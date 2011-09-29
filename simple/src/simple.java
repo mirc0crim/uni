@@ -28,6 +28,10 @@ public class simple {
 	static float[] zylinderVertex;
 	static float[] zylinderColors;
 	static int[] zylinderFaces;
+	
+	static float[] torusVertex;
+	static float[] torusColors;
+	static int[] torusFaces;
 
 	/**
 	 * An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to provide
@@ -108,10 +112,14 @@ public class simple {
 	 */
 	public static void main(String[] args) {
 
-		int seg = 15;
+		int seg = 50;
 		calcZylinderVertex(seg);
 		calcZylinderColors(seg);
 		calcZylinderFaces(seg);
+		
+		calcTorusVertex(seg);
+		calcTorusColors(seg);
+		calcTorusFaces(seg);
 
 		// Make a simple geometric object: a cube
 		// The vertex positions of the cube
@@ -131,10 +139,13 @@ public class simple {
 
 		// Construct a data structure that stores the vertices, their
 		// attributes, and the triangle mesh connectivity
-
-		VertexData vertexData = new VertexData(2 * seg);
-		vertexData.addElement(zylinderColors, VertexData.Semantic.COLOR, 3);
-		vertexData.addElement(zylinderVertex, VertexData.Semantic.POSITION, 3);
+		// cube = 24
+		// zylinder = 2 * seg
+		// torus = seg * seg
+		
+		VertexData vertexData = new VertexData(seg * seg);
+		vertexData.addElement(torusColors, VertexData.Semantic.COLOR, 3);
+		vertexData.addElement(torusVertex, VertexData.Semantic.POSITION, 3);
 
 		// The triangles (three vertex indices for each triangle)
 		int cubeFaces[] = { 0, 2, 3, 0, 1, 2, // front face
@@ -145,7 +156,7 @@ public class simple {
 				20, 22, 23, 20, 21, 22 }; // bottom face
 
 
-		vertexData.addIndices(zylinderFaces);
+		vertexData.addIndices(torusFaces);
 
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
@@ -170,6 +181,21 @@ public class simple {
 		jframe.setVisible(true); // show window
 	}
 
+	private static void calcTorusVertex(int seg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void calcTorusColors(int seg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void calcTorusFaces(int seg) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private static void calcZylinderVertex(int Segments) {
 		float[] zylVert = new float[6 * Segments];
 		int i = 0;
@@ -187,9 +213,10 @@ public class simple {
 			j++;
 		}
 
-		for (int k = 0; k < 6 * Segments; k = k + 3)
+		/*for (int k = 0; k < 6 * Segments; k = k + 3)
 			System.out.println(zylVert[k] + " " + zylVert[k + 1] + " "
 					+ zylVert[k + 2]);
+					*/
 		zylinderVertex = zylVert;
 	}
 
@@ -206,9 +233,10 @@ public class simple {
 			i += 2;
 		}
 		zylinderColors = zylCol;
-		for (int j = 0; j < 6 * Segments; j = j + 3)
+		/*for (int j = 0; j < 6 * Segments; j = j + 3)
 			System.out.println(zylCol[j] + " " + zylCol[j + 1] + " "
 					+ zylCol[j + 2]);
+					*/
 	}
 
 	private static void calcZylinderFaces(int Segments) {
@@ -250,9 +278,10 @@ public class simple {
 		zylFac[3 * i + 1] = 0;
 		zylFac[3 * i + 2] = Segments - 1;
 
-		for (int k = 0; k < 12 * Segments - 12; k = k + 3)
+		/*for (int k = 0; k < 12 * Segments - 12; k = k + 3)
 			System.out.println(zylFac[k] + " " + zylFac[k + 1] + " "
 					+ zylFac[k + 2]);
+					*/
 		zylinderFaces = zylFac;
 	}
 
