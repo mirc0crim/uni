@@ -28,7 +28,7 @@ public class simple {
 	static float[] zylinderVertex;
 	static float[] zylinderColors;
 	static int[] zylinderFaces;
-	
+
 	static float[] torusVertex;
 	static float[] torusColors;
 	static int[] torusFaces;
@@ -112,12 +112,14 @@ public class simple {
 	 */
 	public static void main(String[] args) {
 
-		int seg = 50;
+		int seg = 8;
+		int mainRad = 1;
+		int rad = 1;
 		calcZylinderVertex(seg);
 		calcZylinderColors(seg);
 		calcZylinderFaces(seg);
-		
-		calcTorusVertex(seg);
+
+		calcTorusVertex(seg, mainRad, rad);
 		calcTorusColors(seg);
 		calcTorusFaces(seg);
 
@@ -142,7 +144,7 @@ public class simple {
 		// cube = 24
 		// zylinder = 2 * seg
 		// torus = seg * seg
-		
+
 		VertexData vertexData = new VertexData(seg * seg);
 		vertexData.addElement(torusColors, VertexData.Semantic.COLOR, 3);
 		vertexData.addElement(torusVertex, VertexData.Semantic.POSITION, 3);
@@ -181,19 +183,68 @@ public class simple {
 		jframe.setVisible(true); // show window
 	}
 
-	private static void calcTorusVertex(int seg) {
-		// TODO Auto-generated method stub
-		
+	private static void calcTorusVertex(int seg, int mainRadius, int radius) {
+		float[] circle = new float[seg*3];
+		float[] torVert = new float[3 * seg * seg];
+		int i = 0;
+		while (i < seg) {
+			circle[3 * i] = (float) Math.cos(i * 2 * Math.PI / seg) * radius
+			+ mainRadius;
+			circle[3 * i + 1] = (float) Math.sin(i * 2 * Math.PI / seg)
+			* radius;
+			circle[3 * i + 2] = 0;
+			i++;
+		}
+		float cos, sin;
+		i = 0;
+		while (i < seg) {
+			int k = 0;
+			while (k < seg) {
+				cos = (float) Math.cos(i * 2 * Math.PI / seg);
+				sin = (float) Math.sin(i * 2 * Math.PI / seg);
+				torVert[3 * k + 3 * i * seg] = circle[3 * k] * cos
+				- circle[3 * i + 2] * sin;
+				torVert[3 * k + 3 * i * seg + 1] = circle[3 * k + 1];
+				torVert[3 * k + 3 * i * seg + 2] = circle[3 * k] * sin
+				+ circle[3 * i + 2] * cos;
+				k++;
+			}
+			i++;
+		}
+		for (int j = 0; j < 3 * seg * seg; j = j + 3)
+			System.out.println(torVert[j] + " " + torVert[j + 1] + " "
+					+ torVert[j + 2]);
+		torusVertex = torVert;
 	}
 
 	private static void calcTorusColors(int seg) {
-		// TODO Auto-generated method stub
-		
+		float[] torCol = new float[3 * seg * seg];
+		int i = 0;
+		while (i < seg * seg) {
+			torCol[3 * i] = 1;
+			if (i % 2 == 0) {
+				torCol[3 * i + 1] = 1;
+				torCol[3 * i + 2] = 0;
+			} else {
+				torCol[3 * i + 1] = 0;
+				torCol[3 * i + 2] = 1;
+			}
+			i++;
+		}
+		torusColors = torCol;
+
+		for (int j = 0; j < 3 * seg * seg; j = j + 3)
+			System.out.println(torCol[j] + " " + torCol[j + 1] + " "
+					+ torCol[j + 2]);
+
 	}
 
 	private static void calcTorusFaces(int seg) {
-		// TODO Auto-generated method stub
-		
+		int[] torFac = new int[3];
+		torFac[0] = 0;
+		torFac[1] = 1;
+		torFac[2] = 2;
+		torusFaces = torFac;
 	}
 
 	private static void calcZylinderVertex(int Segments) {
@@ -216,7 +267,7 @@ public class simple {
 		/*for (int k = 0; k < 6 * Segments; k = k + 3)
 			System.out.println(zylVert[k] + " " + zylVert[k + 1] + " "
 					+ zylVert[k + 2]);
-					*/
+		 */
 		zylinderVertex = zylVert;
 	}
 
@@ -224,19 +275,24 @@ public class simple {
 		float[] zylCol = new float[6 * Segments];
 		int i = 0;
 		while (i < Segments * 2) {
-			zylCol[3 * i] = 1;
-			zylCol[3 * i + 1] = 1;
-			zylCol[3 * i + 2] = 0;
-			zylCol[3 * i + 3] = 1;
-			zylCol[3 * i + 4] = 0;
-			zylCol[3 * i + 5] = 1;
-			i += 2;
+			zylCol[3 * i] = 0;
+			if (i % 3 == 0) {
+				zylCol[3 * i + 1] = 0;
+				zylCol[3 * i + 2] = 1;
+			} else if (i % 3 == 1) {
+				zylCol[3 * i + 1] = 1;
+				zylCol[3 * i + 2] = 0;
+			} else {
+				zylCol[3 * i + 1] = 1;
+				zylCol[3 * i + 2] = 1;
+			}
+			i++;
 		}
 		zylinderColors = zylCol;
 		/*for (int j = 0; j < 6 * Segments; j = j + 3)
 			System.out.println(zylCol[j] + " " + zylCol[j + 1] + " "
 					+ zylCol[j + 2]);
-					*/
+		 */
 	}
 
 	private static void calcZylinderFaces(int Segments) {
@@ -281,7 +337,7 @@ public class simple {
 		/*for (int k = 0; k < 12 * Segments - 12; k = k + 3)
 			System.out.println(zylFac[k] + " " + zylFac[k + 1] + " "
 					+ zylFac[k + 2]);
-					*/
+		 */
 		zylinderFaces = zylFac;
 	}
 
