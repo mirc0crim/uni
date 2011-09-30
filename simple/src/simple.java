@@ -113,7 +113,7 @@ public class simple {
 	public static void main(String[] args) {
 
 		int seg = 8;
-		int mainRad = 1;
+		int mainRad = 2;
 		int rad = 1;
 		calcZylinderVertex(seg);
 		calcZylinderColors(seg);
@@ -240,11 +240,39 @@ public class simple {
 	}
 
 	private static void calcTorusFaces(int seg) {
-		int[] torFac = new int[3];
-		torFac[0] = 0;
-		torFac[1] = 1;
-		torFac[2] = 2;
+		int[] torFac = new int[6 * seg * seg];
+		int k = 0;
+		while (k < seg - 1) {
+			int j = 0;
+			int i = 0;
+			while (j < seg - 1) { // side face one bottom two top
+				torFac[3 * i + 3 * k * seg] = j + k * seg;
+				torFac[3 * i + 1 + 3 * k * seg] = j + seg + k * seg;
+				torFac[3 * i + 2 + 3 * k * seg] = j + 1 + seg + k * seg;
+				i++;
+				j++;
+			}
+			torFac[3 * i + 3 * k * seg] = j + k * seg;
+			torFac[3 * i + 1 + 3 * k * seg] = j + seg + k * seg;
+			torFac[3 * i + 2 + 3 * k * seg] = seg + k * seg;
+			i++;
+			j = 0;
+			while (j < seg - 1) { // side face one top two bottom
+				torFac[3 * i + 3 * k * seg] = j + seg + 1 + k * seg;
+				torFac[3 * i + 1 + 3 * k * seg] = j + k * seg;
+				torFac[3 * i + 2 + 3 * k * seg] = j + 1 + k	* seg;
+				i++;
+				j++;
+			}
+			torFac[3 * i + 3 * k * seg] = seg + k * seg;
+			torFac[3 * i + 1 + 3 * k * seg] = 0 + k * seg;
+			torFac[3 * i + 2 + 3 * k * seg] = seg - 1 + k * seg;
+			k++;
+		}
 		torusFaces = torFac;
+		for (int j = 0; j < 6 * seg * seg; j = j + 3)
+			System.out.println(torFac[j] + " " + torFac[j + 1] + " "
+					+ torFac[j + 2]);
 	}
 
 	private static void calcZylinderVertex(int Segments) {
