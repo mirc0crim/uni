@@ -112,7 +112,7 @@ public class simple {
 	 */
 	public static void main(String[] args) {
 
-		int seg = 4;
+		int seg = 8;
 		int mainRad = 2;
 		int rad = 1;
 		calcZylinderVertex(seg);
@@ -275,7 +275,7 @@ public class simple {
 		}
 		j = 0;
 		i = 0;
-		while (j < seg) {
+		while (j < seg) { // last and first segment, one last and two first
 			torFac[3 * i + 3 * k * seg] = j + k * seg;
 			torFac[3 * i + 1 + 3 * k * seg] = j;
 			if (j != seg - 1)
@@ -284,6 +284,22 @@ public class simple {
 				torFac[3 * i + 2 + 3 * k * seg] = 0;
 			j++;
 			i++;
+		}
+		j = 0;
+		i = 0;
+		k = 0;
+		while (j < seg) { // last and first segment, one first and two last
+			torFac[3 * i + 3 * k * seg + 3 * seg * seg] = j;
+			torFac[3 * i + 1 + 3 * k * seg + 3 * seg * seg] = j + (seg - 1)
+			* seg;
+			if (j != 0)
+				torFac[3 * i + 2 + 3 * k * seg + 3 * seg * seg] = j - 1 + (seg - 1)
+				* seg;
+			else
+				torFac[3 * i + 2 + 3 * k * seg + 3 * seg * seg] = seg - 1
+				+ (seg - 1) * seg;
+			i++;
+			j++;
 		}
 
 		torusFaces = torFac;
