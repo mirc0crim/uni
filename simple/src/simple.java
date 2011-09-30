@@ -53,7 +53,7 @@ public class simple {
 
 			// Register a timer task
 			Timer timer = new Timer();
-			angle = 0.01f;
+			angle = 0.005f;
 			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}
 	}
@@ -112,7 +112,7 @@ public class simple {
 	 */
 	public static void main(String[] args) {
 
-		int seg = 8;
+		int seg = 4;
 		int mainRad = 2;
 		int rad = 1;
 		calcZylinderVertex(seg);
@@ -247,17 +247,16 @@ public class simple {
 		while (k < seg - 1) {
 			j = 0;
 			i = 0;
-			while (j < seg - 1) { // side face one bottom two top
+			while (j < seg) { // side face one bottom two top
 				torFac[3 * i + 3 * k * seg] = j + k * seg;
 				torFac[3 * i + 1 + 3 * k * seg] = j + seg + k * seg;
-				torFac[3 * i + 2 + 3 * k * seg] = j + 1 + seg + k * seg;
+				if (j != seg - 1)
+					torFac[3 * i + 2 + 3 * k * seg] = j + 1 + seg + k * seg;
+				else
+					torFac[3 * i + 2 + 3 * k * seg] = seg + k * seg;
 				i++;
 				j++;
 			}
-			torFac[3 * i + 3 * k * seg] = j + k * seg;
-			torFac[3 * i + 1 + 3 * k * seg] = j + seg + k * seg;
-			torFac[3 * i + 2 + 3 * k * seg] = seg + k * seg;
-			i++;
 			j = 0;
 			while (j < seg - 1) { // side face one top two bottom
 				torFac[3 * i + 3 * k * seg + 3 * seg * seg] = j + seg + 1 + k
@@ -272,6 +271,19 @@ public class simple {
 			torFac[3 * i + 1 + 3 * k * seg + 3 * seg * seg] = 0 + k * seg;
 			torFac[3 * i + 2 + 3 * k * seg + 3 * seg * seg] = seg - 1 + k * seg;
 			k++;
+			i++;
+		}
+		j = 0;
+		i = 0;
+		while (j < seg) {
+			torFac[3 * i + 3 * k * seg] = j + k * seg;
+			torFac[3 * i + 1 + 3 * k * seg] = j;
+			if (j != seg - 1)
+				torFac[3 * i + 2 + 3 * k * seg] = j + 1;
+			else
+				torFac[3 * i + 2 + 3 * k * seg] = 0;
+			j++;
+			i++;
 		}
 
 		torusFaces = torFac;
