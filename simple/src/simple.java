@@ -118,12 +118,88 @@ public class simple {
 		@Override
 		public void run() {
 			// Update transformation
-			Matrix4f tF = torusFront.getTransformation();
 			Matrix4f z = zylinder.getTransformation();
-			Matrix4f cS = cubeSeat.getTransformation();
+			Matrix4f cSeat = cubeSeat.getTransformation();
+			Matrix4f cSteering = cubeSteering.getTransformation();
+			Matrix4f tF = torusFront.getTransformation();
+			Matrix4f tB = torusBack.getTransformation();
+			Matrix4f rotY = new Matrix4f();
+			Matrix4f rotX = new Matrix4f();
+			Matrix4f rotXi = new Matrix4f();
+			Matrix4f rotZ = new Matrix4f();
+			Matrix4f rotZi = new Matrix4f();
+			Matrix4f transTF = new Matrix4f(1, 0, 0, 4, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transTFi = new Matrix4f(1, 0, 0, -4, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transTB = new Matrix4f(1, 0, 0, -4, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transTBi = new Matrix4f(1, 0, 0, 4, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transZ = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transZi = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transCSeat = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transCSeati = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transCSteering = new Matrix4f(1, 0, 0, 3, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transCSteeringi = new Matrix4f(1, 0, 0, -3, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0,
+					1);
+			Matrix4f scalePointSeven = new Matrix4f((float) (1 / 0.7), 0, 0, 0, 0,
+					(float) (1 / 0.7), 0, 0, 0, 0, (float) (1 / 0.7), 0, 0, 0, 0, 1);
+			Matrix4f scalePointSeveni = new Matrix4f((float) 0.7, 0, 0, 0, 0, (float) 0.7, 0, 0, 0,
+					0, (float) 0.7, 0, 0, 0, 0, 1);
+			Matrix4f scaleDriver = new Matrix4f((float) 2 / 3, 0, 0, 0, 0, (float) 1 / 2, 0, 0, 0,
+					0, (float) (1 / 1.8), 0, 0, 0, 0, 1);
+			Matrix4f scaleDriveri = new Matrix4f((float) 1.5, 0, 0, 0, 0, 2, 0, 0, 0, 0,
+					(float) 1.8, 0, 0, 0, 0, 1);
+			Matrix4f scaleCSeat = new Matrix4f((float) 1 / 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+					0, 0, 1);
+			Matrix4f scaleCSeati = new Matrix4f(3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+			Matrix4f scaleCSteering = new Matrix4f(1, 0, 0, 0, 0, (float) 1 / 2, 0, 0, 0, 0, 1, 0,
+					0, 0, 0, 1);
+			Matrix4f scaleCSteeringi = new Matrix4f(1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+			rotY.rotY(angle);
+			rotX.rotX((float) (Math.PI / -2));
+			rotXi.rotX((float) (Math.PI / 2));
+			rotZ.rotZ((float) Math.PI / -4);
+			rotZi.rotZ((float) Math.PI / 4);
+
+			z.mul(rotZ);
+			z.mul(scaleDriver);
+			z.mul(transZ);
+			z.mul(rotY);
+			z.mul(transZi);
+			z.mul(scaleDriveri);
+			z.mul(rotZi);
+
+			cSeat.mul(scaleCSeat);
+			cSeat.mul(transCSeat);
+			cSeat.mul(rotY);
+			cSeat.mul(transCSeati);
+			cSeat.mul(scaleCSeati);
+
+			cSteering.mul(scaleCSteering);
+			cSteering.mul(transCSteering);
+			cSteering.mul(rotY);
+			cSteering.mul(transCSteeringi);
+			cSteering.mul(scaleCSteeringi);
+
+			tF.mul(rotX);
+			tF.mul(scalePointSeven);
+			tF.mul(transTF);
+			tF.mul(rotY);
+			tF.mul(transTFi);
+			tF.mul(scalePointSeveni);
+			tF.mul(rotXi);
+
+			tB.mul(rotX);
+			tB.mul(scalePointSeven);
+			tB.mul(transTB);
+			tB.mul(rotY);
+			tB.mul(transTBi);
+			tB.mul(scalePointSeveni);
+			tB.mul(rotXi);
+
 			zylinder.setTransformation(z);
+			cubeSeat.setTransformation(cSeat);
+			cubeSteering.setTransformation(cSteering);
 			torusFront.setTransformation(tF);
-			cubeSeat.setTransformation(cS);
+			torusBack.setTransformation(tB);
 
 			// Trigger redrawing of the render window
 			renderPanel.getCanvas().repaint();
