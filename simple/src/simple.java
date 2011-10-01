@@ -22,9 +22,11 @@ public class simple {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
-	static Shape torus;
+	static Shape torusFront;
+	static Shape torusBack;
 	static Shape zylinder;
-	static Shape cube;
+	static Shape cubeSeat;
+	static Shape cubeSteering;
 	static Shape plane;
 	static float angle;
 
@@ -59,15 +61,51 @@ public class simple {
 			// Register a timer task
 			Timer timer = new Timer();
 			angle = 0.01f;
+			Matrix4f p = plane.getTransformation();
 			Matrix4f z = zylinder.getTransformation();
-			Matrix4f c = cube.getTransformation();
-			Matrix4f trans33i0 = new Matrix4f(1, 0, 0, 3, 0, 1, 0, -3, 0, 0, 1, 0, 0, 0, 0, 1);
-			Matrix4f trans3i30 = new Matrix4f(1, 0, 0, -3, 0, 1, 0, 3, 0, 0, 1, 0, 0, 0,
-					0, 1);
-			z.mul(trans33i0);
-			c.mul(trans3i30);
+			Matrix4f cSeat = cubeSeat.getTransformation();
+			Matrix4f cSteering = cubeSteering.getTransformation();
+			Matrix4f tF = torusFront.getTransformation();
+			Matrix4f tB = torusBack.getTransformation();
+			Matrix4f transP = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 1, 0, 0, 0, 0, 1);
+			Matrix4f transTF = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transTB = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transZ = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transCSeat = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transCSteering = new Matrix4f(1, 0, 0, -3, 0, 1, 0, 1, 0, 0, 1, -10, 0, 0, 0,
+					1);
+			Matrix4f scaleP = new Matrix4f(3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1);
+			Matrix4f scaleCSeat = new Matrix4f(3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+			Matrix4f scaleCSteering = new Matrix4f(1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+			Matrix4f scalePointSeven = new Matrix4f((float) 0.7, 0, 0, 0, 0, (float) 0.7, 0, 0, 0, 0,
+					(float) 0.7, 0, 0, 0, 0, 1);
+			Matrix4f scaleDriver = new Matrix4f((float) 1.5, 0, 0, 0, 0, 2, 0, 0, 0, 0,
+					(float) 1.8, 0, 0, 0, 0, 1);
+			Matrix4f rotX = new Matrix4f();
+			rotX.rotX((float) Math.PI / 2);
+			Matrix4f rotZ = new Matrix4f();
+			rotZ.rotZ((float) Math.PI / 4);
+			p.mul(transP);
+			p.mul(scaleP);
+			z.mul(transZ);
+			z.mul(scaleDriver);
+			z.mul(rotZ);
+			cSeat.mul(transCSeat);
+			cSeat.mul(scaleCSeat);
+			cSteering.mul(transCSteering);
+			cSteering.mul(scaleCSteering);
+			tF.mul(transTF);
+			tF.mul(scalePointSeven);
+			tF.mul(rotX);
+			tB.mul(transTB);
+			tB.mul(scalePointSeven);
+			tB.mul(rotX);
+			plane.setTransformation(p);
 			zylinder.setTransformation(z);
-			cube.setTransformation(c);
+			cubeSeat.setTransformation(cSeat);
+			cubeSteering.setTransformation(cSteering);
+			torusFront.setTransformation(tF);
+			torusBack.setTransformation(tB);
 			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}
 	}
@@ -80,28 +118,12 @@ public class simple {
 		@Override
 		public void run() {
 			// Update transformation
-			Matrix4f t = torus.getTransformation();
+			Matrix4f tF = torusFront.getTransformation();
 			Matrix4f z = zylinder.getTransformation();
-			Matrix4f c = cube.getTransformation();
-			Matrix4f rotX = new Matrix4f();
-			Matrix4f rotY = new Matrix4f();
-			blaa++;
-			Matrix4f updown = new Matrix4f(1, 0, 0, (float) Math.sin(blaa / 10) / 10, 0,
-					1,
-					0, 0,
-					0, 0, 1, 0, 0, 0, 0, 1);
-			rotX.rotX(angle / 2);
-			rotY.rotY(angle);
-			t.mul(rotX);
-			t.mul(rotY);
-			t.mul(updown);
-			z.mul(rotX);
-			z.mul(rotY);
-			c.mul(rotX);
-			c.mul(rotY);
+			Matrix4f cS = cubeSeat.getTransformation();
 			zylinder.setTransformation(z);
-			torus.setTransformation(t);
-			cube.setTransformation(c);
+			torusFront.setTransformation(tF);
+			cubeSeat.setTransformation(cS);
 
 			// Trigger redrawing of the render window
 			renderPanel.getCanvas().repaint();
@@ -209,13 +231,17 @@ public class simple {
 
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
-		torus = new Shape(torusData);
+		torusFront = new Shape(torusData);
+		torusBack = new Shape(torusData);
 		zylinder = new Shape(zylinderData);
-		cube = new Shape(cubeData);
+		cubeSeat = new Shape(cubeData);
+		cubeSteering = new Shape(cubeData);
 		plane = new Shape(planeData);
-		sceneManager.addShape(torus);
+		sceneManager.addShape(torusFront);
+		sceneManager.addShape(torusBack);
 		sceneManager.addShape(zylinder);
-		sceneManager.addShape(cube);
+		sceneManager.addShape(cubeSeat);
+		sceneManager.addShape(cubeSteering);
 		sceneManager.addShape(plane);
 
 		// Make a render panel. The init function of the renderPanel
