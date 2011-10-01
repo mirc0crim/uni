@@ -22,7 +22,10 @@ public class simple {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
-	static Shape shape;
+	static Shape torus;
+	static Shape zylinder;
+	static Shape cube;
+	static Shape plane;
 	static float angle;
 
 	static float[] zylinderVertex;
@@ -32,6 +35,8 @@ public class simple {
 	static float[] torusVertex;
 	static float[] torusColors;
 	static int[] torusFaces;
+
+	static int blaa = 0;
 
 	/**
 	 * An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to provide
@@ -53,7 +58,16 @@ public class simple {
 
 			// Register a timer task
 			Timer timer = new Timer();
-			angle = 0.005f;
+			angle = 0.01f;
+			Matrix4f z = zylinder.getTransformation();
+			Matrix4f c = cube.getTransformation();
+			Matrix4f trans33i0 = new Matrix4f(1, 0, 0, 3, 0, 1, 0, -3, 0, 0, 1, 0, 0, 0, 0, 1);
+			Matrix4f trans3i30 = new Matrix4f(1, 0, 0, -3, 0, 1, 0, 3, 0, 0, 1, 0, 0, 0,
+					0, 1);
+			z.mul(trans33i0);
+			c.mul(trans3i30);
+			zylinder.setTransformation(z);
+			cube.setTransformation(c);
 			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}
 	}
@@ -66,14 +80,28 @@ public class simple {
 		@Override
 		public void run() {
 			// Update transformation
-			Matrix4f t = shape.getTransformation();
+			Matrix4f t = torus.getTransformation();
+			Matrix4f z = zylinder.getTransformation();
+			Matrix4f c = cube.getTransformation();
 			Matrix4f rotX = new Matrix4f();
-			rotX.rotX(angle);
 			Matrix4f rotY = new Matrix4f();
+			blaa++;
+			Matrix4f updown = new Matrix4f(1, 0, 0, (float) Math.sin(blaa / 10) / 10, 0,
+					1,
+					0, 0,
+					0, 0, 1, 0, 0, 0, 0, 1);
+			rotX.rotX(angle / 2);
 			rotY.rotY(angle);
 			t.mul(rotX);
 			t.mul(rotY);
-			shape.setTransformation(t);
+			t.mul(updown);
+			z.mul(rotX);
+			z.mul(rotY);
+			c.mul(rotX);
+			c.mul(rotY);
+			zylinder.setTransformation(z);
+			torus.setTransformation(t);
+			cube.setTransformation(c);
 
 			// Trigger redrawing of the render window
 			renderPanel.getCanvas().repaint();
@@ -112,16 +140,20 @@ public class simple {
 	 */
 	public static void main(String[] args) {
 
-		int seg = 8;
+		int seg = 20;
 		int mainRad = 2;
 		int rad = 1;
-		calcZylinderVertex(seg);
-		calcZylinderColors(seg);
-		calcZylinderFaces(seg);
+		zylinderVertex = calcZylinderVertex(seg);
+		zylinderColors = calcZylinderColors(seg);
+		zylinderFaces = calcZylinderFaces(seg);
 
-		calcTorusVertex(seg, mainRad, rad);
-		calcTorusColors(seg);
-		calcTorusFaces(seg);
+		torusVertex = calcTorusVertex(seg, mainRad, rad);
+		torusColors = calcTorusColors(seg);
+		torusFaces = calcTorusFaces(seg);
+
+		float planeVertex[] = { -5, -3, 5, -5, -3, -5, 5, -3, -5, 5, -3, 5 };
+		float planeColors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
+		int planeFaces[] = { 0, 1, 2, 0, 2, 3 };
 
 		// Make a simple geometric object: a cube
 		// The vertex positions of the cube
@@ -141,13 +173,25 @@ public class simple {
 
 		// Construct a data structure that stores the vertices, their
 		// attributes, and the triangle mesh connectivity
+		// plane = 4
 		// cube = 24
 		// zylinder = 2 * seg
 		// torus = seg * seg
+		VertexData planeData = new VertexData(4);
+		planeData.addElement(planeColors, VertexData.Semantic.COLOR, 3);
+		planeData.addElement(planeVertex, VertexData.Semantic.POSITION, 3);
 
-		VertexData vertexData = new VertexData(seg * seg);
-		vertexData.addElement(torusColors, VertexData.Semantic.COLOR, 3);
-		vertexData.addElement(torusVertex, VertexData.Semantic.POSITION, 3);
+		VertexData cubeData = new VertexData(24);
+		cubeData.addElement(cubeColors, VertexData.Semantic.COLOR, 3);
+		cubeData.addElement(cubeVertex, VertexData.Semantic.POSITION, 3);
+
+		VertexData zylinderData = new VertexData(2 * seg);
+		zylinderData.addElement(zylinderColors, VertexData.Semantic.COLOR, 3);
+		zylinderData.addElement(zylinderVertex, VertexData.Semantic.POSITION, 3);
+
+		VertexData torusData = new VertexData(seg * seg);
+		torusData.addElement(torusColors, VertexData.Semantic.COLOR, 3);
+		torusData.addElement(torusVertex, VertexData.Semantic.POSITION, 3);
 
 		// The triangles (three vertex indices for each triangle)
 		int cubeFaces[] = { 0, 2, 3, 0, 1, 2, // front face
@@ -158,12 +202,21 @@ public class simple {
 				20, 22, 23, 20, 21, 22 }; // bottom face
 
 
-		vertexData.addIndices(torusFaces);
+		torusData.addIndices(torusFaces);
+		zylinderData.addIndices(zylinderFaces);
+		cubeData.addIndices(cubeFaces);
+		planeData.addIndices(planeFaces);
 
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
-		shape = new Shape(vertexData);
-		sceneManager.addShape(shape);
+		torus = new Shape(torusData);
+		zylinder = new Shape(zylinderData);
+		cube = new Shape(cubeData);
+		plane = new Shape(planeData);
+		sceneManager.addShape(torus);
+		sceneManager.addShape(zylinder);
+		sceneManager.addShape(cube);
+		sceneManager.addShape(plane);
 
 		// Make a render panel. The init function of the renderPanel
 		// (see above) will be called back for initialization.
@@ -183,7 +236,7 @@ public class simple {
 		jframe.setVisible(true); // show window
 	}
 
-	private static void calcTorusVertex(int seg, int mainRadius, int radius) {
+	private static float[] calcTorusVertex(int seg, int mainRadius, int radius) {
 		float[] circle = new float[seg*3];
 		float[] torVert = new float[3 * seg * seg];
 		int i = 0;
@@ -211,13 +264,14 @@ public class simple {
 			}
 			i++;
 		}
-		for (int j = 0; j < 3 * seg * seg; j = j + 3)
+		/*for (int j = 0; j < 3 * seg * seg; j = j + 3)
 			System.out.println(torVert[j] + " " + torVert[j + 1] + " "
 					+ torVert[j + 2]);
-		torusVertex = torVert;
+		 */
+		return torVert;
 	}
 
-	private static void calcTorusColors(int seg) {
+	private static float[] calcTorusColors(int seg) {
 		float[] torCol = new float[3 * seg * seg];
 		int i = 0;
 		while (i < seg * seg) {
@@ -231,15 +285,16 @@ public class simple {
 			}
 			i++;
 		}
-		torusColors = torCol;
 
-		for (int j = 0; j < 3 * seg * seg; j = j + 3)
+		/*for (int j = 0; j < 3 * seg * seg; j = j + 3)
 			System.out.println(torCol[j] + " " + torCol[j + 1] + " "
 					+ torCol[j + 2]);
+		 */
+		return torCol;
 
 	}
 
-	private static void calcTorusFaces(int seg) {
+	private static int[] calcTorusFaces(int seg) {
 		int[] torFac = new int[6 * seg * seg];
 		int k = 0;
 		int i = 0;
@@ -302,13 +357,14 @@ public class simple {
 			j++;
 		}
 
-		torusFaces = torFac;
-		for (int p = 0; p < 6 * seg * seg; p = p + 3)
+		/*for (int p = 0; p < 6 * seg * seg; p = p + 3)
 			System.out.println(torFac[p] + " " + torFac[p + 1] + " "
 					+ torFac[p + 2]);
+		 */
+		return torFac;
 	}
 
-	private static void calcZylinderVertex(int Segments) {
+	private static float[] calcZylinderVertex(int Segments) {
 		float[] zylVert = new float[6 * Segments];
 		int i = 0;
 		while (i < Segments) { // top circle
@@ -329,10 +385,10 @@ public class simple {
 			System.out.println(zylVert[k] + " " + zylVert[k + 1] + " "
 					+ zylVert[k + 2]);
 		 */
-		zylinderVertex = zylVert;
+		return zylVert;
 	}
 
-	private static void calcZylinderColors(int Segments) {
+	private static float[] calcZylinderColors(int Segments) {
 		float[] zylCol = new float[6 * Segments];
 		int i = 0;
 		while (i < Segments * 2) {
@@ -349,14 +405,14 @@ public class simple {
 			}
 			i++;
 		}
-		zylinderColors = zylCol;
 		/*for (int j = 0; j < 6 * Segments; j = j + 3)
 			System.out.println(zylCol[j] + " " + zylCol[j + 1] + " "
 					+ zylCol[j + 2]);
 		 */
+		return zylCol;
 	}
 
-	private static void calcZylinderFaces(int Segments) {
+	private static int[] calcZylinderFaces(int Segments) {
 		int[] zylFac = new int[12 * Segments - 12];
 		int i = 0;
 		while (i < Segments - 2) { // Top face
@@ -399,7 +455,7 @@ public class simple {
 			System.out.println(zylFac[k] + " " + zylFac[k + 1] + " "
 					+ zylFac[k + 2]);
 		 */
-		zylinderFaces = zylFac;
+		return zylFac;
 	}
 
 }
