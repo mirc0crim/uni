@@ -67,6 +67,7 @@ public class simple {
 			Matrix4f cSteering = cubeSteering.getTransformation();
 			Matrix4f tF = torusFront.getTransformation();
 			Matrix4f tB = torusBack.getTransformation();
+			Matrix4f transAway = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -15, 0, 0, 0, 1);
 			Matrix4f transP = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 1, 0, 0, 0, 0, 1);
 			Matrix4f transTF = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transTB = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
@@ -85,18 +86,24 @@ public class simple {
 			rotX.rotX((float) Math.PI / 2);
 			Matrix4f rotZ = new Matrix4f();
 			rotZ.rotZ((float) Math.PI / 4);
+			p.mul(transAway);
 			p.mul(transP);
 			p.mul(scaleP);
+			z.mul(transAway);
 			z.mul(transZ);
 			z.mul(scaleDriver);
 			z.mul(rotZ);
+			cSeat.mul(transAway);
 			cSeat.mul(transCSeat);
 			cSeat.mul(scaleCSeat);
+			cSteering.mul(transAway);
 			cSteering.mul(transCSteering);
 			cSteering.mul(scaleCSteering);
+			tF.mul(transAway);
 			tF.mul(transTF);
 			tF.mul(scalePointSeven);
 			tF.mul(rotX);
+			tB.mul(transAway);
 			tB.mul(transTB);
 			tB.mul(scalePointSeven);
 			tB.mul(rotX);
@@ -124,6 +131,7 @@ public class simple {
 			Matrix4f tF = torusFront.getTransformation();
 			Matrix4f tB = torusBack.getTransformation();
 			Matrix4f rotY = new Matrix4f();
+			Matrix4f rotYi = new Matrix4f();
 			Matrix4f rotX = new Matrix4f();
 			Matrix4f rotXi = new Matrix4f();
 			Matrix4f rotZ = new Matrix4f();
@@ -154,6 +162,7 @@ public class simple {
 					0, 0, 0, 1);
 			Matrix4f scaleCSteeringi = new Matrix4f(1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 			rotY.rotY(angle);
+			rotYi.rotY(-angle);
 			rotX.rotX((float) (Math.PI / -2));
 			rotXi.rotX((float) (Math.PI / 2));
 			rotZ.rotZ((float) Math.PI / -4);
@@ -378,11 +387,14 @@ public class simple {
 		int i = 0;
 		while (i < seg * seg) {
 			torCol[3 * i] = 1;
-			if (i % 2 == 0) {
+			if (i % 3 == 0) {
 				torCol[3 * i + 1] = 1;
 				torCol[3 * i + 2] = 0;
-			} else {
+			} else if (i % 3 == 1) {
 				torCol[3 * i + 1] = 0;
+				torCol[3 * i + 2] = 1;
+			} else {
+				torCol[3 * i + 1] = 1;
 				torCol[3 * i + 2] = 1;
 			}
 			i++;
