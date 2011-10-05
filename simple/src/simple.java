@@ -67,7 +67,7 @@ public class simple {
 			Matrix4f cSteering = cubeSteering.getTransformation();
 			Matrix4f tF = torusFront.getTransformation();
 			Matrix4f tB = torusBack.getTransformation();
-			Matrix4f transAway = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -15, 0, 0, 0, 1);
+			Matrix4f transAway = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -5, 0, 0, 1, -25, 0, 0, 0, 1);
 			Matrix4f transP = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 1, 0, 0, 0, 0, 1);
 			Matrix4f transTF = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transTB = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
@@ -86,6 +86,8 @@ public class simple {
 			rotX.rotX((float) Math.PI / 2);
 			Matrix4f rotZ = new Matrix4f();
 			rotZ.rotZ((float) Math.PI / 4);
+			Matrix4f rotZi = new Matrix4f();
+			rotZi.rotZ((float) Math.PI / -4);
 			p.mul(transAway);
 			p.mul(transP);
 			p.mul(scaleP);
@@ -103,6 +105,7 @@ public class simple {
 			tF.mul(transTF);
 			tF.mul(scalePointSeven);
 			tF.mul(rotX);
+			tF.mul(rotZi);
 			tB.mul(transAway);
 			tB.mul(transTB);
 			tB.mul(scalePointSeven);
@@ -188,6 +191,7 @@ public class simple {
 			cSteering.mul(transCSteeringi);
 			cSteering.mul(scaleCSteeringi);
 
+			tF.mul(rotZi);
 			tF.mul(rotX);
 			tF.mul(scalePointSeven);
 			tF.mul(transTF);
@@ -195,6 +199,7 @@ public class simple {
 			tF.mul(transTFi);
 			tF.mul(scalePointSeveni);
 			tF.mul(rotXi);
+			tF.mul(rotZ);
 
 			tB.mul(rotX);
 			tB.mul(scalePointSeven);
@@ -212,6 +217,7 @@ public class simple {
 
 			// Trigger redrawing of the render window
 			renderPanel.getCanvas().repaint();
+
 		}
 	}
 
