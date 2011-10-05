@@ -30,14 +30,6 @@ public class simple {
 	static Shape plane;
 	static float angle;
 
-	static float[] zylinderVertex;
-	static float[] zylinderColors;
-	static int[] zylinderFaces;
-
-	static float[] torusVertex;
-	static float[] torusColors;
-	static int[] torusFaces;
-
 	static int blaa = 0;
 
 	/**
@@ -63,25 +55,24 @@ public class simple {
 			angle = 0.01f;
 			Matrix4f p = plane.getTransformation();
 			Matrix4f z = zylinder.getTransformation();
-			Matrix4f cSeat = cubeSeat.getTransformation();
-			Matrix4f cSteering = cubeSteering.getTransformation();
 			Matrix4f tF = torusFront.getTransformation();
 			Matrix4f tB = torusBack.getTransformation();
+			Matrix4f cSeat = cubeSeat.getTransformation();
+			Matrix4f cSteering = cubeSteering.getTransformation();
 			Matrix4f transAway = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -5, 0, 0, 1, -25, 0, 0, 0, 1);
-			Matrix4f transP = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 1, 0, 0, 0, 0, 1);
-			Matrix4f transTF = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
-			Matrix4f transTB = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transtF = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transZ = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transtB = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transP = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -2, 0, 0, 1, 0, 0, 0, 0, 1);
 			Matrix4f transCSeat = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transCSteering = new Matrix4f(1, 0, 0, -3, 0, 1, 0, 1, 0, 0, 1, -10, 0, 0, 0,
 					1);
 			Matrix4f scaleP = new Matrix4f(3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1);
-			Matrix4f scaleCSeat = new Matrix4f(3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-			Matrix4f scaleCSteering = new Matrix4f(1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-			Matrix4f scalePointSeven = new Matrix4f((float) 0.7, 0, 0, 0, 0, (float) 0.7, 0, 0, 0, 0,
-					(float) 0.7, 0, 0, 0, 0, 1);
-			Matrix4f scaleDriver = new Matrix4f((float) 1.5, 0, 0, 0, 0, 2, 0, 0, 0, 0,
-					(float) 1.8, 0, 0, 0, 0, 1);
+			Matrix4f scaleCSeat = new Matrix4f(4, 0, 0, 0, 0, (float) 1.5, 0, 0, 0, 0, 1, 0, 0, 0,
+					0, 1);
+			Matrix4f scaleDriver = new Matrix4f((float) 3 / 2, 0, 0, 0, 0, 3, 0, 0, 0, 0,
+					(float) 3 / 2, 0, 0, 0, 0, 1);
+			Matrix4f scaleCSteering = new Matrix4f(1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 			Matrix4f rotX = new Matrix4f();
 			rotX.rotX((float) Math.PI / 2);
 			Matrix4f rotZ = new Matrix4f();
@@ -91,31 +82,28 @@ public class simple {
 			p.mul(transAway);
 			p.mul(transP);
 			p.mul(scaleP);
-			z.mul(transAway);
-			z.mul(transZ);
-			z.mul(scaleDriver);
-			z.mul(rotZ);
 			cSeat.mul(transAway);
 			cSeat.mul(transCSeat);
 			cSeat.mul(scaleCSeat);
 			cSteering.mul(transAway);
 			cSteering.mul(transCSteering);
 			cSteering.mul(scaleCSteering);
+			z.mul(transAway);
+			z.mul(transZ);
+			z.mul(rotZ);
+			z.mul(scaleDriver);
 			tF.mul(transAway);
-			tF.mul(transTF);
-			tF.mul(scalePointSeven);
+			tF.mul(transtF);
 			tF.mul(rotX);
-			tF.mul(rotZi);
 			tB.mul(transAway);
-			tB.mul(transTB);
-			tB.mul(scalePointSeven);
+			tB.mul(transtB);
 			tB.mul(rotX);
 			plane.setTransformation(p);
-			zylinder.setTransformation(z);
-			cubeSeat.setTransformation(cSeat);
-			cubeSteering.setTransformation(cSteering);
 			torusFront.setTransformation(tF);
 			torusBack.setTransformation(tB);
+			cubeSeat.setTransformation(cSeat);
+			cubeSteering.setTransformation(cSteering);
+			zylinder.setTransformation(z);
 			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}
 	}
@@ -129,55 +117,44 @@ public class simple {
 		public void run() {
 			// Update transformation
 			Matrix4f z = zylinder.getTransformation();
-			Matrix4f cSeat = cubeSeat.getTransformation();
-			Matrix4f cSteering = cubeSteering.getTransformation();
 			Matrix4f tF = torusFront.getTransformation();
 			Matrix4f tB = torusBack.getTransformation();
+			Matrix4f cSeat = cubeSeat.getTransformation();
+			Matrix4f cSteering = cubeSteering.getTransformation();
 			Matrix4f rotY = new Matrix4f();
 			Matrix4f rotYi = new Matrix4f();
 			Matrix4f rotX = new Matrix4f();
 			Matrix4f rotXi = new Matrix4f();
 			Matrix4f rotZ = new Matrix4f();
 			Matrix4f rotZi = new Matrix4f();
-			Matrix4f transTF = new Matrix4f(1, 0, 0, 4, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
-			Matrix4f transTFi = new Matrix4f(1, 0, 0, -4, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
-			Matrix4f transTB = new Matrix4f(1, 0, 0, -4, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
-			Matrix4f transTBi = new Matrix4f(1, 0, 0, 4, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
-			Matrix4f transZ = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
-			Matrix4f transZi = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transtF = new Matrix4f(1, 0, 0, -4, 0, 1, 0, 2, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transtFi = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transZ = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -2, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transZi = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transtB = new Matrix4f(1, 0, 0, 4, 0, 1, 0, 2, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transtBi = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transCSeat = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
 			Matrix4f transCSeati = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transCSteering = new Matrix4f(1, 0, 0, 3, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
 			Matrix4f transCSteeringi = new Matrix4f(1, 0, 0, -3, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0,
 					1);
-			Matrix4f scalePointSeven = new Matrix4f((float) (1 / 0.7), 0, 0, 0, 0,
-					(float) (1 / 0.7), 0, 0, 0, 0, (float) (1 / 0.7), 0, 0, 0, 0, 1);
-			Matrix4f scalePointSeveni = new Matrix4f((float) 0.7, 0, 0, 0, 0, (float) 0.7, 0, 0, 0,
-					0, (float) 0.7, 0, 0, 0, 0, 1);
-			Matrix4f scaleDriver = new Matrix4f((float) 2 / 3, 0, 0, 0, 0, (float) 1 / 2, 0, 0, 0,
-					0, (float) (1 / 1.8), 0, 0, 0, 0, 1);
-			Matrix4f scaleDriveri = new Matrix4f((float) 1.5, 0, 0, 0, 0, 2, 0, 0, 0, 0,
-					(float) 1.8, 0, 0, 0, 0, 1);
-			Matrix4f scaleCSeat = new Matrix4f((float) 1 / 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-					0, 0, 1);
-			Matrix4f scaleCSeati = new Matrix4f(3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-			Matrix4f scaleCSteering = new Matrix4f(1, 0, 0, 0, 0, (float) 1 / 2, 0, 0, 0, 0, 1, 0,
+			Matrix4f scaleCSeat = new Matrix4f((float) 1 / 4, 0, 0, 0, 0, (float) 2 / 3, 0, 0, 0,
+					0, 1, 0, 0, 0, 0, 1);
+			Matrix4f scaleCSeati = new Matrix4f(4, 0, 0, 0, 0, (float) 1.5, 0, 0, 0, 0, 1, 0, 0, 0,
+					0, 1);
+			Matrix4f scaleCSteering = new Matrix4f(1, 0, 0, 0, 0, (float) 1 / 3, 0, 0, 0, 0, 1, 0,
 					0, 0, 0, 1);
-			Matrix4f scaleCSteeringi = new Matrix4f(1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+			Matrix4f scaleCSteeringi = new Matrix4f(1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+			Matrix4f scaleDriver = new Matrix4f((float) 2 / 3, 0, 0, 0, 0, (float) 1 / 3, 0, 0, 0,
+					0, (float) 2 / 3, 0, 0, 0, 0, 1);
+			Matrix4f scaleDriveri = new Matrix4f((float) 3 / 2, 0, 0, 0, 0, 3, 0, 0, 0, 0,
+					(float) 3 / 2, 0, 0, 0, 0, 1);
 			rotY.rotY(angle);
 			rotYi.rotY(-angle);
 			rotX.rotX((float) (Math.PI / -2));
 			rotXi.rotX((float) (Math.PI / 2));
 			rotZ.rotZ((float) Math.PI / -4);
 			rotZi.rotZ((float) Math.PI / 4);
-
-			z.mul(rotZ);
-			z.mul(scaleDriver);
-			z.mul(transZ);
-			z.mul(rotY);
-			z.mul(transZi);
-			z.mul(scaleDriveri);
-			z.mul(rotZi);
 
 			cSeat.mul(scaleCSeat);
 			cSeat.mul(transCSeat);
@@ -191,29 +168,31 @@ public class simple {
 			cSteering.mul(transCSteeringi);
 			cSteering.mul(scaleCSteeringi);
 
-			tF.mul(rotZi);
 			tF.mul(rotX);
-			tF.mul(scalePointSeven);
-			tF.mul(transTF);
+			tF.mul(transtF);
 			tF.mul(rotY);
-			tF.mul(transTFi);
-			tF.mul(scalePointSeveni);
+			tF.mul(transtFi);
 			tF.mul(rotXi);
-			tF.mul(rotZ);
 
 			tB.mul(rotX);
-			tB.mul(scalePointSeven);
-			tB.mul(transTB);
+			tB.mul(transtB);
 			tB.mul(rotY);
-			tB.mul(transTBi);
-			tB.mul(scalePointSeveni);
+			tB.mul(transtBi);
 			tB.mul(rotXi);
 
+			z.mul(scaleDriver);
+			z.mul(rotZ);
+			z.mul(transZ);
+			z.mul(rotY);
+			z.mul(transZi);
+			z.mul(rotZi);
+			z.mul(scaleDriveri);
+
+			torusFront.setTransformation(tF);
+			torusBack.setTransformation(tB);
 			zylinder.setTransformation(z);
 			cubeSeat.setTransformation(cSeat);
 			cubeSteering.setTransformation(cSteering);
-			torusFront.setTransformation(tF);
-			torusBack.setTransformation(tB);
 
 			// Trigger redrawing of the render window
 			renderPanel.getCanvas().repaint();
@@ -256,13 +235,14 @@ public class simple {
 		int seg = 20;
 		int mainRad = 2;
 		int rad = 1;
-		zylinderVertex = calcZylinderVertex(seg);
-		zylinderColors = calcZylinderColors(seg);
-		zylinderFaces = calcZylinderFaces(seg);
 
-		torusVertex = calcTorusVertex(seg, mainRad, rad);
-		torusColors = calcTorusColors(seg);
-		torusFaces = calcTorusFaces(seg);
+		Shape zylinder1 = makeZylinder(seg);
+		Shape torusFront1 = makeTorus(seg, mainRad, rad);
+		Shape torusBack1 = makeTorus(seg, mainRad, rad);
+
+		zylinder = zylinder1;
+		torusFront = torusFront1;
+		torusBack = torusBack1;
 
 		float planeVertex[] = { -5, -3, 5, -5, -3, -5, 5, -3, -5, 5, -3, 5 };
 		float planeColors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
@@ -270,7 +250,8 @@ public class simple {
 
 		// Make a simple geometric object: a cube
 		// The vertex positions of the cube
-		float cubeVertex[] = { -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, // front face
+		float cubeVertex[] = { -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, // front
+				// face
 				-1, -1, -1, -1, -1, 1, -1, 1, 1, -1, 1, -1, // left face
 				1, -1, -1, -1, -1, -1, -1, 1, -1, 1, 1, -1, // back face
 				1, -1, 1, 1, -1, -1, 1, 1, -1, 1, 1, 1, // right face
@@ -278,18 +259,15 @@ public class simple {
 				-1, -1, 1, -1, -1, -1, 1, -1, -1, 1, -1, 1 }; // bottom face
 
 		// The vertex colors
-		float cubeColors[] = { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0,
-				1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0,
-				1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
-				0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1 };
+		float cubeColors[] = { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+				0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1,
+				0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1 };
 
 
 		// Construct a data structure that stores the vertices, their
 		// attributes, and the triangle mesh connectivity
 		// plane = 4
 		// cube = 24
-		// zylinder = 2 * seg
-		// torus = seg * seg
 		VertexData planeData = new VertexData(4);
 		planeData.addElement(planeColors, VertexData.Semantic.COLOR, 3);
 		planeData.addElement(planeVertex, VertexData.Semantic.POSITION, 3);
@@ -297,14 +275,6 @@ public class simple {
 		VertexData cubeData = new VertexData(24);
 		cubeData.addElement(cubeColors, VertexData.Semantic.COLOR, 3);
 		cubeData.addElement(cubeVertex, VertexData.Semantic.POSITION, 3);
-
-		VertexData zylinderData = new VertexData(2 * seg);
-		zylinderData.addElement(zylinderColors, VertexData.Semantic.COLOR, 3);
-		zylinderData.addElement(zylinderVertex, VertexData.Semantic.POSITION, 3);
-
-		VertexData torusData = new VertexData(seg * seg);
-		torusData.addElement(torusColors, VertexData.Semantic.COLOR, 3);
-		torusData.addElement(torusVertex, VertexData.Semantic.POSITION, 3);
 
 		// The triangles (three vertex indices for each triangle)
 		int cubeFaces[] = { 0, 2, 3, 0, 1, 2, // front face
@@ -314,23 +284,17 @@ public class simple {
 				16, 18, 19, 16, 17, 18, // top face
 				20, 22, 23, 20, 21, 22 }; // bottom face
 
-
-		torusData.addIndices(torusFaces);
-		zylinderData.addIndices(zylinderFaces);
 		cubeData.addIndices(cubeFaces);
 		planeData.addIndices(planeFaces);
 
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
-		torusFront = new Shape(torusData);
-		torusBack = new Shape(torusData);
-		zylinder = new Shape(zylinderData);
 		cubeSeat = new Shape(cubeData);
 		cubeSteering = new Shape(cubeData);
 		plane = new Shape(planeData);
+		sceneManager.addShape(zylinder);
 		sceneManager.addShape(torusFront);
 		sceneManager.addShape(torusBack);
-		sceneManager.addShape(zylinder);
 		sceneManager.addShape(cubeSeat);
 		sceneManager.addShape(cubeSteering);
 		sceneManager.addShape(plane);
@@ -354,14 +318,12 @@ public class simple {
 	}
 
 	private static float[] calcTorusVertex(int seg, int mainRadius, int radius) {
-		float[] circle = new float[seg*3];
+		float[] circle = new float[seg * 3];
 		float[] torVert = new float[3 * seg * seg];
 		int i = 0;
 		while (i < seg) {
-			circle[3 * i] = (float) Math.cos(i * 2 * Math.PI / seg) * radius
-			+ mainRadius;
-			circle[3 * i + 1] = (float) Math.sin(i * 2 * Math.PI / seg)
-			* radius;
+			circle[3 * i] = (float) Math.cos(i * 2 * Math.PI / seg) * radius + mainRadius;
+			circle[3 * i + 1] = (float) Math.sin(i * 2 * Math.PI / seg) * radius;
 			circle[3 * i + 2] = 0;
 			i++;
 		}
@@ -372,19 +334,13 @@ public class simple {
 			while (k < seg) {
 				cos = (float) Math.cos(i * 2 * Math.PI / seg);
 				sin = (float) Math.sin(i * 2 * Math.PI / seg);
-				torVert[3 * k + 3 * i * seg] = circle[3 * k] * cos
-				- circle[3 * i + 2] * sin;
+				torVert[3 * k + 3 * i * seg] = circle[3 * k] * cos - circle[3 * i + 2] * sin;
 				torVert[3 * k + 3 * i * seg + 1] = circle[3 * k + 1];
-				torVert[3 * k + 3 * i * seg + 2] = circle[3 * k] * sin
-				+ circle[3 * i + 2] * cos;
+				torVert[3 * k + 3 * i * seg + 2] = circle[3 * k] * sin + circle[3 * i + 2] * cos;
 				k++;
 			}
 			i++;
 		}
-		/*for (int j = 0; j < 3 * seg * seg; j = j + 3)
-			System.out.println(torVert[j] + " " + torVert[j + 1] + " "
-					+ torVert[j + 2]);
-		 */
 		return torVert;
 	}
 
@@ -405,11 +361,6 @@ public class simple {
 			}
 			i++;
 		}
-
-		/*for (int j = 0; j < 3 * seg * seg; j = j + 3)
-			System.out.println(torCol[j] + " " + torCol[j + 1] + " "
-					+ torCol[j + 2]);
-		 */
 		return torCol;
 
 	}
@@ -434,11 +385,9 @@ public class simple {
 			}
 			j = 0;
 			while (j < seg - 1) { // side face one top two bottom
-				torFac[3 * i + 3 * k * seg + 3 * seg * seg] = j + seg + 1 + k
-				* seg;
+				torFac[3 * i + 3 * k * seg + 3 * seg * seg] = j + seg + 1 + k * seg;
 				torFac[3 * i + 1 + 3 * k * seg + 3 * seg * seg] = j + k * seg;
-				torFac[3 * i + 2 + 3 * k * seg + 3 * seg * seg] = j + 1 + k
-				* seg;
+				torFac[3 * i + 2 + 3 * k * seg + 3 * seg * seg] = j + 1 + k * seg;
 				i++;
 				j++;
 			}
@@ -465,22 +414,14 @@ public class simple {
 		k = 0;
 		while (j < seg) { // last and first segment, one first and two last
 			torFac[3 * i + 3 * k * seg + 3 * seg * seg] = j;
-			torFac[3 * i + 1 + 3 * k * seg + 3 * seg * seg] = j + (seg - 1)
-			* seg;
+			torFac[3 * i + 1 + 3 * k * seg + 3 * seg * seg] = j + (seg - 1) * seg;
 			if (j != 0)
-				torFac[3 * i + 2 + 3 * k * seg + 3 * seg * seg] = j - 1 + (seg - 1)
-				* seg;
+				torFac[3 * i + 2 + 3 * k * seg + 3 * seg * seg] = j - 1 + (seg - 1) * seg;
 			else
-				torFac[3 * i + 2 + 3 * k * seg + 3 * seg * seg] = seg - 1
-				+ (seg - 1) * seg;
+				torFac[3 * i + 2 + 3 * k * seg + 3 * seg * seg] = seg - 1 + (seg - 1) * seg;
 			i++;
 			j++;
 		}
-
-		/*for (int p = 0; p < 6 * seg * seg; p = p + 3)
-			System.out.println(torFac[p] + " " + torFac[p + 1] + " "
-					+ torFac[p + 2]);
-		 */
 		return torFac;
 	}
 
@@ -500,11 +441,6 @@ public class simple {
 			zylVert[3 * j + 2] = (float) Math.cos(j * 2 * Math.PI / Segments);
 			j++;
 		}
-
-		/*for (int k = 0; k < 6 * Segments; k = k + 3)
-			System.out.println(zylVert[k] + " " + zylVert[k + 1] + " "
-					+ zylVert[k + 2]);
-		 */
 		return zylVert;
 	}
 
@@ -525,10 +461,6 @@ public class simple {
 			}
 			i++;
 		}
-		/*for (int j = 0; j < 6 * Segments; j = j + 3)
-			System.out.println(zylCol[j] + " " + zylCol[j + 1] + " "
-					+ zylCol[j + 2]);
-		 */
 		return zylCol;
 	}
 
@@ -570,12 +502,43 @@ public class simple {
 		zylFac[3 * i] = Segments;
 		zylFac[3 * i + 1] = 0;
 		zylFac[3 * i + 2] = Segments - 1;
-
-		/*for (int k = 0; k < 12 * Segments - 12; k = k + 3)
-			System.out.println(zylFac[k] + " " + zylFac[k + 1] + " "
-					+ zylFac[k + 2]);
-		 */
 		return zylFac;
+	}
+
+	public static Shape makeZylinder(int resolution) {
+		float[] zylinderVertex;
+		float[] zylinderColors;
+		int[] zylinderFaces;
+
+		zylinderVertex = calcZylinderVertex(resolution);
+		zylinderColors = calcZylinderColors(resolution);
+		zylinderFaces = calcZylinderFaces(resolution);
+
+		VertexData vertexData = new VertexData(2 * resolution);
+		vertexData.addElement(zylinderVertex, VertexData.Semantic.POSITION, 3);
+		vertexData.addElement(zylinderColors, VertexData.Semantic.COLOR, 3);
+
+		vertexData.addIndices(zylinderFaces);
+
+		return new Shape(vertexData);
+	}
+
+	public static Shape makeTorus(int resolution, int mainRad, int rad) {
+		float[] torusVertex;
+		float[] torusColors;
+		int[] torusFaces;
+
+		torusVertex = calcTorusVertex(resolution, mainRad, rad);
+		torusColors = calcTorusColors(resolution);
+		torusFaces = calcTorusFaces(resolution);
+
+		VertexData vertexData = new VertexData(resolution * resolution);
+		vertexData.addElement(torusVertex, VertexData.Semantic.POSITION, 3);
+		vertexData.addElement(torusColors, VertexData.Semantic.COLOR, 3);
+
+		vertexData.addIndices(torusFaces);
+
+		return new Shape(vertexData);
 	}
 
 }
