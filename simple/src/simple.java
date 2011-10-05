@@ -1,3 +1,9 @@
+/*
+ * Author: Mirco Kocher
+ * Matrikelno: 09-113-739
+ * Solution for 1st Exercise
+ */
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Timer;
@@ -60,9 +66,9 @@ public class simple {
 			Matrix4f cSeat = cubeSeat.getTransformation();
 			Matrix4f cSteering = cubeSteering.getTransformation();
 			Matrix4f transAway = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -5, 0, 0, 1, -25, 0, 0, 0, 1);
-			Matrix4f transtF = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transtF = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transZ = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 1, -10, 0, 0, 0, 1);
-			Matrix4f transtB = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transtB = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transP = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -2, 0, 0, 1, 0, 0, 0, 0, 1);
 			Matrix4f transCSeat = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transCSteering = new Matrix4f(1, 0, 0, -3, 0, 1, 0, 1, 0, 0, 1, -10, 0, 0, 0,
@@ -95,6 +101,7 @@ public class simple {
 			tF.mul(transAway);
 			tF.mul(transtF);
 			tF.mul(rotX);
+			tF.mul(rotZi);
 			tB.mul(transAway);
 			tB.mul(transtB);
 			tB.mul(rotX);
@@ -127,12 +134,12 @@ public class simple {
 			Matrix4f rotXi = new Matrix4f();
 			Matrix4f rotZ = new Matrix4f();
 			Matrix4f rotZi = new Matrix4f();
-			Matrix4f transtF = new Matrix4f(1, 0, 0, -4, 0, 1, 0, 2, 0, 0, 1, 10, 0, 0, 0, 1);
-			Matrix4f transtFi = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transtF = new Matrix4f(1, 0, 0, 4, 0, 1, 0, 2, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transtFi = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transZ = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -2, 0, 0, 1, 10, 0, 0, 0, 1);
 			Matrix4f transZi = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 1, -10, 0, 0, 0, 1);
-			Matrix4f transtB = new Matrix4f(1, 0, 0, 4, 0, 1, 0, 2, 0, 0, 1, 10, 0, 0, 0, 1);
-			Matrix4f transtBi = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transtB = new Matrix4f(1, 0, 0, -4, 0, 1, 0, 2, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transtBi = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transCSeat = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
 			Matrix4f transCSeati = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f transCSteering = new Matrix4f(1, 0, 0, 3, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
@@ -168,11 +175,13 @@ public class simple {
 			cSteering.mul(transCSteeringi);
 			cSteering.mul(scaleCSteeringi);
 
+			tF.mul(rotZi);
 			tF.mul(rotX);
 			tF.mul(transtF);
 			tF.mul(rotY);
 			tF.mul(transtFi);
 			tF.mul(rotXi);
+			tF.mul(rotZ);
 
 			tB.mul(rotX);
 			tB.mul(transtB);
@@ -233,8 +242,8 @@ public class simple {
 	public static void main(String[] args) {
 
 		int seg = 20;
-		int mainRad = 2;
-		int rad = 1;
+		float mainRad = 2;
+		float rad = 1;
 
 		Shape zylinder1 = makeZylinder(seg);
 		Shape torusFront1 = makeTorus(seg, mainRad, rad);
@@ -317,7 +326,7 @@ public class simple {
 		jframe.setVisible(true); // show window
 	}
 
-	private static float[] calcTorusVertex(int seg, int mainRadius, int radius) {
+	private static float[] calcTorusVertex(int seg, float mainRadius, float radius) {
 		float[] circle = new float[seg * 3];
 		float[] torVert = new float[3 * seg * seg];
 		int i = 0;
@@ -523,7 +532,7 @@ public class simple {
 		return new Shape(vertexData);
 	}
 
-	public static Shape makeTorus(int resolution, int mainRad, int rad) {
+	public static Shape makeTorus(int resolution, float mainRad, float rad) {
 		float[] torusVertex;
 		float[] torusColors;
 		int[] torusFaces;
