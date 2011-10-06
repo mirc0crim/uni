@@ -35,8 +35,7 @@ public class simple {
 	static Shape cubeSteering;
 	static Shape plane;
 	static float angle;
-
-	static int blaa = 0;
+	static float currentAngle;
 
 	/**
 	 * An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to provide
@@ -77,6 +76,8 @@ public class simple {
 			Matrix4f scaleDriver = new Matrix4f((float) 3 / 2, 0, 0, 0, 0, 3, 0, 0, 0, 0,
 					(float) 3 / 2, 0, 0, 0, 0, 1);
 			Matrix4f scaleCSteering = new Matrix4f(1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+			Matrix4f transTF = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transTB = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
 			Matrix4f rotX = new Matrix4f();
 			rotX.rotX((float) Math.PI / 2);
 			Matrix4f rotZ = new Matrix4f();
@@ -97,9 +98,10 @@ public class simple {
 			z.mul(rotZ);
 			z.mul(scaleDriver);
 			tF.mul(transAway);
+			tF.mul(transTF);
 			tF.mul(rotX);
-			tF.mul(rotZi);
 			tB.mul(transAway);
+			tB.mul(transTB);
 			tB.mul(rotX);
 			plane.setTransformation(p);
 			torusFront.setTransformation(tF);
@@ -138,6 +140,10 @@ public class simple {
 			Matrix4f transCSteering = new Matrix4f(1, 0, 0, 3, 0, 1, 0, 0, 0, 0, 1, 10, 0, 0, 0, 1);
 			Matrix4f transCSteeringi = new Matrix4f(1, 0, 0, -3, 0, 1, 0, 0, 0, 0, 1, -10, 0, 0, 0,
 					1);
+			Matrix4f transTF = new Matrix4f(1, 0, 0, -4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transTFi = new Matrix4f(1, 0, 0, 4, 0, 1, 0, 2, 0, 0, 1, 10, 0, 0, 0, 1);
+			Matrix4f transTB = new Matrix4f(1, 0, 0, 4, 0, 1, 0, -2, 0, 0, 1, -10, 0, 0, 0, 1);
+			Matrix4f transTBi = new Matrix4f(1, 0, 0, -4, 0, 1, 0, 2, 0, 0, 1, 10, 0, 0, 0, 1);
 			Matrix4f scaleCSeat = new Matrix4f((float) 1 / 4, 0, 0, 0, 0, (float) 2 / 3, 0, 0, 0,
 					0, 1, 0, 0, 0, 0, 1);
 			Matrix4f scaleCSeati = new Matrix4f(4, 0, 0, 0, 0, (float) 1.5, 0, 0, 0, 0, 1, 0, 0, 0,
@@ -156,6 +162,11 @@ public class simple {
 			rotZ.rotZ((float) Math.PI / -4);
 			rotZ2.rotZ(-angle);
 			rotZi.rotZ((float) Math.PI / 4);
+			Matrix4f rotBack = new Matrix4f();
+			Matrix4f rot = new Matrix4f();
+			rotBack.rotY(-currentAngle);
+			rot.rotY(currentAngle + angle * 3);
+
 
 			cSeat.mul(scaleCSeat);
 			cSeat.mul(transCSeat);
@@ -169,9 +180,21 @@ public class simple {
 			cSteering.mul(transCSteeringi);
 			cSteering.mul(scaleCSteeringi);
 
-			tF.mul(rotZ2);
+			tF.mul(rotBack);
+			tF.mul(rotX);
+			tF.mul(transTFi);
+			tF.mul(rotY);
+			tF.mul(transTF);
+			tF.mul(rotXi);
+			tF.mul(rot);
 
-			tB.mul(rotZ2);
+			tB.mul(rotBack);
+			tB.mul(rotX);
+			tB.mul(transTBi);
+			tB.mul(rotY);
+			tB.mul(transTB);
+			tB.mul(rotXi);
+			tB.mul(rot);
 
 			z.mul(scaleDriver);
 			z.mul(rotZ);
@@ -189,6 +212,7 @@ public class simple {
 
 			// Trigger redrawing of the render window
 			renderPanel.getCanvas().repaint();
+			currentAngle += angle * 3;
 
 		}
 	}
@@ -230,8 +254,8 @@ public class simple {
 		float rad = 1;
 
 		Shape zylinder1 = makeZylinder(seg);
-		Shape torusFront1 = makeTorus(seg, mainRad, rad, 4, -10, 2);
-		Shape torusBack1 = makeTorus(seg, mainRad, rad, 4, -10, 2);
+		Shape torusFront1 = makeTorus(seg, mainRad, rad, 0, 0, 0);
+		Shape torusBack1 = makeTorus(seg, mainRad, rad, 0, 0, 0);
 
 		zylinder = zylinder1;
 		torusFront = torusFront1;
