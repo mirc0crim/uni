@@ -53,6 +53,7 @@ public class Camera {
 
 	public void setCenterOfProjection(Vector3f centerOfProjection) {
 		this.centerOfProjection = centerOfProjection;
+		setCameraMatrix();
 	}
 
 	public Vector3f getLookAtPoint() {
@@ -61,6 +62,7 @@ public class Camera {
 
 	public void setLookAtPoint(Vector3f lookAtPoint) {
 		this.lookAtPoint = lookAtPoint;
+		setCameraMatrix();
 	}
 
 	public Vector3f getUpVector() {
@@ -69,6 +71,7 @@ public class Camera {
 
 	public void setUpVector(Vector3f upVector) {
 		this.upVector = upVector;
+		setCameraMatrix();
 	}
 
 	private void setCameraMatrix(){
