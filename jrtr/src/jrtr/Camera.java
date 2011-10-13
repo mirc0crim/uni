@@ -13,8 +13,10 @@ import javax.vecmath.Vector3f;
  */
 public class Camera {
 
-	private Matrix4f cameraMatrix;
-	private Vector3f centerOfProjection, lookAtPoint, upVector;
+	private static Matrix4f cameraMatrix = new Matrix4f();
+	private static Vector3f centerOfProjection = new Vector3f(0, 0, 10);
+	private static Vector3f lookAtPoint = new Vector3f(0, 0, 0);
+	private static Vector3f upVector = new Vector3f(0, 1, 0);
 
 	/**
 	 * Construct a camera with a default camera matrix. The camera
@@ -24,10 +26,6 @@ public class Camera {
 	 */
 	public Camera()
 	{
-		centerOfProjection = new Vector3f(0,0,10);
-		lookAtPoint = new Vector3f(0,0,0);
-		upVector = new Vector3f(0,1,0);
-		cameraMatrix = new Matrix4f();
 		// float f[] = { 1.f, 0.f, 0.f, 0.f,
 		// 0.f, 1.f, 0.f, 0.f,
 		// 0.f, 0.f, 1.f, -10.f,
@@ -51,8 +49,8 @@ public class Camera {
 		return centerOfProjection;
 	}
 
-	public void setCenterOfProjection(Vector3f centerOfProjection) {
-		this.centerOfProjection = centerOfProjection;
+	public static void setCenterOfProjection(Vector3f centerOfProjec) {
+		centerOfProjection = centerOfProjec;
 		setCameraMatrix();
 	}
 
@@ -60,21 +58,21 @@ public class Camera {
 		return lookAtPoint;
 	}
 
-	public void setLookAtPoint(Vector3f lookAtPoint) {
-		this.lookAtPoint = lookAtPoint;
+	public static void setLookAtPoint(Vector3f lookPnt) {
+		lookAtPoint = lookPnt;
 		setCameraMatrix();
 	}
 
-	public Vector3f getUpVector() {
+	public static Vector3f getUpVector() {
 		return upVector;
 	}
 
-	public void setUpVector(Vector3f upVector) {
-		this.upVector = upVector;
+	public static void setUpVector(Vector3f upVec) {
+		upVector = upVec;
 		setCameraMatrix();
 	}
 
-	private void setCameraMatrix(){
+	private static void setCameraMatrix() {
 		Matrix4f newMatrix = new Matrix4f();
 		Vector3f x = new Vector3f();
 		Vector3f y = new Vector3f();

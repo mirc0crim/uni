@@ -13,8 +13,11 @@ import javax.vecmath.Matrix4f;
  */
 public class Frustum {
 
-	private Matrix4f projectionMatrix;
-	private float nearPlane, farPlane, aspectRatio, verticalFOV;
+	private static Matrix4f projectionMatrix = new Matrix4f();
+	private static float nearPlane = 1;// (x+y)/(x-y)=-1.02; (2*x*y)/(x-y)=-2.02
+	private static float farPlane = 101;// --> x = 1, y = 101
+	private static float aspectRatio = 1;// aspect ratio is 1, because m00=m11;
+	private static float verticalFOV = 53;// 1/(tan(x*pi/360)) = 2
 
 	/**
 	 * Construct a default viewing frustum. The frustum is given by a
@@ -22,11 +25,6 @@ public class Frustum {
 	 */
 	public Frustum()
 	{
-		aspectRatio = 1; // aspect ratio is 1, because m00 = m11
-		verticalFOV = 413; // 1/(tan(x*pi/360)) = 2
-		nearPlane = 1; // (x+y)/(x-y) = -1.02; (2*x*y)/(x-y) = -2.02;
-		farPlane = 101; // --> x = 1, y = 101
-		projectionMatrix = new Matrix4f();
 		// float f[] = {2.f, 0.f, 0.f, 0.f,
 		// 0.f, 2.f, 0.f, 0.f,
 		// 0.f, 0.f, -1.02f, -2.02f,
@@ -46,7 +44,7 @@ public class Frustum {
 		return projectionMatrix;
 	}
 
-	private void setProjectionMatrix() {
+	private static void setProjectionMatrix() {
 		Matrix4f newMatrix = new Matrix4f();
 		projectionMatrix
 		.setM00((float) (1 / (aspectRatio * Math.tan(verticalFOV * Math.PI / 360))));
@@ -60,8 +58,8 @@ public class Frustum {
 		return nearPlane;
 	}
 
-	public void setNearPlane(float nearPlane) {
-		this.nearPlane = nearPlane;
+	public static void setNearPlane(float nearPl) {
+		nearPlane = nearPl;
 		setProjectionMatrix();
 	}
 
@@ -69,8 +67,8 @@ public class Frustum {
 		return farPlane;
 	}
 
-	public void setFarPlane(float farPlane) {
-		this.farPlane = farPlane;
+	public static void setFarPlane(float farPl) {
+		farPlane = farPl;
 		setProjectionMatrix();
 	}
 
@@ -78,8 +76,8 @@ public class Frustum {
 		return aspectRatio;
 	}
 
-	public void setAspectRatio(float aspectRatio) {
-		this.aspectRatio = aspectRatio;
+	public static void setAspectRatio(float aspectRa) {
+		aspectRatio = aspectRa;
 		setProjectionMatrix();
 	}
 
@@ -87,8 +85,8 @@ public class Frustum {
 		return verticalFOV;
 	}
 
-	public void setVerticalFOV(float verticalFOV) {
-		this.verticalFOV = verticalFOV;
+	public static void setVerticalFOV(float vertFOV) {
+		verticalFOV = vertFOV;
 		setProjectionMatrix();
 	}
 }
