@@ -1,7 +1,8 @@
 /*
  * Author: Mirco Kocher
  * Matrikelno: 09-113-739
- * Solution for 1st Exercise
+ * param = 0 for 1st Exercise
+ * param = 1 or 2 for 1st Task of 2nd Exercise
  */
 
 import java.awt.event.MouseEvent;
@@ -253,6 +254,8 @@ public class simple21 {
 	 */
 	public static void main(String[] args) {
 
+		param = 1; // 0=animation, 1=param1, 2=param2
+
 		int seg = 20;
 		float mainRad = 2;
 		float rad = 1;
@@ -265,8 +268,6 @@ public class simple21 {
 		zylinder = zylinder1;
 		torusFront = torusFront1;
 		torusBack = torusBack1;
-
-		param = 1; // 0=animation, 1=param1, 2=param2
 
 		if (param == 1) { // Parameter für Bild 1
 			Camera.setCenterOfProjection(new Vector3f(0, 0, 40));
