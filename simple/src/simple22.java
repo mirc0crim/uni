@@ -5,6 +5,7 @@
  */
 
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.util.TimerTask;
@@ -51,8 +52,9 @@ public class simple22 {
 		}
 	}
 
-	public static class SimpleMouseListener implements MouseMotionListener {
+	public static class SimpleMouseListener implements MouseMotionListener, MouseListener {
 
+		@Override
 		public void mousePressed(MouseEvent e) {
 			int winHeight = e.getComponent().getSize().height;
 			int winWidth = e.getComponent().getSize().width;
@@ -64,6 +66,7 @@ public class simple22 {
 			startVec.normalize();
 		}
 
+		@Override
 		public void mouseReleased(MouseEvent e) {
 		}
 
@@ -79,24 +82,31 @@ public class simple22 {
 			currVec.normalize();
 
 			axis.cross(startVec, currVec);
+			axis.normalize();
 			theta = startVec.angle(currVec);
+			startX = currX;
+			startY = currY;
+			startZ = currZ;
+			System.out.println(axis.toString());
+
+			e.getComponent().repaint();
 		}
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
 		}
 
+		@Override
 		public void mouseClicked(MouseEvent e) {
+
 		}
 
+		@Override
 		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
+		@Override
 		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 	}
 
@@ -120,9 +130,9 @@ public class simple22 {
 		JFrame jframe = new JFrame("simple 2-2 Trackball");
 		jframe.setSize(500, 500);
 		jframe.setLocationRelativeTo(null);
+		renderPanel.getCanvas().addMouseListener(new SimpleMouseListener());
+		renderPanel.getCanvas().addMouseMotionListener(new SimpleMouseListener());
 		jframe.getContentPane().add(renderPanel.getCanvas());
-
-		jframe.addMouseMotionListener(new SimpleMouseListener());
 
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jframe.setVisible(true);

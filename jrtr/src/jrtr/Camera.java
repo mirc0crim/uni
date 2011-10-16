@@ -40,12 +40,12 @@ public class Camera {
 	 * 
 	 * @return the 4x4 world-to-camera transform matrix
 	 */
-	public Matrix4f getCameraMatrix()
+	public static Matrix4f getCameraMatrix()
 	{
 		return cameraMatrix;
 	}
 
-	public Vector3f getCenterOfProjection() {
+	public static Vector3f getCenterOfProjection() {
 		return centerOfProjection;
 	}
 
@@ -54,7 +54,7 @@ public class Camera {
 		setCameraMatrix();
 	}
 
-	public Vector3f getLookAtPoint() {
+	public static Vector3f getLookAtPoint() {
 		return lookAtPoint;
 	}
 
