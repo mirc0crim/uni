@@ -4,22 +4,20 @@
  * Solution for 3rd Task of 2nd Exercise
  */
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.TimerTask;
-
 import javax.swing.JFrame;
 
 import jrtr.GLRenderPanel;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
+import jrtr.Shape;
 import jrtr.SimpleSceneManager;
+import jrtr.VertexData;
 
 public class simple23 {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
+	static Shape shape;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
 		@Override
@@ -29,49 +27,15 @@ public class simple23 {
 		}
 	}
 
-	public static class AnimationTask extends TimerTask {
-		@Override
-		public void run() {
-			renderPanel.getCanvas().repaint();
-		}
-	}
-
-	public static class SimpleMouseListener implements MouseMotionListener, MouseListener {
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseDragged(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-		}
-	}
-
 	public static void main(String[] args) {
 
+		VertexData vertexData = new VertexData(size * size);
+		vertexData.addElement(color, VertexData.Semantic.COLOR, 3);
+		vertexData.addElement(vertex, VertexData.Semantic.POSITION, 3);
+		vertexData.addIndices(faces);
+		shape = new Shape(vertexData);
 		sceneManager = new SimpleSceneManager();
-		// sceneManager.addShape(object);
+		sceneManager.addShape(shape);
 
 		renderPanel = new SimpleRenderPanel();
 
