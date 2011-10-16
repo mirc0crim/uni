@@ -254,7 +254,7 @@ public class simple21 {
 	 */
 	public static void main(String[] args) {
 
-		param = 1; // 0=animation, 1=param1, 2=param2
+		param = 0; // 0=animation, 1=param1, 2=param2
 
 		int seg = 20;
 		float mainRad = 2;

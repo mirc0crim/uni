@@ -17,7 +17,7 @@ public class Frustum {
 	private static float nearPlane = 1;// (x+y)/(x-y)=-1.02; (2*x*y)/(x-y)=-2.02
 	private static float farPlane = 101;// --> x = 1, y = 101
 	private static float aspectRatio = 1;// aspect ratio is 1, because m00=m11;
-	private static float verticalFOV = 53;// 1/(tan(x*pi/360)) = 2
+	private static float verticalFOV = 53;// 1/(tan(x*pi/360)) = 2 --> 53
 
 	/**
 	 * Construct a default viewing frustum. The frustum is given by a
@@ -45,7 +45,6 @@ public class Frustum {
 	}
 
 	private static void setProjectionMatrix() {
-		Matrix4f newMatrix = new Matrix4f();
 		projectionMatrix
 		.setM00((float) (1 / (aspectRatio * Math.tan(verticalFOV * Math.PI / 360))));
 		projectionMatrix.setM11((float) (1 / Math.tan(verticalFOV * Math.PI / 360)));
