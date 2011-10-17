@@ -4,16 +4,21 @@
  * Solution for 4th Task of 2nd Exercise
  */
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.TimerTask;
 
 import javax.swing.JFrame;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
+import jrtr.Camera;
 import jrtr.GLRenderPanel;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
+import jrtr.Shape;
 import jrtr.SimpleSceneManager;
 
 public class simple24 {
@@ -26,13 +31,6 @@ public class simple24 {
 		public void init(RenderContext r) {
 			renderContext = r;
 			renderContext.setSceneManager(sceneManager);
-		}
-	}
-
-	public static class AnimationTask extends TimerTask {
-		@Override
-		public void run() {
-			renderPanel.getCanvas().repaint();
 		}
 	}
 
@@ -56,7 +54,6 @@ public class simple24 {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-
 		}
 
 		@Override
@@ -68,10 +65,51 @@ public class simple24 {
 		}
 	}
 
+	public static class MyKeyListener implements KeyListener {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			Matrix4f cam = Camera.getCameraMatrix();
+			Vector3f trans = new Vector3f();
+			cam.get(trans);
+			int shift = 1;
+			switch(e.getKeyChar()) {
+			case 'w': {
+				trans.setY(trans.getY() - shift);
+				break;
+			}
+			case 's': {
+				trans.setY(trans.getY() + shift);
+				break;
+			}
+			case 'd': {
+				trans.setX(trans.getX() - shift);
+				break;
+			}
+			case 'a': {
+				trans.setX(trans.getX() + shift);
+				break;
+			}
+			}
+			cam.setTranslation(new Vector3f(trans));
+			Camera.setCameraMatrix(cam);
+			e.getComponent().repaint();
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+		}
+	}
+
 	public static void main(String[] args) {
 
 		sceneManager = new SimpleSceneManager();
-		// sceneManager.addShape(object);
+		Shape terrain = simple23.getTerrain();
+		sceneManager.addShape(terrain);
+		Camera.setCenterOfProjection(new Vector3f(0, 0, 50));
 
 		renderPanel = new SimpleRenderPanel();
 
@@ -79,6 +117,8 @@ public class simple24 {
 		jframe.setSize(500, 500);
 		jframe.setLocationRelativeTo(null);
 		jframe.getContentPane().add(renderPanel.getCanvas());
+
+		renderPanel.getCanvas().addKeyListener(new MyKeyListener());
 
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jframe.setVisible(true);
