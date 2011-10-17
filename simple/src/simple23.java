@@ -25,6 +25,7 @@ public class simple23 {
 	static float[][] area;
 	static int division;
 	static int hight;
+	static Shape terrain;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
 		@Override
@@ -37,68 +38,9 @@ public class simple23 {
 	public static void main(String[] args) {
 		Camera.setCenterOfProjection(new Vector3f(5, 0, 40));
 		Camera.setLookAtPoint(new Vector3f(30, 30, 0));
-		int s = 6;
-		int size = (1 << s) + 1; // = 2^s +1
-		hight = 10;
-		float r = 2f; // best between 1 and 3
-		createArea(s, r);
-		// create grid
-		float frac[][][] = new float[size][size][3];
-		for (int i = 0; i < frac.length; i++)
-			for (int j=0;j<frac[i].length; j++) {
-				frac[i][j][0]=i;
-				frac[i][j][1]=j;
-				frac[i][j][2] = getHeight(i, j);
-			}
-		// save grid in vertex
-		float vertex[] = new float[size * size * 3];
-		int index = 0;
-		for (float[][] point : frac)
-			for (float[] element : point)
-				for (int k=0; k<3; k++){
-					vertex[index] = element[k];
-					index++;
-				}
-		// create triangles
-		int triangles[][] = new int[2 * (size - 1) * (size - 1)][3];
-		index = 0;
-		for (int i = 0; i < size - 1; i++)
-			for (int j=0;j<size-1;j++) {
-				triangles[index][0]=j+i*size;
-				triangles[index][1]=j+1+i*size;
-				triangles[index][2]=j+size+i*size;
-				index++;
-				triangles[index][0]=j +i*size+1;
-				triangles[index][1]=j+size+1 +i*size;
-				triangles[index][2]=j+size +i*size;
-				index++;
-			}
-		// save triangles in faces
-		int faces[] = new int[triangles.length * 3];
-		index = 0;
-		for (int i = 0; i < 2 * (size - 1) * (size - 1); i++)
-			for (int j=0;j<3;j++) {
-				faces[index]=triangles[i][j];
-				index++;
-			}
-		// create colors
-		float color[] = new float[vertex.length];
-		index = 0;
-		for (int i = 0; i < size; i++)
-			for (int j = 0; j < size; j++) {
-				color[index] = getColorR(i, j);
-				color[++index] = getColorG(i, j);
-				color[++index] = getColorB(i, j);
-				index++;
-			}
 
-		VertexData vertexData = new VertexData(size * size);
-		vertexData.addElement(color, VertexData.Semantic.COLOR, 3);
-		vertexData.addElement(vertex, VertexData.Semantic.POSITION, 3);
-		vertexData.addIndices(faces);
-		Shape shape = new Shape(vertexData);
 		sceneManager = new SimpleSceneManager();
-		sceneManager.addShape(shape);
+		sceneManager.addShape(getTerrain());
 
 		renderPanel = new SimpleRenderPanel();
 
@@ -188,6 +130,69 @@ public class simple23 {
 
 	private static float rh() {
 		return rand.nextFloat() * hight;
+	}
+
+	public static Shape getTerrain() {
+		int s = 6;
+		int size = (1 << s) + 1; // = 2^s +1
+		hight = 10;
+		float r = 2f; // best between 1 and 3
+		createArea(s, r);
+		// create grid
+		float frac[][][] = new float[size][size][3];
+		for (int i = 0; i < frac.length; i++)
+			for (int j = 0; j < frac[i].length; j++) {
+				frac[i][j][0] = i;
+				frac[i][j][1] = j;
+				frac[i][j][2] = getHeight(i, j);
+			}
+		// save grid in vertex
+		float vertex[] = new float[size * size * 3];
+		int index = 0;
+		for (float[][] point : frac)
+			for (float[] element : point)
+				for (int k = 0; k < 3; k++) {
+					vertex[index] = element[k];
+					index++;
+				}
+		// create triangles
+		int triangles[][] = new int[2 * (size - 1) * (size - 1)][3];
+		index = 0;
+		for (int i = 0; i < size - 1; i++)
+			for (int j = 0; j < size - 1; j++) {
+				triangles[index][0] = j + i * size;
+				triangles[index][1] = j + 1 + i * size;
+				triangles[index][2] = j + size + i * size;
+				index++;
+				triangles[index][0] = j + i * size + 1;
+				triangles[index][1] = j + size + 1 + i * size;
+				triangles[index][2] = j + size + i * size;
+				index++;
+			}
+		// save triangles in faces
+		int faces[] = new int[triangles.length * 3];
+		index = 0;
+		for (int i = 0; i < 2 * (size - 1) * (size - 1); i++)
+			for (int j = 0; j < 3; j++) {
+				faces[index] = triangles[i][j];
+				index++;
+			}
+		// create colors
+		float color[] = new float[vertex.length];
+		index = 0;
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++) {
+				color[index] = getColorR(i, j);
+				color[++index] = getColorG(i, j);
+				color[++index] = getColorB(i, j);
+				index++;
+			}
+
+		VertexData vertexData = new VertexData(size * size);
+		vertexData.addElement(color, VertexData.Semantic.COLOR, 3);
+		vertexData.addElement(vertex, VertexData.Semantic.POSITION, 3);
+		vertexData.addIndices(faces);
+		return terrain = new Shape(vertexData);
 	}
 
 }

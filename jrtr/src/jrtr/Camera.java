@@ -31,7 +31,7 @@ public class Camera {
 		// 0.f, 0.f, 1.f, -10.f,
 		// 0.f, 0.f, 0.f, 1.f };
 		// cameraMatrix.set(f);
-		setCameraMatrix();
+		updateCameraMatrix();
 	}
 
 	/**
@@ -40,9 +40,12 @@ public class Camera {
 	 * 
 	 * @return the 4x4 world-to-camera transform matrix
 	 */
-	public static Matrix4f getCameraMatrix()
-	{
+	public static Matrix4f getCameraMatrix() {
 		return cameraMatrix;
+	}
+
+	public static void setCameraMatrix(Matrix4f cameraMat) {
+		cameraMatrix.set(cameraMat);
 	}
 
 	public static Vector3f getCenterOfProjection() {
@@ -51,7 +54,7 @@ public class Camera {
 
 	public static void setCenterOfProjection(Vector3f centerOfProjec) {
 		centerOfProjection = centerOfProjec;
-		setCameraMatrix();
+		updateCameraMatrix();
 	}
 
 	public static Vector3f getLookAtPoint() {
@@ -60,7 +63,7 @@ public class Camera {
 
 	public static void setLookAtPoint(Vector3f lookPnt) {
 		lookAtPoint = lookPnt;
-		setCameraMatrix();
+		updateCameraMatrix();
 	}
 
 	public static Vector3f getUpVector() {
@@ -69,10 +72,10 @@ public class Camera {
 
 	public static void setUpVector(Vector3f upVec) {
 		upVector = upVec;
-		setCameraMatrix();
+		updateCameraMatrix();
 	}
 
-	private static void setCameraMatrix() {
+	private static void updateCameraMatrix() {
 		Matrix4f newMatrix = new Matrix4f();
 		Vector3f x = new Vector3f();
 		Vector3f y = new Vector3f();
