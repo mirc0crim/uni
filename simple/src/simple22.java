@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.TimerTask;
 
 import javax.swing.JFrame;
+import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
 import jrtr.Camera;
@@ -32,10 +33,9 @@ public class simple22 {
 	static float currX = 0;
 	static float currY = 0;
 	static float currZ = 0;
-	static float theta = 0;
 	static Vector3f currVec = new Vector3f();
 	static Vector3f startVec = new Vector3f();
-	static Vector3f axis = new Vector3f();
+	static Shape teapot;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
 		@Override
@@ -80,15 +80,21 @@ public class simple22 {
 			currZ = (float) (z2 > 0 ? Math.sqrt(z2) : 0);
 			currVec.set(currX, currY, currZ);
 			currVec.normalize();
+			System.out.println(currVec.toString());
+			System.out.println(startVec.toString());
 
+			Vector3f axis = new Vector3f();
 			axis.cross(startVec, currVec);
 			axis.normalize();
+			float theta = 0;
 			theta = startVec.angle(currVec);
-			startX = currX;
-			startY = currY;
-			startZ = currZ;
-			System.out.println(axis.toString());
 
+			Matrix4f tea = teapot.getTransformation();
+			Matrix4f t = getRotMatrix(axis, theta);
+			t.mul(tea);
+			teapot.setTransformation(t);
+
+			startVec.set(currVec);
 			e.getComponent().repaint();
 		}
 
@@ -122,7 +128,7 @@ public class simple22 {
 		}
 
 		sceneManager = new SimpleSceneManager();
-		Shape teapot = new Shape(vertexTeapot);
+		teapot = new Shape(vertexTeapot);
 		sceneManager.addShape(teapot);
 
 		renderPanel = new SimpleRenderPanel();
@@ -136,6 +142,31 @@ public class simple22 {
 
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jframe.setVisible(true);
+	}
+
+	public static Matrix4f getRotMatrix(Vector3f axis, float theta) {
+		float[] m = new float[16];
+		float x = axis.getX();
+		float y = axis.getY();
+		float z = axis.getZ();
+		double cos = Math.cos(theta);
+		double sin = Math.sin(theta);
+		m[3] = m[7] = m[11] = m[12] = m[13] = m[14] = 0;
+		m[15] = 1;
+
+		m[0] = (float) (cos + x * x * (1 - cos));
+		m[1] = (float) (x * y * (1 - cos) - z * sin);
+		m[2] = (float) (x * z * (1 - cos) + y * sin);
+
+		m[4] = (float) (x * y * (1 - cos) + z * sin);
+		m[5] = (float) (cos + y * y * (1 - cos));
+		m[6] = (float) (y * z * (1 - cos) - x * sin);
+
+		m[8] = (float) (x * z * (1 - cos) - y * sin);
+		m[9] = (float) (y * z * (1 - cos) + x * sin);
+		m[10] = (float) (cos + z * z * (1 - cos));
+
+		return new Matrix4f(m);
 	}
 
 }

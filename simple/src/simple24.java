@@ -72,6 +72,7 @@ public class simple24 {
 			Vector3f trans = new Vector3f();
 			cam.get(trans);
 			int shift = 1;
+			float spin = 0.1f;
 			switch(e.getKeyChar()) {
 			case 'w': {
 				trans.setY(trans.getY() - shift);
