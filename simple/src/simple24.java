@@ -70,15 +70,15 @@ public class simple24 {
 						* (z - cop.getZ())));
 			}
 			if (e.getY() < startY) {
-				lap.setY((float) (cop.getY() + Math.cos(-spin) * (y - cop.getY()) - Math.sin(-spin)
-						* (z - cop.getZ())));
-				lap.setZ((float) (cop.getZ() + Math.sin(-spin) * (y - cop.getY()) + Math.cos(-spin)
-						* (z - cop.getZ())));
-			}
-			if (e.getY() > startY) {
 				lap.setY((float) (cop.getY() + Math.cos(spin) * (y - cop.getY()) - Math.sin(spin)
 						* (z - cop.getZ())));
 				lap.setZ((float) (cop.getZ() + Math.sin(spin) * (y - cop.getY()) + Math.cos(spin)
+						* (z - cop.getZ())));
+			}
+			if (e.getY() > startY) {
+				lap.setY((float) (cop.getY() + Math.cos(-spin) * (y - cop.getY()) - Math.sin(-spin)
+						* (z - cop.getZ())));
+				lap.setZ((float) (cop.getZ() + Math.sin(-spin) * (y - cop.getY()) + Math.cos(-spin)
 						* (z - cop.getZ())));
 			}
 			startX = e.getX();
