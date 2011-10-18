@@ -58,8 +58,8 @@ public class simple22 {
 		public void mousePressed(MouseEvent e) {
 			int winHeight = e.getComponent().getSize().height;
 			int winWidth = e.getComponent().getSize().width;
-			startX = 2 * e.getX() / winWidth - 1;
-			startY = 1 - 2 * e.getY() / winHeight;
+			startX = 2f * e.getX() / winWidth - 1f;
+			startY = 1f - 2f * e.getY() / winHeight;
 			double z2 = 1 - startX * startX - startY * startY;
 			startZ = (float) (z2 > 0 ? Math.sqrt(z2) : 0);
 			startVec.set(startX, startY, startZ);
@@ -74,29 +74,25 @@ public class simple22 {
 		public void mouseDragged(MouseEvent e) {
 			int winHeight = e.getComponent().getSize().height;
 			int winWidth = e.getComponent().getSize().width;
-			currX = 2 * e.getX() / winWidth - 1;
-			currY = 1 - 2 * e.getY() / winHeight;
+			currX = 2f * e.getX() / winWidth - 1f;
+			currY = 1f - 2f * e.getY() / winHeight;
 			double z2 = 1 - currX * currX - currY * currY;
 			currZ = (float) (z2 > 0 ? Math.sqrt(z2) : 0);
 			currVec.set(currX, currY, currZ);
 			currVec.normalize();
+			System.out.println(currVec.toString());
 
 			Vector3f axis = new Vector3f();
 			axis.cross(startVec, currVec);
-			// axis.set(new Vector3f(1, 0, 0));
 			axis.normalize();
 			float theta = 0;
 			theta = startVec.angle(currVec);
-			// theta = 0.1f;
 
-			float dx = startX - currX;
-			float dy = startY - currY;
 			Matrix4f tea = teapot.getTransformation();
-			Matrix4f t = getRotMatrix(axis, theta / 10);
-			if (dx * dx + dy * dy > 1) {
-				tea.mul(t);
-				startVec.set(currVec);
-			}
+			Matrix4f t = getRotMatrix(axis, -theta);
+			tea.mul(t);
+			startVec.set(currVec);
+
 			teapot.setTransformation(tea);
 
 			e.getComponent().repaint();
