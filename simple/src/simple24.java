@@ -85,7 +85,6 @@ public class simple24 {
 			startY = e.getY();
 			Camera.setLookAtPoint(lap);
 			e.getComponent().repaint();
-
 		}
 
 		@Override
@@ -114,19 +113,35 @@ public class simple24 {
 			Vector3f lap = Camera.getLookAtPoint();
 			Vector3f uv = Camera.getUpVector();
 			Vector3f look = new Vector3f();
-			look.set(lap);
-			look.sub(cop);
+			Vector3f lookL = new Vector3f();
+			look.set(Camera.getLookAtPoint());
+			look.sub(Camera.getCenterOfProjection());
+			lookL.set(look);
+			float x = cop.getX();
+			float y = cop.getY();
+			float z = cop.getZ();
 			cam.get(trans);
-			int shift = 1;
+			float scale = 1.01f;
+			float shift = 1.01f;
 			switch(e.getKeyChar()) {
 			case 'w': {
-				cop.setY(cop.getY() + shift);
-				lap.setY(lap.getY() + shift);
+				lookL.scale(1 / scale);
+				cop.setX(lap.getX() - lookL.getX());
+				cop.setY(lap.getY() - lookL.getY());
+				cop.setZ(lap.getZ() - lookL.getZ());
+				lap.setX(x + lookL.getX());
+				lap.setY(y + lookL.getY());
+				lap.setZ(z + lookL.getZ());
 				break;
 			}
 			case 's': {
-				cop.setY(cop.getY() - shift);
-				lap.setY(lap.getY() - shift);
+				lookL.scale(scale);
+				cop.setX(lap.getX() - lookL.getX());
+				cop.setY(lap.getY() - lookL.getY());
+				cop.setZ(lap.getZ() - lookL.getZ());
+				lap.setX(x + lookL.getX());
+				lap.setY(y + lookL.getY());
+				lap.setZ(z + lookL.getZ());
 				break;
 			}
 			case 'd': {
@@ -161,7 +176,7 @@ public class simple24 {
 		terrain = simple23.getTerrain();
 		sceneManager.addShape(terrain);
 		Camera.setCenterOfProjection(new Vector3f(30, 20, 50));
-		Camera.setLookAtPoint(new Vector3f(40, 20, 0));
+		Camera.setLookAtPoint(new Vector3f(40, 20, -50));
 
 		renderPanel = new SimpleRenderPanel();
 
