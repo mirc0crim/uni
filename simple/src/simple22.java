@@ -80,7 +80,6 @@ public class simple22 {
 			currZ = (float) (z2 > 0 ? Math.sqrt(z2) : 0);
 			currVec.set(currX, currY, currZ);
 			currVec.normalize();
-			System.out.println(currVec.toString());
 
 			Vector3f axis = new Vector3f();
 			axis.cross(startVec, currVec);
@@ -89,7 +88,7 @@ public class simple22 {
 			theta = startVec.angle(currVec);
 
 			Matrix4f tea = teapot.getTransformation();
-			Matrix4f t = getRotMatrix(axis, -theta);
+			Matrix4f t = getRotMatrix(axis, theta);
 			tea.mul(t);
 			startVec.set(currVec);
 
