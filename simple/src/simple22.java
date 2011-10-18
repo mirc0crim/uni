@@ -80,21 +80,25 @@ public class simple22 {
 			currZ = (float) (z2 > 0 ? Math.sqrt(z2) : 0);
 			currVec.set(currX, currY, currZ);
 			currVec.normalize();
-			System.out.println(currVec.toString());
-			System.out.println(startVec.toString());
 
 			Vector3f axis = new Vector3f();
 			axis.cross(startVec, currVec);
+			// axis.set(new Vector3f(1, 0, 0));
 			axis.normalize();
 			float theta = 0;
 			theta = startVec.angle(currVec);
+			// theta = 0.1f;
 
+			float dx = startX - currX;
+			float dy = startY - currY;
 			Matrix4f tea = teapot.getTransformation();
-			Matrix4f t = getRotMatrix(axis, theta);
-			t.mul(tea);
-			teapot.setTransformation(t);
+			Matrix4f t = getRotMatrix(axis, theta / 10);
+			if (dx * dx + dy * dy > 1) {
+				tea.mul(t);
+				startVec.set(currVec);
+			}
+			teapot.setTransformation(tea);
 
-			startVec.set(currVec);
 			e.getComponent().repaint();
 		}
 

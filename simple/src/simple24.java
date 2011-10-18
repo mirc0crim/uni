@@ -25,6 +25,9 @@ public class simple24 {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
+	static Shape terrain;
+	static int startX;
+	static int startY;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
 		@Override
@@ -38,6 +41,8 @@ public class simple24 {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			startX = e.getX();
+			startY = e.getY();
 		}
 
 		@Override
@@ -46,6 +51,41 @@ public class simple24 {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			Vector3f lap = Camera.getLookAtPoint();
+			Vector3f cop = Camera.getCenterOfProjection();
+			float x = lap.getX();
+			float y = lap.getY();
+			float z = lap.getZ();
+			float spin = 0.01f;
+			if (e.getX() < startX) {
+				lap.setX((float) (cop.getX() + Math.cos(-spin) * (x - cop.getX()) - Math.sin(-spin)
+						* (z - cop.getZ())));
+				lap.setZ((float) (cop.getZ() + Math.sin(-spin) * (x - cop.getX()) + Math.cos(-spin)
+						* (z - cop.getZ())));
+			}
+			if (e.getX() > startX) {
+				lap.setX((float) (cop.getX() + Math.cos(spin) * (x - cop.getX()) - Math.sin(spin)
+						* (z - cop.getZ())));
+				lap.setZ((float) (cop.getZ() + Math.sin(spin) * (x - cop.getX()) + Math.cos(spin)
+						* (z - cop.getZ())));
+			}
+			if (e.getY() < startY) {
+				lap.setY((float) (cop.getY() + Math.cos(-spin) * (y - cop.getY()) - Math.sin(-spin)
+						* (z - cop.getZ())));
+				lap.setZ((float) (cop.getZ() + Math.sin(-spin) * (y - cop.getY()) + Math.cos(-spin)
+						* (z - cop.getZ())));
+			}
+			if (e.getY() > startY) {
+				lap.setY((float) (cop.getY() + Math.cos(spin) * (y - cop.getY()) - Math.sin(spin)
+						* (z - cop.getZ())));
+				lap.setZ((float) (cop.getZ() + Math.sin(spin) * (y - cop.getY()) + Math.cos(spin)
+						* (z - cop.getZ())));
+			}
+			startX = e.getX();
+			startY = e.getY();
+			Camera.setLookAtPoint(lap);
+			e.getComponent().repaint();
+
 		}
 
 		@Override
@@ -70,29 +110,39 @@ public class simple24 {
 		public void keyPressed(KeyEvent e) {
 			Matrix4f cam = Camera.getCameraMatrix();
 			Vector3f trans = new Vector3f();
+			Vector3f cop = Camera.getCenterOfProjection();
+			Vector3f lap = Camera.getLookAtPoint();
+			Vector3f uv = Camera.getUpVector();
+			Vector3f look = new Vector3f();
+			look.set(lap);
+			look.sub(cop);
 			cam.get(trans);
 			int shift = 1;
-			float spin = 0.1f;
 			switch(e.getKeyChar()) {
 			case 'w': {
-				trans.setY(trans.getY() - shift);
+				cop.setY(cop.getY() + shift);
+				lap.setY(lap.getY() + shift);
 				break;
 			}
 			case 's': {
-				trans.setY(trans.getY() + shift);
+				cop.setY(cop.getY() - shift);
+				lap.setY(lap.getY() - shift);
 				break;
 			}
 			case 'd': {
-				trans.setX(trans.getX() - shift);
+				cop.setX(cop.getX() + shift);
+				lap.setX(lap.getX() + shift);
 				break;
 			}
 			case 'a': {
-				trans.setX(trans.getX() + shift);
+				cop.setX(cop.getX() - shift);
+				lap.setX(lap.getX() - shift);
 				break;
 			}
 			}
-			cam.setTranslation(new Vector3f(trans));
-			Camera.setCameraMatrix(cam);
+			Camera.setCenterOfProjection(cop);
+			Camera.setUpVector(uv);
+			Camera.setLookAtPoint(lap);
 			e.getComponent().repaint();
 		}
 
@@ -108,9 +158,10 @@ public class simple24 {
 	public static void main(String[] args) {
 
 		sceneManager = new SimpleSceneManager();
-		Shape terrain = simple23.getTerrain();
+		terrain = simple23.getTerrain();
 		sceneManager.addShape(terrain);
-		Camera.setCenterOfProjection(new Vector3f(0, 0, 50));
+		Camera.setCenterOfProjection(new Vector3f(30, 20, 50));
+		Camera.setLookAtPoint(new Vector3f(40, 20, 0));
 
 		renderPanel = new SimpleRenderPanel();
 
@@ -120,6 +171,8 @@ public class simple24 {
 		jframe.getContentPane().add(renderPanel.getCanvas());
 
 		renderPanel.getCanvas().addKeyListener(new MyKeyListener());
+		renderPanel.getCanvas().addMouseMotionListener(new SimpleMouseListener());
+		renderPanel.getCanvas().addMouseListener(new SimpleMouseListener());
 
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jframe.setVisible(true);
