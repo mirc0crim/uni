@@ -25,7 +25,7 @@ public class simple31 {
 	 * An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to provide
 	 * a call-back function for initialization.
 	 */
-	public final static class SimpleRenderPanel extends GLRenderPanel {
+	public final static class SimpleRenderPanel extends SWRenderPanel {
 		@Override
 		public void init(RenderContext r) {
 
