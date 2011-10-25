@@ -52,7 +52,7 @@ public class simple31 {
 
 		renderPanel = new SimpleRenderPanel();
 
-		JFrame jframe = new JFrame("simple");
+		JFrame jframe = new JFrame("simple - SW Render");
 		jframe.setSize(500, 500);
 		jframe.setLocationRelativeTo(null);
 		jframe.getContentPane().add(renderPanel.getCanvas());
