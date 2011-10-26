@@ -39,7 +39,7 @@ public class Frustum {
 	 * 
 	 * @return the 4x4 projection matrix
 	 */
-	public Matrix4f getProjectionMatrix()
+	public static Matrix4f getProjectionMatrix()
 	{
 		return projectionMatrix;
 	}
@@ -53,7 +53,7 @@ public class Frustum {
 		projectionMatrix.setM23(2 * nearPlane * farPlane / (nearPlane - farPlane));
 	}
 
-	public float getNearPlane() {
+	public static float getNearPlane() {
 		return nearPlane;
 	}
 
@@ -62,7 +62,7 @@ public class Frustum {
 		setProjectionMatrix();
 	}
 
-	public float getFarPlane() {
+	public static float getFarPlane() {
 		return farPlane;
 	}
 
@@ -71,7 +71,7 @@ public class Frustum {
 		setProjectionMatrix();
 	}
 
-	public float getAspectRatio() {
+	public static float getAspectRatio() {
 		return aspectRatio;
 	}
 
@@ -80,7 +80,7 @@ public class Frustum {
 		setProjectionMatrix();
 	}
 
-	public float getVerticalFOV() {
+	public static float getVerticalFOV() {
 		return verticalFOV;
 	}
 
