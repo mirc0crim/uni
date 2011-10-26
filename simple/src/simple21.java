@@ -40,7 +40,7 @@ public class simple21 {
 	static Shape plane;
 	static float angle;
 	static float currentAngle;
-	static int param = 0; // 0=animation, 1=param1, 2=param2
+	static int param = 2; // 0=animation, 1=param1, 2=param2
 
 	/**
 	 * An extension of {@link GLRenderPanel} or {@link SWRenderPanel} to provide

@@ -2,7 +2,9 @@ package jrtr;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 import javax.vecmath.Matrix4f;
@@ -24,6 +26,8 @@ public class SWRenderContext implements RenderContext {
 	private BufferedImage colorBuffer;
 	private Matrix4f viewMat;
 	private int vHeight, vWidth;
+	private List<Vector4f> edges;
+	private int[][] zBuffer;
 
 	@Override
 	public void setSceneManager(SceneManagerInterface sceneManager) {
@@ -88,9 +92,22 @@ public class SWRenderContext implements RenderContext {
 	 * objects.
 	 */
 	private void draw(RenderItem renderItem) {
-		LinkedList<VertexElement> vertexEle = renderItem.getShape()
-				.getVertexData().getElements();
-		int[] index = renderItem.getShape().getVertexData().getIndices();
+		edges = new ArrayList<Vector4f>();
+		zBuffer = new int[vWidth][vHeight];
+		for (int i = 0; i < vHeight; i++)
+			for (int j = 0; j < vWidth; j++)
+				zBuffer[i][j] = Integer.MAX_VALUE;
+
+		projection(renderItem.getShape().getVertexData());
+		raster();
+	}
+
+	private void raster() {
+	}
+
+	private void projection(VertexData vertexData) {
+		LinkedList<VertexElement> vertexEle = vertexData.getElements();
+		int[] index = vertexData.getIndices();
 		if (index == null)
 			return;
 		Matrix4f temp = new Matrix4f();
@@ -116,6 +133,7 @@ public class SWRenderContext implements RenderContext {
 							&& vec.getY() < vHeight)
 						colorBuffer.setRGB((int) vec.getX(), vHeight
 								- (int) vec.getY(), Color.white.getRGB());
+					edges.add(vec);
 				}
 			}
 		}

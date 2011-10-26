@@ -15,10 +15,10 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
 import jrtr.Camera;
-import jrtr.GLRenderPanel;
 import jrtr.ObjReader;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
+import jrtr.SWRenderPanel;
 import jrtr.Shape;
 import jrtr.SimpleSceneManager;
 import jrtr.VertexData;
@@ -37,7 +37,7 @@ public class simple22 {
 	static Vector3f startVec = new Vector3f();
 	static Shape teapot;
 
-	public final static class SimpleRenderPanel extends GLRenderPanel {
+	public final static class SimpleRenderPanel extends SWRenderPanel {
 		@Override
 		public void init(RenderContext r) {
 			renderContext = r;

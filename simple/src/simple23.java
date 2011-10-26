@@ -10,9 +10,9 @@ import javax.swing.JFrame;
 import javax.vecmath.Vector3f;
 
 import jrtr.Camera;
-import jrtr.GLRenderPanel;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
+import jrtr.SWRenderPanel;
 import jrtr.Shape;
 import jrtr.SimpleSceneManager;
 import jrtr.VertexData;
@@ -27,7 +27,7 @@ public class simple23 {
 	static int hight;
 	static Shape terrain;
 
-	public final static class SimpleRenderPanel extends GLRenderPanel {
+	public final static class SimpleRenderPanel extends SWRenderPanel {
 		@Override
 		public void init(RenderContext r) {
 			renderContext = r;
