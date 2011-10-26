@@ -383,7 +383,7 @@ public class simple21 {
 				torVert[3 * k + 3 * i * seg] = circle[3 * k] * cos - circle[3 * i + 2] * sin + x;
 				torVert[3 * k + 3 * i * seg + 1] = circle[3 * k + 1] + y;
 				torVert[3 * k + 3 * i * seg + 2] = circle[3 * k] * sin + circle[3 * i + 2] * cos
-				+ z;
+						+ z;
 				k++;
 			}
 			i++;
