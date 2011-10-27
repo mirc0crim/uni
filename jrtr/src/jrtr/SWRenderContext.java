@@ -73,10 +73,8 @@ public class SWRenderContext implements RenderContext {
 		viewMat.setIdentity();
 		viewMat.setM00(width / 2);
 		viewMat.setM11(height / 2);
-		viewMat.setM22(1 / 2);
 		viewMat.setM03((width - 1) / 2);
 		viewMat.setM13((height - 1) / 2);
-		viewMat.setM23(1 / 2);
 		colorBuffer = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
 	}
 
@@ -100,20 +98,22 @@ public class SWRenderContext implements RenderContext {
 		zBuffer = new float[vWidth][vHeight];
 		for (int i = 0; i < vHeight; i++)
 			for (int j = 0; j < vWidth; j++)
-				zBuffer[i][j] = Integer.MAX_VALUE;
+				zBuffer[i][j] = Float.MAX_VALUE;
 
 		projection(vertDat);
 		raster(vertDat);
+
+		System.out.println("finished");
 	}
 
 	private void raster(VertexData dat) {
 		for (int i = 0; i < edges.size(); i++) {
-			Vector4f a = edges.get(i);
-			Color3f aCol = colors.get(i++);
-			Vector4f b = edges.get(i);
-			Color3f bCol = colors.get(i++);
-			Vector4f c = edges.get(i);
+			Color3f aCol = colors.get(i);
+			Vector4f a = edges.get(i++);
+			Color3f bCol = colors.get(i);
+			Vector4f b = edges.get(i++);
 			Color3f cCol = colors.get(i);
+			Vector4f c = edges.get(i);
 
 			// edge function
 			Matrix3f edge = new Matrix3f();
@@ -136,37 +136,39 @@ public class SWRenderContext implements RenderContext {
 			if (invertable)
 				if (pos(a) && pos(b) && pos(c)) {
 					// do bounding box
-					int leftx = min(a.getX(), b.getX(), c.getX());
-					int rightx = max(a.getX(), b.getX(), c.getX());
-					int bottomy = min(a.getY(), b.getY(), c.getY());
-					int topy = max(a.getY(), b.getY(), c.getY());
-					drawInBox(edge, leftx, bottomy, rightx, topy, a, b, c, aCol);
+					float leftx = min(a.getX(), b.getX(), c.getX());
+					float rightx = max(a.getX(), b.getX(), c.getX());
+					float bottomy = min(a.getY(), b.getY(), c.getY());
+					float topy = max(a.getY(), b.getY(), c.getY());
+					System.out.println(leftx + "," + rightx);
+					drawInBox(edge, leftx, bottomy, rightx, topy, a, b, c,
+							aCol);
 				} else
 					drawInBox(edge, 0, 0, vWidth, vHeight, a, b, c, aCol);
 		}
 	}
 
 
-	private void drawInBox(Matrix3f edge, int leftx, int bottomy, int rightx, int topy,
+	private void drawInBox(Matrix3f edge, float leftx, float bottomy, float rightx,
+			float topy,
 			Vector4f a, Vector4f b, Vector4f c, Color3f col) {
-		for (int i = leftx; i < rightx; i++)
-			for (int j = topy; j > bottomy; j--) {
-				System.out.println("drawinbox");
-				float alpha = edge.m00 * i / a.w + edge.m10 * j / a.w + edge.m20;
-				float beta = edge.m01 * i / b.w + edge.m11 * j / b.w + edge.m21;
-				float gamma = edge.m02 * i / c.w + edge.m12 * j / c.w + edge.m22;
+		for (float x = leftx; x < rightx; x++)
+			for (float y = bottomy; y < topy; y++) {
+				float alpha = edge.m00 * x / a.w + edge.m10 * y / a.w + edge.m20;
+				float beta = edge.m01 * x / b.w + edge.m11 * y / b.w + edge.m21;
+				float gamma = edge.m02 * x / c.w + edge.m12 * y / c.w + edge.m22;
 
-				if (alpha > 0 && beta > 0 && gamma > 0) {
-					drawPixel(i, j, 1 / a.w, col);
-					System.out.println("abg");
-				}
+				if (alpha > 0 && beta > 0 && gamma > 0)
+					drawPixel((int) x, (int) y, 1 / a.w, col);
 			}
 
 	}
 
 	private void drawPixel(int x, int y, float z, Color3f col) {
-		if (zBuffer[x][y] > z) {
-			zBuffer[x][y] = z;
+		if (x < 0 || y < 0 || x > vWidth - 1 || y > vHeight - 1)
+			return;
+		if (zBuffer[x][y] > 1 / z) {
+			zBuffer[x][y] = 1 / z;
 			try {
 				int color = (int) (255f * col.x) << 16 | (int) (255f * col.y) << 8
 						| (int) (255f * col.z);
@@ -181,20 +183,20 @@ public class SWRenderContext implements RenderContext {
 		return a.getX() > 0 && a.getY() > 0;
 	}
 
-	private int min(float a, float b, float c) {
+	private float min(float a, float b, float c) {
 		if (a < b && a < c)
-			return (int) a;
+			return a;
 		if (b < a && b < c)
-			return (int) b;
-		return (int) c;
+			return b;
+		return c;
 	}
 
-	private int max(float a, float b, float c) {
+	private float max(float a, float b, float c) {
 		if (a > b && a > c)
-			return (int) a;
+			return a;
 		if (b > a && b > c)
-			return (int) b;
-		return (int) c;
+			return b;
+		return c;
 	}
 
 

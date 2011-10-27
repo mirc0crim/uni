@@ -262,10 +262,12 @@ public class simple21 {
 		Shape torusFront1 = makeTorus(seg, mainRad, rad, 0, 0, 0);
 		Shape torusBack1 = makeTorus(seg, mainRad, rad, 0, 0, 0);
 		Shape house = makeHouse();
+		Shape plane1 = makePlane();
 
 		zylinder = zylinder1;
 		torusFront = torusFront1;
 		torusBack = torusBack1;
+		plane = plane1;
 
 		if (param == 1) { // Parameter für Bild 1
 			Camera.setCenterOfProjection(new Vector3f(0, 0, 40));
@@ -286,10 +288,6 @@ public class simple21 {
 			Frustum.setFarPlane(100);
 		}
 
-		float planeVertex[] = { -5, -3, 5, -5, -3, -5, 5, -3, -5, 5, -3, 5 };
-		float planeColors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
-		int planeFaces[] = { 0, 1, 2, 0, 2, 3 };
-
 		// Make a simple geometric object: a cube
 		// The vertex positions of the cube
 		float cubeVertex[] = { -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, // front
@@ -308,11 +306,6 @@ public class simple21 {
 
 		// Construct a data structure that stores the vertices, their
 		// attributes, and the triangle mesh connectivity
-		// plane = 4
-		// cube = 24
-		VertexData planeData = new VertexData(4);
-		planeData.addElement(planeColors, VertexData.Semantic.COLOR, 3);
-		planeData.addElement(planeVertex, VertexData.Semantic.POSITION, 3);
 
 		VertexData cubeData = new VertexData(24);
 		cubeData.addElement(cubeColors, VertexData.Semantic.COLOR, 3);
@@ -327,13 +320,12 @@ public class simple21 {
 				20, 22, 23, 20, 21, 22 }; // bottom face
 
 		cubeData.addIndices(cubeFaces);
-		planeData.addIndices(planeFaces);
 
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
 		cubeSeat = new Shape(cubeData);
 		cubeSteering = new Shape(cubeData);
-		plane = new Shape(planeData);
+
 		if (param == 0) {
 			sceneManager.addShape(zylinder);
 			sceneManager.addShape(torusFront);
@@ -587,6 +579,20 @@ public class simple21 {
 		vertexData.addIndices(torusFaces);
 
 		return new Shape(vertexData);
+	}
+
+	public static Shape makePlane() {
+		float planeVertex[] = { -5, -3, 5, -5, -3, -5, 5, -3, -5, 5, -3, 5 };
+		float planeColors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
+		int planeFaces[] = { 0, 1, 2, 0, 2, 3 };
+
+		VertexData planeData = new VertexData(4);
+		planeData.addElement(planeColors, VertexData.Semantic.COLOR, 3);
+		planeData.addElement(planeVertex, VertexData.Semantic.POSITION, 3);
+
+		planeData.addIndices(planeFaces);
+		return new Shape(planeData);
+
 	}
 
 	public static Shape makeHouse()

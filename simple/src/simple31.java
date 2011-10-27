@@ -5,7 +5,9 @@
  */
 
 import javax.swing.JFrame;
+import javax.vecmath.Vector3f;
 
+import jrtr.Camera;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
 import jrtr.SWRenderPanel;
@@ -28,8 +30,17 @@ public class simple31 {
 
 	public static void main(String[] args) {
 
-		shape = simple21.makeTorus(20, 2, 1, 0, 0, 0);
-		// shape = simple21.makeZylinder(20);
+		int sh = 3;
+		if (sh == 0)
+			shape = simple21.makeTorus(20, 2, 1, 0, 0, 0);
+		if (sh == 1)
+			shape = simple21.makeHouse();
+		if (sh == 2)
+			shape = simple21.makeZylinder(20);
+		if (sh == 3)
+			shape = simple21.makePlane();
+
+		Camera.setCenterOfProjection(new Vector3f(0, -10, -20));
 
 		sceneManager = new SimpleSceneManager();
 		sceneManager.addShape(shape);
