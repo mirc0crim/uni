@@ -16,7 +16,7 @@ public class simple31 {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static SimpleSceneManager sceneManager;
-	static Shape torus;
+	static Shape shape;
 
 	public final static class SimpleRenderPanel extends SWRenderPanel {
 		@Override
@@ -28,10 +28,11 @@ public class simple31 {
 
 	public static void main(String[] args) {
 
-		torus = simple21.makeTorus(20, 2, 1, 0, 0, 0);
+		shape = simple21.makeTorus(20, 2, 1, 0, 0, 0);
+		// shape = simple21.makeZylinder(20);
 
 		sceneManager = new SimpleSceneManager();
-		sceneManager.addShape(torus);
+		sceneManager.addShape(shape);
 
 		renderPanel = new SimpleRenderPanel();
 

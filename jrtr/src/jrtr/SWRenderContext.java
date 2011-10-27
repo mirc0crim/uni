@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.vecmath.Color3f;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector4f;
@@ -28,7 +29,8 @@ public class SWRenderContext implements RenderContext {
 	private Matrix4f viewMat;
 	private int vHeight, vWidth;
 	private List<Vector4f> edges;
-	private int[][] zBuffer;
+	private List<Color3f> colors;
+	private float[][] zBuffer;
 
 	@Override
 	public void setSceneManager(SceneManagerInterface sceneManager) {
@@ -94,7 +96,8 @@ public class SWRenderContext implements RenderContext {
 	private void draw(RenderItem renderItem) {
 		VertexData vertDat = renderItem.getShape().getVertexData();
 		edges = new ArrayList<Vector4f>();
-		zBuffer = new int[vWidth][vHeight];
+		colors = new ArrayList<Color3f>();
+		zBuffer = new float[vWidth][vHeight];
 		for (int i = 0; i < vHeight; i++)
 			for (int j = 0; j < vWidth; j++)
 				zBuffer[i][j] = Integer.MAX_VALUE;
@@ -105,9 +108,12 @@ public class SWRenderContext implements RenderContext {
 
 	private void raster(VertexData dat) {
 		for (int i = 0; i < edges.size(); i++) {
-			Vector4f a = edges.get(i++);
-			Vector4f b = edges.get(i++);
-			Vector4f c = edges.get(i++);
+			Vector4f a = edges.get(i);
+			Color3f aCol = colors.get(i++);
+			Vector4f b = edges.get(i);
+			Color3f bCol = colors.get(i++);
+			Vector4f c = edges.get(i);
+			Color3f cCol = colors.get(i);
 
 			// edge function
 			Matrix3f edge = new Matrix3f();
@@ -128,27 +134,47 @@ public class SWRenderContext implements RenderContext {
 			}
 
 			if (invertable)
-				if (pos(a) && pos(b) && pos(c)){
+				if (pos(a) && pos(b) && pos(c)) {
 					// do bounding box
 					int leftx = min(a.getX(), b.getX(), c.getX());
 					int rightx = max(a.getX(), b.getX(), c.getX());
 					int bottomy = min(a.getY(), b.getY(), c.getY());
 					int topy = max(a.getY(), b.getY(), c.getY());
-					drawInBox(edge, leftx, bottomy, rightx, topy, a, b, c);
+					drawInBox(edge, leftx, bottomy, rightx, topy, a, b, c, aCol);
 				} else
-					drawInBox(edge, 0, 0 , vWidth, vHeight, a, b, c);
-
+					drawInBox(edge, 0, 0, vWidth, vHeight, a, b, c, aCol);
 		}
 	}
 
 
 	private void drawInBox(Matrix3f edge, int leftx, int bottomy, int rightx, int topy,
-			Vector4f a, Vector4f b, Vector4f c) {
+			Vector4f a, Vector4f b, Vector4f c, Color3f col) {
 		for (int i = leftx; i < rightx; i++)
 			for (int j = topy; j > bottomy; j--) {
-				// alpha beta gamma functions
+				System.out.println("drawinbox");
+				float alpha = edge.m00 * i / a.w + edge.m10 * j / a.w + edge.m20;
+				float beta = edge.m01 * i / b.w + edge.m11 * j / b.w + edge.m21;
+				float gamma = edge.m02 * i / c.w + edge.m12 * j / c.w + edge.m22;
+
+				if (alpha > 0 && beta > 0 && gamma > 0) {
+					drawPixel(i, j, 1 / a.w, col);
+					System.out.println("abg");
+				}
 			}
 
+	}
+
+	private void drawPixel(int x, int y, float z, Color3f col) {
+		if (zBuffer[x][y] > z) {
+			zBuffer[x][y] = z;
+			try {
+				int color = (int) (255f * col.x) << 16 | (int) (255f * col.y) << 8
+						| (int) (255f * col.z);
+				colorBuffer.setRGB(x, vHeight - y, color);
+			} catch (ArrayIndexOutOfBoundsException exc) {
+				System.out.println("x:" + x + " y:" + y);
+			}
+		}
 	}
 
 	private boolean pos(Vector4f a) {
@@ -201,6 +227,10 @@ public class SWRenderContext implements RenderContext {
 							&& vec.getY() < vHeight)
 						colorBuffer.setRGB((int) vec.getX(), vHeight - (int) vec.getY(),
 								Color.white.getRGB());
+				} else if (e.getSemantic() == VertexData.Semantic.COLOR) {
+					Color3f col = new Color3f(e.getData()[k * 3], e.getData()[k * 3 + 1],
+							e.getData()[k * 3 + 2]);
+					colors.add(col);
 				}
 			}
 		}
