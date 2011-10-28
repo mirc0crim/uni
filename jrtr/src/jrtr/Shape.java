@@ -1,5 +1,5 @@
 package jrtr;
-import javax.vecmath.*;
+import javax.vecmath.Matrix4f;
 
 /**
  * Represents a 3D shape. The shape currently just consists
@@ -8,9 +8,11 @@ import javax.vecmath.*;
  */
 public class Shape {
 
+	private Material material;
+
 	/**
 	 * Make a shape from {@link VertexData}.
-	 *  
+	 * 
 	 * @param vertexData the vertices of the shape.
 	 */
 	public Shape(VertexData vertexData)
@@ -19,35 +21,34 @@ public class Shape {
 		t = new Matrix4f();
 		t.setIdentity();
 	}
-	
+
 	public VertexData getVertexData()
 	{
 		return vertexData;
 	}
-	
+
 	public void setTransformation(Matrix4f t)
 	{
 		this.t = t;
 	}
-	
+
 	public Matrix4f getTransformation()
 	{
 		return t;
-	}
-	
-	/**
-	 * To be implemented in the "Textures and Shading" project.
-	 */
-	public void setMaterial(Material material)
-	{
 	}
 
 	/**
 	 * To be implemented in the "Textures and Shading" project.
 	 */
-	public Material getMaterial()
-	{
-		return null;
+	public void setMaterial(Material mat) {
+		material = mat;
+	}
+
+	/**
+	 * To be implemented in the "Textures and Shading" project.
+	 */
+	public Material getMaterial() {
+		return material;
 	}
 
 	private VertexData vertexData;
