@@ -599,10 +599,12 @@ public class simple21 {
 		float squareVertex[] = { -5, -5, 0, 5, -5, 0, 5, 5, 0, -5, 5, 0 };
 		float squareColors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
 		int squareFaces[] = { 0, 2, 1, 0, 2, 3 };
+		float squareTexture[] = { 0, 0, 1, 0, 1, 1, 0, 1 };
 
 		VertexData squareData = new VertexData(4);
 		squareData.addElement(squareColors, VertexData.Semantic.COLOR, 3);
 		squareData.addElement(squareVertex, VertexData.Semantic.POSITION, 3);
+		squareData.addElement(squareTexture, VertexData.Semantic.TEXCOORD, 2);
 
 		squareData.addIndices(squareFaces);
 		return new Shape(squareData);

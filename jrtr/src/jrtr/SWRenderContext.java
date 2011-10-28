@@ -10,6 +10,7 @@ import java.util.ListIterator;
 import javax.vecmath.Color3f;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.TexCoord2f;
 import javax.vecmath.Vector4f;
 
 import jrtr.VertexData.VertexElement;
@@ -30,7 +31,9 @@ public class SWRenderContext implements RenderContext {
 	private int vHeight, vWidth;
 	private List<Vector4f> edges;
 	private List<Color3f> colors;
+	private List<TexCoord2f> texCo;
 	private float[][] zBuffer;
+	private RenderItem rndItm;
 
 	@Override
 	public void setSceneManager(SceneManagerInterface sceneManager) {
@@ -92,10 +95,12 @@ public class SWRenderContext implements RenderContext {
 	 * objects.
 	 */
 	private void draw(RenderItem renderItem) {
+		rndItm = renderItem;
 		VertexData vertDat = renderItem.getShape().getVertexData();
 		boolean back = true;
 		edges = new ArrayList<Vector4f>();
 		colors = new ArrayList<Color3f>();
+		texCo = new ArrayList<TexCoord2f>();
 		zBuffer = new float[vWidth][vHeight];
 		for (int i = 0; i < vHeight; i++)
 			for (int j = 0; j < vWidth; j++)
@@ -105,14 +110,14 @@ public class SWRenderContext implements RenderContext {
 		raster(back);
 		raster(!back);
 
-		texture(renderItem);
+		texture();
 
 		System.out.println("finished");
 	}
 
-	private void texture(RenderItem renderItem) {
-		Texture texture = renderItem.getShape().getMaterial().getTexture();
-		tex = texture;
+	private void texture() {
+		Texture text = rndItm.getShape().getMaterial().getTexture();
+		tex = ((SWTexture) text).getTexture();
 	}
 
 	private void raster(boolean back) {
@@ -189,6 +194,26 @@ public class SWRenderContext implements RenderContext {
 
 	}
 
+	private void drawInBox(Matrix3f edge, float leftx, float bottomy, float rightx,
+			float topy, Vector4f a, Vector4f b, Vector4f c) {
+		Texture tex = rndItm.getShape().getMaterial().getTexture();
+		BufferedImage im = ((SWTexture) tex).getTexture();
+		for (float x = leftx; x < rightx; x++)
+			for (float y = bottomy; y < topy; y++) {
+				float zSlope = (1 / b.w - 1 / a.w) / (b.x - a.x);
+				float z = a.w + (x - a.x) * zSlope;
+				float alpha = edge.m00 * x / z + edge.m10 * y / z + edge.m20;
+				float beta = edge.m01 * x / z + edge.m11 * y / z + edge.m21;
+				float gamma = edge.m02 * x / z + edge.m12 * y / z + edge.m22;
+
+				if (alpha > 0 && beta > 0 && gamma > 0) {
+					int col = im.getRGB((int) x, (int) y);
+					drawPixel((int) x, (int) y, 1 / z, col);
+				}
+			}
+
+	}
+
 	private void drawPixel(int x, int y, float z, Color3f col) {
 		if (x < 0 || y < 0 || x > vWidth - 1 || y > vHeight - 1)
 			return;
@@ -199,6 +224,20 @@ public class SWRenderContext implements RenderContext {
 			int color = (int) (255 * col.x) << 16 | (int) (255 * col.y) << 8
 					| (int) (255 * col.z);
 			colorBuffer.setRGB(x, vHeight - y, color);
+		} catch (ArrayIndexOutOfBoundsException exc) {
+			System.out.println("Out of Bounds: x=" + x + " y=" + y + " z=" + z);
+		}
+
+	}
+
+	private void drawPixel(int x, int y, float z, int col) {
+		if (x < 0 || y < 0 || x > vWidth - 1 || y > vHeight - 1)
+			return;
+		if (zBuffer[x][y] < z)
+			return;
+		zBuffer[x][y] = z;
+		try {
+			colorBuffer.setRGB(x, vHeight - y, col);
 		} catch (ArrayIndexOutOfBoundsException exc) {
 			System.out.println("Out of Bounds: x=" + x + " y=" + y + " z=" + z);
 		}
@@ -259,6 +298,9 @@ public class SWRenderContext implements RenderContext {
 					Color3f col = new Color3f(e.getData()[k * 3], e.getData()[k * 3 + 1],
 							e.getData()[k * 3 + 2]);
 					colors.add(col);
+				} else if (e.getSemantic() == VertexData.Semantic.TEXCOORD) {
+					TexCoord2f tex = new TexCoord2f(e.getData()[k * 2], e.getData()[k * 2 + 1]);
+					texCo.add(tex);
 				}
 			}
 		}
