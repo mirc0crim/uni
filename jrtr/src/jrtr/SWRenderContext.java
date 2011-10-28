@@ -101,12 +101,12 @@ public class SWRenderContext implements RenderContext {
 				zBuffer[i][j] = Float.MAX_VALUE;
 
 		projection(vertDat);
-		raster(vertDat);
+		raster();
 
 		System.out.println("finished");
 	}
 
-	private void raster(VertexData dat) {
+	private void raster() {
 		for (int i = 0; i < edges.size(); i++) {
 			Color3f aCol = colors.get(i);
 			Vector4f a = edges.get(i++);
@@ -140,26 +140,31 @@ public class SWRenderContext implements RenderContext {
 					float rightx = max(a.getX(), b.getX(), c.getX());
 					float bottomy = min(a.getY(), b.getY(), c.getY());
 					float topy = max(a.getY(), b.getY(), c.getY());
-					System.out.println(leftx + "," + rightx);
+					// System.out.println("Left: " + leftx + " Right: " +
+					// rightx);
+					// System.out.println("Top: " + topy + " Bottom: " +
+					// bottomy);
 					drawInBox(edge, leftx, bottomy, rightx, topy, a, b, c,
 							aCol);
-				} else
+				} else {
 					drawInBox(edge, 0, 0, vWidth, vHeight, a, b, c, aCol);
+					System.out.println("a b c not pos");
+				}
 		}
 	}
 
-
 	private void drawInBox(Matrix3f edge, float leftx, float bottomy, float rightx,
-			float topy,
-			Vector4f a, Vector4f b, Vector4f c, Color3f col) {
+			float topy, Vector4f a, Vector4f b, Vector4f c, Color3f col) {
 		for (float x = leftx; x < rightx; x++)
 			for (float y = bottomy; y < topy; y++) {
-				float alpha = edge.m00 * x / a.w + edge.m10 * y / a.w + edge.m20;
-				float beta = edge.m01 * x / b.w + edge.m11 * y / b.w + edge.m21;
-				float gamma = edge.m02 * x / c.w + edge.m12 * y / c.w + edge.m22;
+				float zSlope = (1 / b.w - 1 / a.w) / (b.x - a.x);
+				float z = a.w + (x - a.x) * zSlope;
+				float alpha = edge.m00 * x / z + edge.m10 * y / z + edge.m20;
+				float beta = edge.m01 * x / z + edge.m11 * y / z + edge.m21;
+				float gamma = edge.m02 * x / z + edge.m12 * y / z + edge.m22;
 
 				if (alpha > 0 && beta > 0 && gamma > 0)
-					drawPixel((int) x, (int) y, 1 / a.w, col);
+					drawPixel((int) x, (int) y, 1 / z, col);
 			}
 
 	}
@@ -167,16 +172,17 @@ public class SWRenderContext implements RenderContext {
 	private void drawPixel(int x, int y, float z, Color3f col) {
 		if (x < 0 || y < 0 || x > vWidth - 1 || y > vHeight - 1)
 			return;
-		if (zBuffer[x][y] > 1 / z) {
-			zBuffer[x][y] = 1 / z;
-			try {
-				int color = (int) (255f * col.x) << 16 | (int) (255f * col.y) << 8
-						| (int) (255f * col.z);
-				colorBuffer.setRGB(x, vHeight - y, color);
-			} catch (ArrayIndexOutOfBoundsException exc) {
-				System.out.println("x:" + x + " y:" + y);
-			}
+		if (zBuffer[x][y] < z)
+			return;
+		zBuffer[x][y] = z;
+		try {
+			int color = (int) (255 * col.x) << 16 | (int) (255 * col.y) << 8
+					| (int) (255 * col.z);
+			colorBuffer.setRGB(x, vHeight - y, color);
+		} catch (ArrayIndexOutOfBoundsException exc) {
+			System.out.println("Out of Bounds: x=" + x + " y=" + y + " z=" + z);
 		}
+
 	}
 
 	private boolean pos(Vector4f a) {

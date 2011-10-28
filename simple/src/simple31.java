@@ -30,7 +30,7 @@ public class simple31 {
 
 	public static void main(String[] args) {
 
-		int sh = 3;
+		int sh = 4;
 		if (sh == 0)
 			shape = simple21.makeTorus(20, 2, 1, 0, 0, 0);
 		if (sh == 1)
@@ -38,9 +38,11 @@ public class simple31 {
 		if (sh == 2)
 			shape = simple21.makeZylinder(20);
 		if (sh == 3)
+			shape = simple21.makeSquare();
+		if (sh == 4)
 			shape = simple21.makePlane();
 
-		Camera.setCenterOfProjection(new Vector3f(0, -10, -20));
+		Camera.setCenterOfProjection(new Vector3f(0, 0, -30));
 
 		sceneManager = new SimpleSceneManager();
 		sceneManager.addShape(shape);

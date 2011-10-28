@@ -584,7 +584,7 @@ public class simple21 {
 	public static Shape makePlane() {
 		float planeVertex[] = { -5, -3, 5, -5, -3, -5, 5, -3, -5, 5, -3, 5 };
 		float planeColors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
-		int planeFaces[] = { 0, 1, 2, 0, 2, 3 };
+		int planeFaces[] = { 0, 1, 2, 0, 3, 2 };
 
 		VertexData planeData = new VertexData(4);
 		planeData.addElement(planeColors, VertexData.Semantic.COLOR, 3);
@@ -593,6 +593,19 @@ public class simple21 {
 		planeData.addIndices(planeFaces);
 		return new Shape(planeData);
 
+	}
+
+	public static Shape makeSquare() {
+		float squareVertex[] = { -5, -5, 0, 5, -5, 0, 5, 5, 0, -5, 5, 0 };
+		float squareColors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
+		int squareFaces[] = { 0, 2, 1, 0, 2, 3 };
+
+		VertexData squareData = new VertexData(4);
+		squareData.addElement(squareColors, VertexData.Semantic.COLOR, 3);
+		squareData.addElement(squareVertex, VertexData.Semantic.POSITION, 3);
+
+		squareData.addIndices(squareFaces);
+		return new Shape(squareData);
 	}
 
 	public static Shape makeHouse()
