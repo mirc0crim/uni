@@ -93,6 +93,7 @@ public class SWRenderContext implements RenderContext {
 	 */
 	private void draw(RenderItem renderItem) {
 		VertexData vertDat = renderItem.getShape().getVertexData();
+		boolean back = true;
 		edges = new ArrayList<Vector4f>();
 		colors = new ArrayList<Color3f>();
 		zBuffer = new float[vWidth][vHeight];
@@ -101,17 +102,29 @@ public class SWRenderContext implements RenderContext {
 				zBuffer[i][j] = Float.MAX_VALUE;
 
 		projection(vertDat);
-		raster();
+		raster(back);
+		raster(!back);
 
 		System.out.println("finished");
 	}
 
-	private void raster() {
+	private void raster(boolean back) {
 		for (int i = 0; i < edges.size(); i++) {
-			Color3f aCol = colors.get(i);
-			Vector4f a = edges.get(i++);
-			Color3f bCol = colors.get(i);
-			Vector4f b = edges.get(i++);
+			Color3f aCol = new Color3f();
+			Color3f bCol = new Color3f();
+			Vector4f a = new Vector4f();
+			Vector4f b = new Vector4f();
+			if (back) {
+				aCol = colors.get(i);
+				a = edges.get(i++);
+				bCol = colors.get(i);
+				b = edges.get(i++);
+			} else {
+				bCol = colors.get(i);
+				b = edges.get(i++);
+				aCol = colors.get(i);
+				a = edges.get(i++);
+			}
 			Color3f cCol = colors.get(i);
 			Vector4f c = edges.get(i);
 
