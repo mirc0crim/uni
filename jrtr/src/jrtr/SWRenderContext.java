@@ -25,7 +25,7 @@ import jrtr.VertexData.VertexElement;
 public class SWRenderContext implements RenderContext {
 
 	private SceneManagerInterface sceneManager;
-	private BufferedImage colorBuffer;
+	private BufferedImage colorBuffer, tex;
 	private Matrix4f viewMat;
 	private int vHeight, vWidth;
 	private List<Vector4f> edges;
@@ -105,7 +105,14 @@ public class SWRenderContext implements RenderContext {
 		raster(back);
 		raster(!back);
 
+		texture(renderItem);
+
 		System.out.println("finished");
+	}
+
+	private void texture(RenderItem renderItem) {
+		Texture texture = renderItem.getShape().getMaterial().getTexture();
+		tex = texture;
 	}
 
 	private void raster(boolean back) {

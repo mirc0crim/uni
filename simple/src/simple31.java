@@ -8,11 +8,13 @@ import javax.swing.JFrame;
 import javax.vecmath.Vector3f;
 
 import jrtr.Camera;
+import jrtr.Material;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
 import jrtr.SWRenderPanel;
 import jrtr.Shape;
 import jrtr.SimpleSceneManager;
+import jrtr.VertexData;
 
 public class simple31 {
 	static RenderPanel renderPanel;
@@ -30,19 +32,33 @@ public class simple31 {
 
 	public static void main(String[] args) {
 
-		int sh = 2;
+		int sh = 3;
 		if (sh == 0)
 			shape = simple21.makeTorus(100, 2, 1, 0, 0, 0);
 		if (sh == 1)
 			shape = simple21.makeHouse();
 		if (sh == 2)
 			shape = simple21.makeZylinder(10);
-		if (sh == 3)
-			shape = simple21.makeSquare();
+		if (sh == 3) {
+			float squareVertex[] = { -5, -5, 0, 5, -5, 0, 5, 5, 0, -5, 5, 0 };
+			float squareColors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
+			int squareFaces[] = { 0, 2, 1, 0, 2, 3 };
+			float squareTexture[] = { 0, 0, 1, 0, 1, 1, 0, 1 };
+
+			VertexData squareData = new VertexData(4);
+			squareData.addElement(squareColors, VertexData.Semantic.COLOR, 3);
+			squareData.addElement(squareVertex, VertexData.Semantic.POSITION, 3);
+			squareData.addElement(squareTexture, VertexData.Semantic.TEXCOORD, 2);
+
+			squareData.addIndices(squareFaces);
+			shape = new Shape(squareData);
+			Material mat = new Material();
+			shape.setMaterial(mat);
+		}
 		if (sh == 4)
 			shape = simple21.makePlane();
 
-		Camera.setCenterOfProjection(new Vector3f(0, 0, -10));
+		Camera.setCenterOfProjection(new Vector3f(0, 0, -30));
 
 		sceneManager = new SimpleSceneManager();
 		sceneManager.addShape(shape);
