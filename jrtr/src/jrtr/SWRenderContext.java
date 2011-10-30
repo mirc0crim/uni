@@ -116,8 +116,12 @@ public class SWRenderContext implements RenderContext {
 	}
 
 	private void texture() {
-		Texture text = rndItm.getShape().getMaterial().getTexture();
-		tex = ((SWTexture) text).getTexture();
+		try{
+			Texture text = rndItm.getShape().getMaterial().getTexture();
+			tex = ((SWTexture) text).getTexture();
+		} catch (NullPointerException e) {
+			System.out.println("No texture");
+		}
 	}
 
 	private void raster(boolean back) {
@@ -165,14 +169,11 @@ public class SWRenderContext implements RenderContext {
 					float rightx = max(a.getX(), b.getX(), c.getX());
 					float bottomy = min(a.getY(), b.getY(), c.getY());
 					float topy = max(a.getY(), b.getY(), c.getY());
-					// System.out.println("Left: " + leftx + " Right: " +
-					// rightx);
-					// System.out.println("Top: " + topy + " Bottom: " +
-					// bottomy);
-					drawInBox(edge, leftx, bottomy, rightx, topy, a, b, c,
-							aCol);
+					// System.out.println("Left: " + leftx + " Right: " + rightx);
+					// System.out.println("Top: " + topy + " Bottom: " + bottomy);
+					drawInBox(edge, leftx, bottomy, rightx - 1, topy - 1, a, b, c);
 				} else {
-					drawInBox(edge, 0, 0, vWidth, vHeight, a, b, c, aCol);
+					drawInBox(edge, 0, 0, vWidth - 1, vHeight - 1, a, b, c);
 					System.out.println("a b c not pos");
 				}
 		}
@@ -196,21 +197,24 @@ public class SWRenderContext implements RenderContext {
 
 	private void drawInBox(Matrix3f edge, float leftx, float bottomy, float rightx,
 			float topy, Vector4f a, Vector4f b, Vector4f c) {
-		Texture tex = rndItm.getShape().getMaterial().getTexture();
-		BufferedImage im = ((SWTexture) tex).getTexture();
-		for (float x = leftx; x < rightx; x++)
-			for (float y = bottomy; y < topy; y++) {
-				float zSlope = (1 / b.w - 1 / a.w) / (b.x - a.x);
-				float z = a.w + (x - a.x) * zSlope;
-				float alpha = edge.m00 * x / z + edge.m10 * y / z + edge.m20;
-				float beta = edge.m01 * x / z + edge.m11 * y / z + edge.m21;
-				float gamma = edge.m02 * x / z + edge.m12 * y / z + edge.m22;
+		try {
+			Texture tex = rndItm.getShape().getMaterial().getTexture();
+			BufferedImage im = ((SWTexture) tex).getTexture();
+			for (float x = leftx; x < rightx; x++)
+				for (float y = bottomy; y < topy; y++) {
+					float zSlope = (1 / b.w - 1 / a.w) / (b.x - a.x);
+					float z = a.w + (x - a.x) * zSlope;
+					float alpha = edge.m00 * x / z + edge.m10 * y / z + edge.m20;
+					float beta = edge.m01 * x / z + edge.m11 * y / z + edge.m21;
+					float gamma = edge.m02 * x / z + edge.m12 * y / z + edge.m22;
 
-				if (alpha > 0 && beta > 0 && gamma > 0) {
-					int col = im.getRGB((int) x, (int) y);
-					drawPixel((int) x, (int) y, 1 / z, col);
+					if (alpha > 0 && beta > 0 && gamma > 0) {
+						int col = im.getRGB((int) x, (int) y);
+						drawPixel((int) x, (int) y, 1 / z, col);
+					}
 				}
-			}
+		} catch (NullPointerException e) {
+		}
 
 	}
 
@@ -301,6 +305,8 @@ public class SWRenderContext implements RenderContext {
 				} else if (e.getSemantic() == VertexData.Semantic.TEXCOORD) {
 					TexCoord2f tex = new TexCoord2f(e.getData()[k * 2], e.getData()[k * 2 + 1]);
 					texCo.add(tex);
+				} else if (e.getSemantic() == VertexData.Semantic.NORMAL) {
+
 				}
 			}
 		}

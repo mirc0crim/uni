@@ -45,7 +45,7 @@ public class simple31 {
 		if (sh == 4)
 			shape = simple21.makePlane();
 
-		Camera.setCenterOfProjection(new Vector3f(0, 0, -30));
+		Camera.setCenterOfProjection(new Vector3f(0, 0, -10));
 
 		sceneManager = new SimpleSceneManager();
 		sceneManager.addShape(shape);
