@@ -1,6 +1,7 @@
 function fn = zzwei(x1,y1,z1,b1,x2,y2,z2,b2,x3,y3,z3,b3)
 	A = [x1,y1,z1,b1;x2,y2,z2,b2;x3,y3,z3,b3]
 	unique = 1;
+	### calculations ###
 	if (A(1,1) != 0)
 		A = [1,A(1,2)/A(1,1),A(1,3)/A(1,1),A(1,4)/A(1,1);A(2,1),A(2,2),A(2,3),A(2,4);A(3,1),A(3,2),A(3,3),A(3,4)];
 	endif
@@ -27,6 +28,7 @@ function fn = zzwei(x1,y1,z1,b1,x2,y2,z2,b2,x3,y3,z3,b3)
 
 	fprintf('----------------------\n')
 
+	### special cases ###
 	# not unique
 	if(A(1,1) == 0)
 		fprintf('  %.2fy= %f %+fx \n', A(2,2), A(2,4), -A(2,1))
@@ -45,11 +47,20 @@ function fn = zzwei(x1,y1,z1,b1,x2,y2,z2,b2,x3,y3,z3,b3)
 	endif
 
 	# zeroes
-	if ((A(1,1:3) == 0 && A(1,4) != 0) || (A(2,1:3) == 0 && A(2,4) != 0) || (A(3,1:3) == 0 && A(3,4) != 0))
-		fprintf('This equation is not solvable! %f \n\n', A(1,4))
+	if (A(1,1:3) == 0 && A(1,4) != 0)
+		fprintf('This equation is not solvable because 0 = %d \n\n', A(1,4))
+		unique = 0;
+	endif
+	if (A(2,1:3) == 0 && A(2,4) != 0)
+		fprintf('This equation is not solvable because 0 = %d \n\n', A(2,4))
+		unique = 0;
+	endif
+	if (A(3,1:3) == 0 && A(3,4) != 0)
+		fprintf('This equation is not solvable because 0 = %d \n\n', A(3,4))
 		unique = 0;
 	endif
 
+	### result ###
 	if (unique == 1)
 		fn = [A(1,4),A(2,4),A(3,4)];
 	endif
