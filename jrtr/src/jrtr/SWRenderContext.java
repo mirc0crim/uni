@@ -34,6 +34,7 @@ public class SWRenderContext implements RenderContext {
 	private List<TexCoord2f> texCo;
 	private float[][] zBuffer;
 	private RenderItem rndItm;
+	private int task = 2;
 
 	@Override
 	public void setSceneManager(SceneManagerInterface sceneManager) {
@@ -107,10 +108,11 @@ public class SWRenderContext implements RenderContext {
 				zBuffer[i][j] = Float.MAX_VALUE;
 
 		projection(vertDat);
-		raster(back);
-		raster(!back);
-
-		texture();
+		if (task != 1) {
+			raster(back);
+			raster(!back);
+			texture();
+		}
 
 		System.out.println("finished");
 	}
@@ -171,9 +173,15 @@ public class SWRenderContext implements RenderContext {
 					float topy = max(a.getY(), b.getY(), c.getY());
 					// System.out.println("Left: " + leftx + " Right: " + rightx);
 					// System.out.println("Top: " + topy + " Bottom: " + bottomy);
-					drawInBox(edge, leftx, bottomy, rightx - 1, topy - 1, a, b, c);
+					if (task == 3)
+						drawInBox(edge, leftx, bottomy, rightx, topy, a, b, c);
+					else
+						drawInBox(edge, leftx, bottomy, rightx, topy, a, b, c, aCol);
 				} else {
-					drawInBox(edge, 0, 0, vWidth - 1, vHeight - 1, a, b, c);
+					if (task == 3)
+						drawInBox(edge, 0, 0, vWidth, vHeight, a, b, c);
+					else
+						drawInBox(edge, 0, 0, vWidth, vHeight, a, b, c, aCol);
 					System.out.println("a b c not pos");
 				}
 		}
@@ -219,7 +227,7 @@ public class SWRenderContext implements RenderContext {
 	}
 
 	private void drawPixel(int x, int y, float z, Color3f col) {
-		if (x < 0 || y < 0 || x > vWidth - 1 || y > vHeight - 1)
+		if (x < 0 || y < 0 || x > vWidth || y > vHeight)
 			return;
 		if (zBuffer[x][y] < z)
 			return;
@@ -249,7 +257,7 @@ public class SWRenderContext implements RenderContext {
 	}
 
 	private boolean pos(Vector4f a) {
-		return a.getX() > 0 && a.getY() > 0;
+		return a.getX() > 0 && a.getY() > 0 && a.getX() < vWidth && a.getY() < vHeight;
 	}
 
 	private float min(float a, float b, float c) {

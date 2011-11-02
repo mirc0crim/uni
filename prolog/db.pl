@@ -89,7 +89,7 @@ gavial :-
 	nl.
 
 zahn :-
-	write('Ist der vierte Unterkieverzahn sichtbar? (ja/nein)'),
+	write('Ist der vierte Unterkieferzahn sichtbar? (ja/nein)'),
 	read(X),
 	nl,
 	(X = ja -> krokodil; aligator).
