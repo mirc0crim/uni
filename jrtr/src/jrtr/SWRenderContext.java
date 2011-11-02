@@ -11,6 +11,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.TexCoord2f;
+import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 import jrtr.VertexData.VertexElement;
@@ -77,8 +78,10 @@ public class SWRenderContext implements RenderContext {
 		viewMat.setIdentity();
 		viewMat.setM00(width / 2);
 		viewMat.setM11(height / 2);
-		viewMat.setM03((width - 1) / 2);
-		viewMat.setM13((height - 1) / 2);
+		viewMat.setM03(width / 2);
+		viewMat.setM13(height / 2);
+		viewMat.setM22(1 / 2);
+		viewMat.setM23(1 / 2);
 		colorBuffer = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
 	}
 
@@ -103,8 +106,8 @@ public class SWRenderContext implements RenderContext {
 		colors = new ArrayList<Color3f>();
 		texCo = new ArrayList<TexCoord2f>();
 		zBuffer = new float[vWidth][vHeight];
-		for (int i = 0; i < vHeight; i++)
-			for (int j = 0; j < vWidth; j++)
+		for (int i = 0; i < vWidth; i++)
+			for (int j = 0; j < vHeight; j++)
 				zBuffer[i][j] = Float.MAX_VALUE;
 
 		projection(vertDat);
@@ -171,8 +174,6 @@ public class SWRenderContext implements RenderContext {
 					float rightx = max(a.getX(), b.getX(), c.getX());
 					float bottomy = min(a.getY(), b.getY(), c.getY());
 					float topy = max(a.getY(), b.getY(), c.getY());
-					// System.out.println("Left: " + leftx + " Right: " + rightx);
-					// System.out.println("Top: " + topy + " Bottom: " + bottomy);
 					if (task == 3)
 						drawInBox(edge, leftx, bottomy, rightx, topy, a, b, c);
 					else
@@ -193,12 +194,14 @@ public class SWRenderContext implements RenderContext {
 			for (float y = bottomy; y < topy; y++) {
 				float zSlope = (1 / b.w - 1 / a.w) / (b.x - a.x);
 				float z = a.w + (x - a.x) * zSlope;
+				Vector3f const1 = new Vector3f(1, 1, 1);
+				edge.transform(const1);
+				float w = const1.x * x / a.w + const1.y * y / a.w + const1.z;
 				float alpha = edge.m00 * x / z + edge.m10 * y / z + edge.m20;
 				float beta = edge.m01 * x / z + edge.m11 * y / z + edge.m21;
 				float gamma = edge.m02 * x / z + edge.m12 * y / z + edge.m22;
-
 				if (alpha > 0 && beta > 0 && gamma > 0)
-					drawPixel((int) x, (int) y, 1 / z, col);
+					drawPixel((int) x, (int) y, z, col);
 			}
 
 	}
@@ -218,7 +221,7 @@ public class SWRenderContext implements RenderContext {
 
 					if (alpha > 0 && beta > 0 && gamma > 0) {
 						int col = im.getRGB((int) x, (int) y);
-						drawPixel((int) x, (int) y, 1 / z, col);
+						drawPixel((int) x, (int) y, z, col);
 					}
 				}
 		} catch (NullPointerException e) {
@@ -227,15 +230,15 @@ public class SWRenderContext implements RenderContext {
 	}
 
 	private void drawPixel(int x, int y, float z, Color3f col) {
-		if (x < 0 || y < 0 || x > vWidth || y > vHeight)
+		if (x <= 0 || y <= 0 || x > vWidth || y > vHeight)
 			return;
 		if (zBuffer[x][y] < z)
 			return;
-		zBuffer[x][y] = z;
 		try {
 			int color = (int) (255 * col.x) << 16 | (int) (255 * col.y) << 8
 					| (int) (255 * col.z);
 			colorBuffer.setRGB(x, vHeight - y, color);
+			zBuffer[x][y] = z;
 		} catch (ArrayIndexOutOfBoundsException exc) {
 			System.out.println("Out of Bounds: x=" + x + " y=" + y + " z=" + z);
 		}
@@ -247,9 +250,9 @@ public class SWRenderContext implements RenderContext {
 			return;
 		if (zBuffer[x][y] < z)
 			return;
-		zBuffer[x][y] = z;
 		try {
 			colorBuffer.setRGB(x, vHeight - y, col);
+			zBuffer[x][y] = z;
 		} catch (ArrayIndexOutOfBoundsException exc) {
 			System.out.println("Out of Bounds: x=" + x + " y=" + y + " z=" + z);
 		}
@@ -292,6 +295,7 @@ public class SWRenderContext implements RenderContext {
 			while (itr.hasNext()) {
 				VertexData.VertexElement e = itr.next();
 				if (e.getSemantic() == VertexData.Semantic.POSITION) {
+
 					float x = e.getData()[k * 3];
 					float y = e.getData()[k * 3 + 1];
 					float z = e.getData()[k * 3 + 2];

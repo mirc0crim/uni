@@ -571,10 +571,12 @@ public class simple21 {
 		torusVertex = calcTorusVertex(resolution, mainRad, rad, x, y, z);
 		torusColors = calcTorusColors(resolution);
 		torusFaces = calcTorusFaces(resolution);
+		float torusTexture[] = { 0, 0, 1, 0, 1, 1, 0, 1 };
 
 		VertexData vertexData = new VertexData(resolution * resolution);
 		vertexData.addElement(torusVertex, VertexData.Semantic.POSITION, 3);
 		vertexData.addElement(torusColors, VertexData.Semantic.COLOR, 3);
+		vertexData.addElement(torusTexture, VertexData.Semantic.TEXCOORD, 2);
 
 		vertexData.addIndices(torusFaces);
 
