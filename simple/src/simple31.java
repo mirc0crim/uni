@@ -1,7 +1,7 @@
 /*
  * Author: Mirco Kocher
  * Matrikelno: 09-113-739
- * Solution for 1st Task of 3rd Exercise
+ * Solution for 3rd Exercise
  */
 
 import java.io.IOException;
