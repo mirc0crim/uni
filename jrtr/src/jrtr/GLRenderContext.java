@@ -5,6 +5,7 @@ import java.nio.IntBuffer;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import javax.media.opengl.GL2;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.vecmath.Matrix4f;
@@ -15,7 +16,7 @@ import javax.vecmath.Matrix4f;
 public class GLRenderContext implements RenderContext {
 
 	private SceneManagerInterface sceneManager;
-	private GL3 gl;
+	private GL2 gl;
 	private GLShader activeShader;
 
 	/**
@@ -45,7 +46,7 @@ public class GLRenderContext implements RenderContext {
 
 	public GLRenderContext(GLAutoDrawable drawable)
 	{
-		gl = drawable.getGL().getGL3();
+		gl = drawable.getGL().getGL2();
 		gl.glEnable(GL3.GL_DEPTH_TEST);
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -101,7 +102,7 @@ public class GLRenderContext implements RenderContext {
 	 */
 	public void display(GLAutoDrawable drawable)
 	{
-		gl = drawable.getGL().getGL3();
+		gl = drawable.getGL().getGL2();
 
 		beginFrame();
 
