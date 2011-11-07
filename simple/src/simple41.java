@@ -10,7 +10,9 @@ import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
+import jrtr.Camera;
 import jrtr.GLRenderPanel;
 import jrtr.ObjReader;
 import jrtr.RenderContext;
@@ -103,12 +105,14 @@ public class simple41 {
 		try {
 			vertexTeapot = ObjReader.read("../simple/teapot_tex.obj", 1);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("ObjReader Problem");
 		}
 
+		Camera.setCenterOfProjection(new Vector3f(0, 0, 2));
+
 		sceneManager = new SimpleSceneManager();
-		shape = new Shape(vertexData);
-		// shape = new Shape(vertexTeapot);
+		// shape = new Shape(vertexData);
+		shape = new Shape(vertexTeapot);
 		sceneManager.addShape(shape);
 		renderPanel = new SimpleRenderPanel();
 		JFrame jframe = new JFrame("simple");

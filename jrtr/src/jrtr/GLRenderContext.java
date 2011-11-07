@@ -52,7 +52,7 @@ public class GLRenderContext implements RenderContext {
 		// Load and use default shader
 		GLShader defaultShader = new GLShader(gl);
 		try {
-			defaultShader.load("../jrtr/shaders/diffuse.vert","../jrtr/shaders/diffuse.frag");
+			defaultShader.load("../jrtr/shaders/diffuse.vert", "../jrtr/shaders/diffuse.frag");
 		} catch(Exception e) {
 			System.out.print("Problem with shader:\n");
 			System.out.print(e.getMessage());
@@ -236,8 +236,7 @@ public class GLRenderContext implements RenderContext {
 	 * 
 	 * To be implemented in the "Textures and Shading" project.
 	 */
-	private void setMaterial(Material m)
-	{
+	private void setMaterial(Material m) {
 	}
 
 	/**
