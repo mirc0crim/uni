@@ -8,15 +8,18 @@ import javax.vecmath.Vector3f;
  */
 public class Material {
 	private Texture texture;
-	public Vector3f diffuse;
-	public Vector3f specular;
-	public Vector3f ambient;
-	public float phong;
+	private Vector3f diffuse;
+	private Vector3f specular;
+	private Vector3f ambient;
+	private float phong;
+	private Shader shader;
+	private Vector3f matColor;
 
 	public Material() {
 		diffuse = new Vector3f(1, 1, 1);
 		specular = new Vector3f(1, 1, 1);
 		ambient = new Vector3f(1, 1, 1);
+		matColor = new Vector3f(1, 1, 1);
 		phong = 1;
 	}
 
@@ -26,6 +29,54 @@ public class Material {
 
 	public void setTexture(Texture tex) {
 		texture = tex;
+	}
+
+	public Vector3f getDiffuse() {
+		return diffuse;
+	}
+
+	public void setDiffuse(Vector3f dif) {
+		diffuse = dif;
+	}
+
+	public Vector3f getSpecular() {
+		return specular;
+	}
+
+	public void setSpecular(Vector3f spec) {
+		specular = spec;
+	}
+
+	public Vector3f getAmbient() {
+		return ambient;
+	}
+
+	public void setAmbient(Vector3f amb) {
+		ambient = amb;
+	}
+
+	public float getPhong() {
+		return phong;
+	}
+
+	public void setPhong(float ph) {
+		phong = ph;
+	}
+
+	public Shader getShader() {
+		return shader;
+	}
+
+	public void setShader(Shader shad) {
+		shader = shad;
+	}
+
+	public Vector3f getMatColor() {
+		return matColor;
+	}
+
+	public void setMatColor(Vector3f kd) {
+		matColor = kd;
 	}
 
 }

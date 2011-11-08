@@ -9,6 +9,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 /**
  * This class implements a {@link RenderContext} (a renderer) using OpenGL version 3 (or later).
@@ -71,14 +72,15 @@ public class GLRenderContext implements RenderContext {
 			tex = new GLTexture(gl);
 			tex.load("../jrtr/textures/plant.jpg");
 			// OpenGL calls to activate the texture
-			gl.glActiveTexture(0);	// Work with texture unit 0
+			gl.glActiveTexture(0); // Work with texture unit 0
 			gl.glEnable(GL3.GL_TEXTURE_2D);
 			gl.glBindTexture(GL3.GL_TEXTURE_2D, tex.getId());
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
 			id = gl.glGetUniformLocation(activeShader.programId(), "myTexture");
-			gl.glUniform1i(id, 0);	// The variable in the shader needs to be set to the desired texture unit, i.e., 0
-		} catch(Exception e) {
+			gl.glUniform1i(id, 0); // The variable in the shader needs to be set to the desired
+									// texture unit, i.e., 0
+		} catch (Exception e) {
 			System.out.print("Could not load texture\n");
 		}
 	}
@@ -238,6 +240,30 @@ public class GLRenderContext implements RenderContext {
 	 * To be implemented in the "Textures and Shading" project.
 	 */
 	private void setMaterial(Material m) {
+		if (m == null)
+			return;
+		float diffuse[] = new float[4];
+		float specular[] = new float[4];
+		float ambient[] = new float[4];
+		diffuse[3] = specular[3] = ambient[3] = 1;
+		diffuse[0] = m.getDiffuse().getX();
+		diffuse[1] = m.getDiffuse().getY();
+		diffuse[2] = m.getDiffuse().getZ();
+		specular[0] = m.getSpecular().getX();
+		specular[1] = m.getSpecular().getY();
+		specular[2] = m.getSpecular().getZ();
+		ambient[0] = m.getAmbient().getX();
+		ambient[1] = m.getAmbient().getY();
+		ambient[2] = m.getAmbient().getZ();
+		gl.glMaterialfv(gl.GL_FRONT_AND_BACK, gl.GL_DIFFUSE, diffuse, 0);
+		gl.glMaterialfv(gl.GL_FRONT_AND_BACK, gl.GL_SPECULAR, specular, 0);
+		gl.glMaterialfv(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT, ambient, 0);
+		gl.glMaterialf(gl.GL_FRONT_AND_BACK, gl.GL_SHININESS, m.getPhong());
+
+		Vector3f kd = m.getMatColor();
+		int id = gl.glGetUniformLocation(activeShader.programId(), "kd");
+		gl.glUniform3f(id, kd.getX(), kd.getY(), kd.getZ());
+
 	}
 
 	/**
@@ -246,8 +272,8 @@ public class GLRenderContext implements RenderContext {
 	 * 
 	 * To be implemented in the "Textures and Shading" project.
 	 */
-	void setLights()
-	{
+	void setLights() {
+
 	}
 
 	/**
