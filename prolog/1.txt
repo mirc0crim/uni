@@ -1,0 +1,61 @@
+GNU Prolog 1.4.0
+By Daniel Diaz
+Copyright (C) 1999-2011 Daniel Diaz
+compiling C:/Users/Mirco/workspace/uni/prolog/db.pl for byte code...
+C:/Users/Mirco/workspace/uni/prolog/db.pl compiled, 102 lines read - 10401 bytes written, 15 ms
+| ?- bestimme.
+Hat das Tier einen Ruecken- und Brustschildpanzer? (ja/nein)ja.
+
+Hat das Tier Flossenaehnliche Glieder? (ja/nein)ja.
+
+Gattungsname des Tieres: Karettschildkroete
+
+(16 ms) yes
+| ?- bestimme.
+Hat das Tier einen Ruecken- und Brustschildpanzer? (ja/nein)nein.
+
+Hat das Tier erkennbare Glieder? (ja/nein)nein.
+
+Hat das Tier sichtbare Augenlieder? (ja/nein)ja.
+
+Gattungsname des Tieres: Blindschleiche
+
+(62 ms) yes
+| ?- bestimme.
+Hat das Tier einen Ruecken- und Brustschildpanzer? (ja/nein)nein.
+
+Hat das Tier erkennbare Glieder? (ja/nein)ja.
+
+Hat das Tier einen zylindrischen Schwanz? (ja/nein)nein.
+
+Hat das Tier eine schmale Schnauze? (ja/nein)ja.
+
+Gattungsname des Tieres: Gavial
+
+(31 ms) yes
+| ?- bestimme.
+Hat das Tier einen Ruecken- und Brustschildpanzer? (ja/nein)nein.
+
+Hat das Tier erkennbare Glieder? (ja/nein)ja.
+
+Hat das Tier einen zylindrischen Schwanz? (ja/nein)ja.
+
+Hat das Tier Krallen an den Fuessen? (ja/nein)nein.
+
+Hat das Tier Haftpolster an den Fuessen? (ja/nein)ja.
+
+Gattungsname des Tieres: Gecko
+
+(47 ms) yes
+| ?- bestimme.
+Hat das Tier einen Ruecken- und Brustschildpanzer? (ja/nein)nein.
+
+Hat das Tier erkennbare Glieder? (ja/nein)nein.
+
+Hat das Tier sichtbare Augenlieder? (ja/nein)nein.
+
+Kann das Tier schwimmen? (ja/nein)ja.
+
+Gattungsname des Tieres: Ringelnatter
+
+(32 ms) yes
