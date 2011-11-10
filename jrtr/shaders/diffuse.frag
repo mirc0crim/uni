@@ -4,6 +4,7 @@
 
 // Uniform variables passed in from host program
 uniform sampler2D myTexture;
+uniform vec3 kd;
 
 // Variables passed in from the vertex shader
 in float ndotl;
@@ -15,5 +16,6 @@ out vec4 frag_shaded;
 void main()
 {		
 	// The built-in GLSL function "texture" performs the texture lookup
-	frag_shaded = ndotl * texture(myTexture, frag_texcoord);		
+	// frag_shaded = ndotl * texture(myTexture, frag_texcoord);
+	frag_shaded = ndotl * texture(myTexture, frag_texcoord) * vec4(kd,0);
 }

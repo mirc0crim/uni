@@ -19,7 +19,7 @@ public class Material {
 		diffuse = new Vector3f(1, 1, 1);
 		specular = new Vector3f(1, 1, 1);
 		ambient = new Vector3f(1, 1, 1);
-		matColor = new Vector3f(1, 1, 1);
+		matColor = new Vector3f(1, 0, 0);
 		phong = 1;
 	}
 

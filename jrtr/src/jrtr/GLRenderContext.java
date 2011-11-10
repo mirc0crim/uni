@@ -79,7 +79,7 @@ public class GLRenderContext implements RenderContext {
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
 			id = gl.glGetUniformLocation(activeShader.programId(), "myTexture");
 			gl.glUniform1i(id, 0); // The variable in the shader needs to be set to the desired
-									// texture unit, i.e., 0
+			// texture unit, i.e., 0
 		} catch (Exception e) {
 			System.out.print("Could not load texture\n");
 		}
@@ -255,15 +255,17 @@ public class GLRenderContext implements RenderContext {
 		ambient[0] = m.getAmbient().getX();
 		ambient[1] = m.getAmbient().getY();
 		ambient[2] = m.getAmbient().getZ();
+
+		/*
 		gl.glMaterialfv(gl.GL_FRONT_AND_BACK, gl.GL_DIFFUSE, diffuse, 0);
 		gl.glMaterialfv(gl.GL_FRONT_AND_BACK, gl.GL_SPECULAR, specular, 0);
 		gl.glMaterialfv(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT, ambient, 0);
 		gl.glMaterialf(gl.GL_FRONT_AND_BACK, gl.GL_SHININESS, m.getPhong());
+		 */
 
 		Vector3f kd = m.getMatColor();
 		int id = gl.glGetUniformLocation(activeShader.programId(), "kd");
 		gl.glUniform3f(id, kd.getX(), kd.getY(), kd.getZ());
-
 	}
 
 	/**
