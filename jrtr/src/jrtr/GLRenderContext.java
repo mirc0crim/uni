@@ -286,6 +286,10 @@ public class GLRenderContext implements RenderContext {
 			Vector3f ca = l.getAmbient();
 			int idCA = gl.glGetUniformLocation(activeShader.programId(), "ca");
 			gl.glUniform3f(idCA, ca.getX(), ca.getY(), ca.getZ());
+
+			Vector3f rad = l.getRadiance();
+			int idRad = gl.glGetUniformLocation(activeShader.programId(), "radiance");
+			gl.glUniform3f(idRad, rad.getX(), rad.getY(), rad.getZ());
 		}
 	}
 
