@@ -63,10 +63,6 @@ public class GLRenderContext implements RenderContext {
 		defaultShader.use();
 		activeShader = defaultShader;
 
-		// Pass light direction to shader
-		int id = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
-		gl.glUniform4f(id, 0, 0, 1, 0);		// Set light direction
-
 		GLTexture tex;
 		try {
 			// Load texture from file
@@ -78,7 +74,7 @@ public class GLRenderContext implements RenderContext {
 			gl.glBindTexture(GL3.GL_TEXTURE_2D, tex.getId());
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
-			id = gl.glGetUniformLocation(activeShader.programId(), "myTexture");
+			int id = gl.glGetUniformLocation(activeShader.programId(), "myTexture");
 			gl.glUniform1i(id, 0); // The variable in the shader needs to be set to the desired
 			// texture unit, i.e., 0
 		} catch (Exception e) {
@@ -290,6 +286,10 @@ public class GLRenderContext implements RenderContext {
 			Vector3f rad = l.getRadiance();
 			int idRad = gl.glGetUniformLocation(activeShader.programId(), "radiance");
 			gl.glUniform3f(idRad, rad.getX(), rad.getY(), rad.getZ());
+
+			Vector3f dir = l.getDirection();
+			int idDir = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
+			gl.glUniform4f(idDir, dir.getX(), dir.getY(), dir.getZ(), 0);
 		}
 	}
 

@@ -13,6 +13,7 @@ public class SimpleSceneManager implements SceneManagerInterface {
 	private LinkedList<Light> lights;
 	private Camera camera;
 	private Frustum frustum;
+	private final int MAX_LIGHTS = 8;
 
 	public SimpleSceneManager()
 	{
@@ -40,8 +41,10 @@ public class SimpleSceneManager implements SceneManagerInterface {
 	}
 
 	public void addLight(Light light) {
-		if (lights.size() < 8)
+		if (lights.size() < MAX_LIGHTS)
 			lights.add(light);
+		else
+			System.out.println("Not more than " + MAX_LIGHTS + " Lights allowed!");
 	}
 
 	@Override

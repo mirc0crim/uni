@@ -21,8 +21,8 @@ public class Light {
 		type = Type.Spot;
 		diffuse = new Vector3f(1, 1, 1);
 		specular = new Vector3f(1, 1, 1);
-		ambient = new Vector3f(0.4f, 0.4f, 0.4f);
-		direction = new Vector3f(0, 0, 1);
+		ambient = new Vector3f(0.2f, 0.2f, 0.2f);
+		direction = new Vector3f(0, 1, 0);
 		position = new Vector3f(0, 0, 1);
 		radiance = new Vector3f(0, 0, 1);
 	}
