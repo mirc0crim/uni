@@ -116,7 +116,14 @@ public class simple41 {
 		// shape = new Shape(vertexData);
 		shape = new Shape(vertexTeapot);
 		shape.setMaterial(new Material());
-		sceneManager.addLight(new Light());
+		Light l1 = new Light();
+		l1.setDirection(new Vector3f(0, 1, 0));
+		l1.setRadiance(new Vector3f(1, 0, 0));
+		Light l2 = new Light();
+		l2.setDirection(new Vector3f(0, -1, 0));
+		l2.setRadiance(new Vector3f(0, 1, 0));
+		sceneManager.addLight(l1);
+		sceneManager.addLight(l2);
 		sceneManager.addShape(shape);
 		renderPanel = new SimpleRenderPanel();
 		JFrame jframe = new JFrame("simple");

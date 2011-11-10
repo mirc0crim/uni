@@ -13,7 +13,7 @@ public class SimpleSceneManager implements SceneManagerInterface {
 	private LinkedList<Light> lights;
 	private Camera camera;
 	private Frustum frustum;
-	private final int MAX_LIGHTS = 8;
+	private final int MAX_LIGHTS = 5;
 
 	public SimpleSceneManager()
 	{

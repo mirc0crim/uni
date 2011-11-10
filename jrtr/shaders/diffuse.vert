@@ -2,7 +2,7 @@
 // GLSL version 1.50 
 // Vertex shader for diffuse shading in combination with a texture map
 
-#define MAX_LIGHTS 8
+#define MAX_LIGHTS 5
 
 // Uniform variables, passed in from host program via suitable 
 // variants of glUniform*
@@ -17,7 +17,7 @@ in vec4 position;
 in vec2 texcoord;
 
 // Output variables for fragment shader
-out float ndotl;
+out float ndotl[MAX_LIGHTS];
 out vec2 frag_texcoord;
 
 void main()
@@ -27,7 +27,9 @@ void main()
 	// Note: here we assume "lightDirection" is specified in camera coordinates,
 	// so we transform the normal to camera coordinates, and we don't transform
 	// the light direction, i.e., it stays in camera coordinates
-	ndotl = max(dot(modelview * vec4(normal,0), lightDirection[0]),0);
+	for (int i = 0; i< MAX_LIGHTS; i++) {
+		ndotl[i] = max(dot(modelview * vec4(normal,0), lightDirection[i]),0);
+	}
 
 	// Pass texture coordiantes to fragment shader, OpenGL automatically
 	// interpolates them to each pixel  (in a perspectively correct manner) 

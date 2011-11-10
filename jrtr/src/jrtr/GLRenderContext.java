@@ -277,20 +277,35 @@ public class GLRenderContext implements RenderContext {
 	 */
 	void setLights() {
 		Iterator<Light> itr = sceneManager.lightIterator();
-		while (itr.hasNext()){
+		int i = 0;
+		float[] lightArray = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		float[] radiArray = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		while (itr.hasNext() && i < 5) {
 			Light l = itr.next();
 			Vector3f ca = l.getAmbient();
 			int idCA = gl.glGetUniformLocation(activeShader.programId(), "ca");
 			gl.glUniform3f(idCA, ca.getX(), ca.getY(), ca.getZ());
 
 			Vector3f rad = l.getRadiance();
-			int idRad = gl.glGetUniformLocation(activeShader.programId(), "radiance");
-			gl.glUniform3f(idRad, rad.getX(), rad.getY(), rad.getZ());
+			radiArray[3 * i] = rad.getX();
+			radiArray[3 * i + 1] = rad.getY();
+			radiArray[3 * i + 2] = rad.getZ();
 
 			Vector3f dir = l.getDirection();
-			int idDir = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
-			gl.glUniform4f(idDir, dir.getX(), dir.getY(), dir.getZ(), 0);
+			lightArray[4 * i] = dir.getX();
+			lightArray[4 * i + 1] = dir.getY();
+			lightArray[4 * i + 2] = dir.getZ();
+			lightArray[4 * i + 3] = 0;
+
+			i++;
 		}
+		int numOfElements = 5;
+
+		int idDir = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
+		gl.glUniform4fv(idDir, numOfElements, lightArray, 0);
+
+		int idRad = gl.glGetUniformLocation(activeShader.programId(), "radiance");
+		gl.glUniform3fv(idRad, numOfElements, radiArray, 0);
 	}
 
 	/**
