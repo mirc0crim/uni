@@ -2,6 +2,7 @@ package jrtr;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -264,8 +265,12 @@ public class GLRenderContext implements RenderContext {
 		 */
 
 		Vector3f kd = m.getMatColor();
-		int id = gl.glGetUniformLocation(activeShader.programId(), "kd");
-		gl.glUniform3f(id, kd.getX(), kd.getY(), kd.getZ());
+		int idKD = gl.glGetUniformLocation(activeShader.programId(), "kd");
+		gl.glUniform3f(idKD, kd.getX(), kd.getY(), kd.getZ());
+
+		Vector3f ka = m.getAmbient();
+		int idKA = gl.glGetUniformLocation(activeShader.programId(), "ka");
+		gl.glUniform3f(idKA, ka.getX(), ka.getY(), ka.getZ());
 	}
 
 	/**
@@ -275,7 +280,13 @@ public class GLRenderContext implements RenderContext {
 	 * To be implemented in the "Textures and Shading" project.
 	 */
 	void setLights() {
-
+		Iterator<Light> itr = sceneManager.lightIterator();
+		while (itr.hasNext()){
+			Light l = itr.next();
+			Vector3f ca = l.getAmbient();
+			int idCA = gl.glGetUniformLocation(activeShader.programId(), "ca");
+			gl.glUniform3f(idCA, ca.getX(), ca.getY(), ca.getZ());
+		}
 	}
 
 	/**

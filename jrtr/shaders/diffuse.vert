@@ -7,7 +7,6 @@
 uniform mat4 projection;
 uniform mat4 modelview;
 uniform vec4 lightDirection;
-uniform vec3 kd;
 
 // Input vertex attributes; passed in from host program to shader
 // via vertex buffer objects

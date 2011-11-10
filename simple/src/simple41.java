@@ -14,6 +14,7 @@ import javax.vecmath.Vector3f;
 
 import jrtr.Camera;
 import jrtr.GLRenderPanel;
+import jrtr.Light;
 import jrtr.Material;
 import jrtr.ObjReader;
 import jrtr.RenderContext;
@@ -115,6 +116,7 @@ public class simple41 {
 		// shape = new Shape(vertexData);
 		shape = new Shape(vertexTeapot);
 		shape.setMaterial(new Material());
+		sceneManager.addLight(new Light());
 		sceneManager.addShape(shape);
 		renderPanel = new SimpleRenderPanel();
 		JFrame jframe = new JFrame("simple");

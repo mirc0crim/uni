@@ -18,8 +18,8 @@ public class Material {
 	public Material() {
 		diffuse = new Vector3f(1, 1, 1);
 		specular = new Vector3f(1, 1, 1);
-		ambient = new Vector3f(1, 1, 1);
-		matColor = new Vector3f(1, 0, 0);
+		ambient = new Vector3f(0.3f, 0.3f, 0.3f);
+		matColor = new Vector3f(1, 1, 1);
 		phong = 1;
 	}
 
