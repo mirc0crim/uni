@@ -12,6 +12,8 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
+import jrtr.Light.Type;
+
 /**
  * This class implements a {@link RenderContext} (a renderer) using OpenGL version 3 (or later).
  */
@@ -278,8 +280,10 @@ public class GLRenderContext implements RenderContext {
 	void setLights() {
 		Iterator<Light> itr = sceneManager.lightIterator();
 		int i = 0;
-		float[] lightArray = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		float[] dirArray = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		float[] posiArray = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		float[] radiArray = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		int[] typeArray = { 0, 0, 0, 0, 0 };
 		while (itr.hasNext() && i < 5) {
 			Light l = itr.next();
 			Vector3f ca = l.getAmbient();
@@ -287,25 +291,44 @@ public class GLRenderContext implements RenderContext {
 			gl.glUniform3f(idCA, ca.getX(), ca.getY(), ca.getZ());
 
 			Vector3f rad = l.getRadiance();
-			radiArray[3 * i] = rad.getX();
-			radiArray[3 * i + 1] = rad.getY();
-			radiArray[3 * i + 2] = rad.getZ();
+			radiArray[4 * i] = rad.getX();
+			radiArray[4 * i + 1] = rad.getY();
+			radiArray[4 * i + 2] = rad.getZ();
+			radiArray[4 * i + 3] = 0;
 
-			Vector3f dir = l.getDirection();
-			lightArray[4 * i] = dir.getX();
-			lightArray[4 * i + 1] = dir.getY();
-			lightArray[4 * i + 2] = dir.getZ();
-			lightArray[4 * i + 3] = 0;
+			if (l.getType() == Type.Directional) {
+				Vector3f dir = l.getDirection();
+				dirArray[4 * i] = dir.getX();
+				dirArray[4 * i + 1] = dir.getY();
+				dirArray[4 * i + 2] = dir.getZ();
+				dirArray[4 * i + 3] = 0;
+				typeArray[i] = 1;
+			}
+
+			if (l.getType() == Type.Point) {
+				Vector3f pos = l.getPosition();
+				posiArray[4 * i] = pos.getX();
+				posiArray[4 * i + 1] = pos.getY();
+				posiArray[4 * i + 2] = pos.getZ();
+				posiArray[4 * i + 3] = 0;
+				typeArray[i] = 2;
+			}
 
 			i++;
 		}
 		int numOfElements = 5;
 
 		int idDir = gl.glGetUniformLocation(activeShader.programId(), "lightDirection");
-		gl.glUniform4fv(idDir, numOfElements, lightArray, 0);
+		gl.glUniform4fv(idDir, numOfElements, dirArray, 0);
 
 		int idRad = gl.glGetUniformLocation(activeShader.programId(), "radiance");
-		gl.glUniform3fv(idRad, numOfElements, radiArray, 0);
+		gl.glUniform4fv(idRad, numOfElements, radiArray, 0);
+
+		int idPos = gl.glGetUniformLocation(activeShader.programId(), "posLight");
+		gl.glUniform4fv(idPos, numOfElements, posiArray, 0);
+
+		int idTyp = gl.glGetUniformLocation(activeShader.programId(), "type");
+		gl.glUniform1iv(idTyp, numOfElements, typeArray, 0);
 	}
 
 	/**

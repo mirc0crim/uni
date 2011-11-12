@@ -9,7 +9,7 @@ uniform sampler2D myTexture;
 uniform vec3 kd;
 uniform vec3 ka;
 uniform vec3 ca;
-uniform vec3 radiance[MAX_LIGHTS];
+uniform vec4 radiance[MAX_LIGHTS];
 
 // Variables passed in from the vertex shader
 in float ndotl[MAX_LIGHTS];
@@ -22,19 +22,22 @@ void main()
 {		
 	// The built-in GLSL function "texture" performs the texture lookup
 	// frag_shaded = ndotl * texture(myTexture, frag_texcoord);
-	vec4 diffuse[MAX_LIGHTS];
+	
+	//Texture
 	vec4 tex = texture(myTexture, frag_texcoord);
 	
+	//Diffuse
+	vec4 diffuse[MAX_LIGHTS];
 	for (int i = 0; i < MAX_LIGHTS; i++) {
-		diffuse[i] = vec4(radiance[i],0) * ndotl[i] * vec4(kd,0);
+		diffuse[i] = radiance[i] * ndotl[i] * vec4(kd,0);
 	}
-	
-	vec4 ambient = vec4(ka,0) * vec4(ca,0);
-	
 	vec4 dif = diffuse[0];
 	for (int i = 1; i < MAX_LIGHTS; i++) {
 		dif = dif + diffuse[i];
 	}
+	
+	//Ambient
+	vec4 ambient = vec4(ka,0) * vec4(ca,0);
 	
 	frag_shaded = tex * dif + ambient;
 }

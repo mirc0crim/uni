@@ -18,12 +18,12 @@ public class Light {
 	private Vector3f radiance;
 
 	public Light() {
-		type = Type.Spot;
+		type = Type.Point;
 		diffuse = new Vector3f(1, 1, 1);
 		specular = new Vector3f(1, 1, 1);
 		ambient = new Vector3f(0.2f, 0.2f, 0.2f);
 		direction = new Vector3f(0, 0, 1);
-		position = new Vector3f(0, 0, 1);
+		position = new Vector3f(0, 0, -10);
 		radiance = new Vector3f(0, 0, 1);
 	}
 

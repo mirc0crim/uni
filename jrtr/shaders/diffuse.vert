@@ -9,6 +9,9 @@
 uniform mat4 projection;
 uniform mat4 modelview;
 uniform vec4 lightDirection[MAX_LIGHTS];
+uniform vec4 radiance[MAX_LIGHTS];
+uniform vec4 posLight[MAX_LIGHTS];
+uniform int type[MAX_LIGHTS];
 
 // Input vertex attributes; passed in from host program to shader
 // via vertex buffer objects
@@ -28,7 +31,12 @@ void main()
 	// so we transform the normal to camera coordinates, and we don't transform
 	// the light direction, i.e., it stays in camera coordinates
 	for (int i = 0; i< MAX_LIGHTS; i++) {
-		ndotl[i] = max(dot(modelview * vec4(normal,0), lightDirection[i]),0);
+		if (type[i] == 1){
+			ndotl[i] = max(dot(modelview * vec4(normal,0), lightDirection[i]),0);
+		}
+		if (type[i] == 2){
+			ndotl[i] = max(dot(modelview * vec4(normal,0), (posLight[i]-modelview*position)/length(posLight[i]-modelview*position)),0);
+		}
 	}
 
 	// Pass texture coordiantes to fragment shader, OpenGL automatically
