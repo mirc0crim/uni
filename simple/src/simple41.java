@@ -29,7 +29,7 @@ public class simple41 {
 	static SimpleSceneManager sceneManager;
 	static Shape tea1;
 	static Shape tea2;
-	static Shape cube;
+	static Shape tea;
 	static float angle;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
@@ -41,13 +41,13 @@ public class simple41 {
 			angle = 0.01f;
 			Matrix4f t = tea1.getTransformation();
 			Matrix4f t2 = tea2.getTransformation();
-			Matrix4f t3 = cube.getTransformation();
-			t.setTranslation(new Vector3f(-1.5f, 1, 0));
-			t2.setTranslation(new Vector3f(1.5f, -1, 0));
+			Matrix4f t3 = tea.getTransformation();
+			t.setTranslation(new Vector3f(-1, 1, 0));
+			t2.setTranslation(new Vector3f(1, -1, 0));
 			t3.setScale(0.5f);
 			tea1.setTransformation(t);
 			tea2.setTransformation(t2);
-			cube.setTransformation(t3);
+			tea.setTransformation(t3);
 			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}
 	}
@@ -57,7 +57,7 @@ public class simple41 {
 		public void run() {
 			Matrix4f t = tea1.getTransformation();
 			Matrix4f t2 = tea2.getTransformation();
-			Matrix4f t3 = cube.getTransformation();
+			Matrix4f t3 = tea.getTransformation();
 			Matrix4f rotX = new Matrix4f();
 			Matrix4f rotY = new Matrix4f();
 
@@ -70,7 +70,7 @@ public class simple41 {
 
 			tea1.setTransformation(t);
 			tea2.setTransformation(t2);
-			cube.setTransformation(t3);
+			tea.setTransformation(t3);
 
 			renderPanel.getCanvas().repaint();
 		}
@@ -130,22 +130,22 @@ public class simple41 {
 			System.out.println("ObjReader Problem");
 		}
 
-		Camera.setCenterOfProjection(new Vector3f(0, 0, 5));
+		Camera.setCenterOfProjection(new Vector3f(0, 0, 4));
 
 		sceneManager = new SimpleSceneManager();
 		tea1 = new Shape(vertexTeapot);
 		tea2 = new Shape(vertexTeapot);
-		cube = new Shape(vertexData);
+		tea = new Shape(vertexTeapot);
 		Material mat1 = new Material();
 		mat1.setMatColor(new Vector3f(1, 1, 1));
 		Material mat2 = new Material();
 		mat2.setMatColor(new Vector3f(1, 0, 0));
 		tea1.setMaterial(mat1);
 		tea2.setMaterial(mat2);
-		cube.setMaterial(new Material());
+		tea.setMaterial(new Material());
 		sceneManager.addShape(tea1);
 		sceneManager.addShape(tea2);
-		sceneManager.addShape(cube);
+		sceneManager.addShape(tea);
 		Light l1 = new Light();
 		l1.setDirection(new Vector3f(0, 1, 0));
 		l1.setRadiance(new Vector3f(1, 0, 0));

@@ -57,8 +57,8 @@ public class GLRenderContext implements RenderContext {
 		// Load and use default shader
 		GLShader defaultShader = new GLShader(gl);
 		try {
-			defaultShader.load("../jrtr/shaders/diffuse.vert", "../jrtr/shaders/diffuse.frag");
-		} catch(Exception e) {
+			defaultShader.load("../jrtr/shaders/test.vert", "../jrtr/shaders/test.frag");
+		} catch (Exception e) {
 			System.out.print("Problem with shader:\n");
 			System.out.print(e.getMessage());
 		}
@@ -255,13 +255,6 @@ public class GLRenderContext implements RenderContext {
 		ambient[1] = m.getAmbient().getY();
 		ambient[2] = m.getAmbient().getZ();
 
-		/*
-		gl.glMaterialfv(gl.GL_FRONT_AND_BACK, gl.GL_DIFFUSE, diffuse, 0);
-		gl.glMaterialfv(gl.GL_FRONT_AND_BACK, gl.GL_SPECULAR, specular, 0);
-		gl.glMaterialfv(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT, ambient, 0);
-		gl.glMaterialf(gl.GL_FRONT_AND_BACK, gl.GL_SHININESS, m.getPhong());
-		 */
-
 		Vector3f kd = m.getMatColor();
 		int idKD = gl.glGetUniformLocation(activeShader.programId(), "kd");
 		gl.glUniform3f(idKD, kd.getX(), kd.getY(), kd.getZ());
@@ -351,4 +344,5 @@ public class GLRenderContext implements RenderContext {
 	{
 		return new GLTexture(gl);
 	}
+
 }
