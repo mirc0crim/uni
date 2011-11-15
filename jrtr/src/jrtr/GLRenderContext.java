@@ -77,8 +77,8 @@ public class GLRenderContext implements RenderContext {
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
 			int id = gl.glGetUniformLocation(activeShader.programId(), "myTexture");
-			gl.glUniform1i(id, 0); // The variable in the shader needs to be set to the desired
-			// texture unit, i.e., 0
+			gl.glUniform1i(id, 0);
+			// The variable in the shader needs to be set to the desired texture unit, i.e., 0
 		} catch (Exception e) {
 			System.out.print("Could not load texture\n");
 		}
