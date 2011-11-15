@@ -57,7 +57,7 @@ public class GLRenderContext implements RenderContext {
 		// Load and use default shader
 		GLShader defaultShader = new GLShader(gl);
 		try {
-			defaultShader.load("../jrtr/shaders/test.vert", "../jrtr/shaders/test.frag");
+			defaultShader.load("../jrtr/shaders/phong.vert", "../jrtr/shaders/phong.frag");
 		} catch (Exception e) {
 			System.out.print("Problem with shader:\n");
 			System.out.print(e.getMessage());
@@ -82,6 +82,10 @@ public class GLRenderContext implements RenderContext {
 		} catch (Exception e) {
 			System.out.print("Could not load texture\n");
 		}
+
+		Vector3f cam = Camera.getCenterOfProjection();
+		int idCam = gl.glGetUniformLocation(activeShader.programId(), "cop");
+		gl.glUniform3f(idCam, cam.getX(), cam.getY(), cam.getZ());
 	}
 
 
@@ -241,19 +245,6 @@ public class GLRenderContext implements RenderContext {
 	private void setMaterial(Material m) {
 		if (m == null)
 			return;
-		float diffuse[] = new float[4];
-		float specular[] = new float[4];
-		float ambient[] = new float[4];
-		diffuse[3] = specular[3] = ambient[3] = 1;
-		diffuse[0] = m.getDiffuse().getX();
-		diffuse[1] = m.getDiffuse().getY();
-		diffuse[2] = m.getDiffuse().getZ();
-		specular[0] = m.getSpecular().getX();
-		specular[1] = m.getSpecular().getY();
-		specular[2] = m.getSpecular().getZ();
-		ambient[0] = m.getAmbient().getX();
-		ambient[1] = m.getAmbient().getY();
-		ambient[2] = m.getAmbient().getZ();
 
 		Vector3f kd = m.getMatColor();
 		int idKD = gl.glGetUniformLocation(activeShader.programId(), "kd");
@@ -262,6 +253,10 @@ public class GLRenderContext implements RenderContext {
 		Vector3f ka = m.getAmbient();
 		int idKA = gl.glGetUniformLocation(activeShader.programId(), "ka");
 		gl.glUniform3f(idKA, ka.getX(), ka.getY(), ka.getZ());
+
+		Vector3f ks = m.getSpecular();
+		int idKS = gl.glGetUniformLocation(activeShader.programId(), "ks");
+		gl.glUniform3f(idKS, ks.getX(), ks.getY(), ks.getZ());
 	}
 
 	/**
