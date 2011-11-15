@@ -22,9 +22,10 @@ in vec2 texcoord;
 
 // Output variables for fragment shader
 out float ndotl[MAX_LIGHTS];
+out vec4 lightDir[MAX_LIGHTS];
 out vec2 frag_texcoord;
+out vec4 frag_normal;
 out vec4 eye;
-out vec3 ref[MAX_LIGHTS];
 
 void main()
 {		
@@ -37,16 +38,15 @@ void main()
 	for (int i = 0; i< MAX_LIGHTS; i++) {
 		if (type[i] == 1){
 			ndotl[i] = max(dot(modelview * vec4(normal,0), lightDirection[i]),0);
+			lightDir[i] = normalize(lightDirection[i]);
 		}
 		if (type[i] == 2){
 			ndotl[i] = max(dot(modelview*vec4(normal,0), (posLight[i]-modelview*position)/length(posLight[i]-modelview*position)),0);
-			ldotn[i] = max(dot((posLight[i]-modelview*position)/length(posLight[i]-modelview*position),modelview*vec4(normal,0)),0);
-			//ref[i] = ((posLight[i]-modelview*position) - 2*ldotn[i]*(modelview*vec4(normal,0))).xyz;
-			ref[i] = reflect((posLight[i]-modelview*position),modelview*vec4(normal,0)).xyz;
+			lightDir[i] = normalize(posLight[i] - modelview*position);
 		}
 	}
-	
-	eye = -(modelview*position);
+	frag_normal = normalize(modelview * vec4(normal,0));
+	eye = normalize(-(modelview*position));
 
 	// Pass texture coordiantes to fragment shader, OpenGL automatically
 	// interpolates them to each pixel  (in a perspectively correct manner) 

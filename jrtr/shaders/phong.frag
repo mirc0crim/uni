@@ -10,13 +10,15 @@ uniform vec3 kd;
 uniform vec3 ka;
 uniform vec3 ca;
 uniform vec3 ks;
+uniform float phong;
 uniform vec4 radiance[MAX_LIGHTS];
 
 // Variables passed in from the vertex shader
 in float ndotl[MAX_LIGHTS];
+in vec4 lightDir[MAX_LIGHTS];
 in vec2 frag_texcoord;
-in vec eye;
-in vec3 ref[MAX_LIGHTS];
+in vec4 frag_normal;
+in vec4 eye;
 
 // Output variable, will be written to framebuffer automatically
 out vec4 frag_shaded;
@@ -42,7 +44,8 @@ void main()
 	//Specular
 	vec4 specular[MAX_LIGHTS];
 	for (int i = 0; i < MAX_LIGHTS; i++) {
-		specular[i] = radiance[i] * vec4(ks,0) * pow(dot(ref[i],eye),2);
+		vec4 ref = normalize(reflect(-lightDir[i], frag_normal));
+		specular[i] = radiance[i] * vec4(ks,0) * pow(max(dot(ref,eye),0),phong);
 	}
 	vec4 spec = specular[0];
 	for (int i = 1; i < MAX_LIGHTS; i++) {
@@ -52,5 +55,5 @@ void main()
 	//Ambient
 	vec4 ambient = vec4(ka,0) * vec4(ca,0);
 	
-	frag_shaded = specular[1];
+	frag_shaded = dif + spec + ambient;
 }

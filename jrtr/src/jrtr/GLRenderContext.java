@@ -257,6 +257,10 @@ public class GLRenderContext implements RenderContext {
 		Vector3f ks = m.getSpecular();
 		int idKS = gl.glGetUniformLocation(activeShader.programId(), "ks");
 		gl.glUniform3f(idKS, ks.getX(), ks.getY(), ks.getZ());
+
+		float phong = m.getPhong();
+		int idPhong = gl.glGetUniformLocation(activeShader.programId(), "phong");
+		gl.glUniform1f(idPhong, phong);
 	}
 
 	/**

@@ -20,7 +20,7 @@ public class Material {
 		specular = new Vector3f(1, 1, 1);
 		ambient = new Vector3f(0.2f, 0.2f, 0.2f);
 		matColor = new Vector3f(1, 1, 1);
-		phong = 1;
+		phong = 5;
 	}
 
 	public Texture getTexture() {
