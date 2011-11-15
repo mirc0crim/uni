@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-import javax.media.opengl.GL2;
 import javax.media.opengl.GL3;
 
 /**
@@ -14,10 +13,10 @@ import javax.media.opengl.GL3;
  */
 public class GLShader implements Shader {
 
-	private GL2 gl; // The OpenGL context
+	private GL3 gl; // The OpenGL context
 	private int p;	// The shader identifier
 
-	public GLShader(GL2 gl)
+	public GLShader(GL3 gl)
 	{
 		this.gl = gl;
 	}

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
-import javax.media.opengl.GL2;
 import javax.media.opengl.GL3;
 
 /**
@@ -15,11 +14,11 @@ import javax.media.opengl.GL3;
  */
 public class GLTexture implements Texture {
 
-	private GL2 gl; // The OpenGL context that stores the texture
+	private GL3 gl; // The OpenGL context that stores the texture
 	private IntBuffer id;	// Stores the OpenGL texture identifier
 	private int w, h;		// Width and height
 
-	public GLTexture(GL2 gl)
+	public GLTexture(GL3 gl)
 	{
 		this.gl = gl;
 		id = IntBuffer.allocate(1);	// Make the buffer that will store the texture identifier
