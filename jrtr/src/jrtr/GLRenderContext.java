@@ -261,6 +261,12 @@ public class GLRenderContext implements RenderContext {
 		float phong = m.getPhong();
 		int idPhong = gl.glGetUniformLocation(activeShader.programId(), "phong");
 		gl.glUniform1f(idPhong, phong);
+
+		if (m.getShader() != null) {
+			m.getShader().use();
+			activeShader = (GLShader) m.getShader();
+			setLights();
+		}
 	}
 
 	/**

@@ -19,6 +19,7 @@ import jrtr.Material;
 import jrtr.ObjReader;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
+import jrtr.Shader;
 import jrtr.Shape;
 import jrtr.SimpleSceneManager;
 import jrtr.VertexData;
@@ -29,7 +30,7 @@ public class simple41 {
 	static SimpleSceneManager sceneManager;
 	static Shape tea1;
 	static Shape tea2;
-	static Shape tea;
+	static Shape tea3;
 	static float angle;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
@@ -37,17 +38,20 @@ public class simple41 {
 		public void init(RenderContext r) {
 			renderContext = r;
 			renderContext.setSceneManager(sceneManager);
+
+			scene();
+
 			Timer timer = new Timer();
 			angle = 0.01f;
-			Matrix4f t = tea1.getTransformation();
+			Matrix4f t1 = tea1.getTransformation();
 			Matrix4f t2 = tea2.getTransformation();
-			Matrix4f t3 = tea.getTransformation();
-			t.setTranslation(new Vector3f(-1, 1, 0));
+			Matrix4f t3 = tea3.getTransformation();
+			t1.setTranslation(new Vector3f(-1, 1, 0));
 			t2.setTranslation(new Vector3f(1, -1, 0));
 			t3.setScale(0.5f);
-			tea1.setTransformation(t);
+			tea1.setTransformation(t1);
 			tea2.setTransformation(t2);
-			tea.setTransformation(t3);
+			tea3.setTransformation(t3);
 			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}
 	}
@@ -55,22 +59,22 @@ public class simple41 {
 	public static class AnimationTask extends TimerTask {
 		@Override
 		public void run() {
-			Matrix4f t = tea1.getTransformation();
+			Matrix4f t1 = tea1.getTransformation();
 			Matrix4f t2 = tea2.getTransformation();
-			Matrix4f t3 = tea.getTransformation();
+			Matrix4f t3 = tea3.getTransformation();
 			Matrix4f rotX = new Matrix4f();
 			Matrix4f rotY = new Matrix4f();
 
 			rotX.rotX(angle);
 			rotY.rotY(1.5f * angle);
-			t.mul(rotX);
+			t1.mul(rotX);
 			t2.mul(rotY);
 			t3.mul(rotX);
 			t3.mul(rotY);
 
-			tea1.setTransformation(t);
+			tea1.setTransformation(t1);
 			tea2.setTransformation(t2);
-			tea.setTransformation(t3);
+			tea3.setTransformation(t3);
 
 			renderPanel.getCanvas().repaint();
 		}
@@ -78,51 +82,6 @@ public class simple41 {
 
 	public static void main(String[] args)
 	{
-		// Make a simple geometric object: a cube
-
-		float v[] = {-1,-1,1, 1,-1,1, 1,1,1, -1,1,1,		// front face
-				-1,-1,-1, -1,-1,1, -1,1,1, -1,1,-1,	// left face
-				1,-1,-1,-1,-1,-1, -1,1,-1, 1,1,-1,		// back face
-				1,-1,1, 1,-1,-1, 1,1,-1, 1,1,1,		// right face
-				1,1,1, 1,1,-1, -1,1,-1, -1,1,1,		// top face
-				-1,-1,1, -1,-1,-1, 1,-1,-1, 1,-1,1};	// bottom face
-
-		float c[] = {1,0,0, 1,0,0, 1,0,0, 1,0,0,
-				0,1,0, 0,1,0, 0,1,0, 0,1,0,
-				1,0,0, 1,0,0, 1,0,0, 1,0,0,
-				0,1,0, 0,1,0, 0,1,0, 0,1,0,
-				0,0,1, 0,0,1, 0,0,1, 0,0,1,
-				0,0,1, 0,0,1, 0,0,1, 0,0,1};
-
-		float n[] = {0,0,1, 0,0,1, 0,0,1, 0,0,1,
-				-1,0,0, -1,0,0, -1,0,0, -1,0,0,
-				0,0,-1, 0,0,-1, 0,0,-1, 0,0,-1,
-				1,0,0, 1,0,0, 1,0,0, 1,0,0,
-				0,1,0, 0,1,0, 0,1,0, 0,1,0,
-				0,-1,0, 0,-1,0, 0,-1,0,  0,-1,0};
-
-		float uv[] = {0,0, 1,0, 1,1, 0,1,
-				0,0, 1,0, 1,1, 0,1,
-				0,0, 1,0, 1,1, 0,1,
-				0,0, 1,0, 1,1, 0,1,
-				0,0, 1,0, 1,1, 0,1,
-				0,0, 1,0, 1,1, 0,1};
-
-		VertexData vertexData = new VertexData(24);
-		vertexData.addElement(c, VertexData.Semantic.COLOR, 3);
-		vertexData.addElement(v, VertexData.Semantic.POSITION, 3);
-		vertexData.addElement(n, VertexData.Semantic.NORMAL, 3);
-		vertexData.addElement(uv, VertexData.Semantic.TEXCOORD, 2);
-
-		int indices[] = {0,2,3, 0,1,2,			// front face
-				4,6,7, 4,5,6,			// left face
-				8,10,11, 8,9,10,		// back face
-				12,14,15, 12,13,14,	// right face
-				16,18,19, 16,17,18,	// top face
-				20,22,23, 20,21,22};	// bottom face
-
-		vertexData.addIndices(indices);
-
 		VertexData vertexTeapot = null;
 		try {
 			vertexTeapot = ObjReader.read("../simple/teapot_tex.obj", 1);
@@ -132,20 +91,48 @@ public class simple41 {
 
 		Camera.setCenterOfProjection(new Vector3f(0, 0, 4));
 
-		sceneManager = new SimpleSceneManager();
 		tea1 = new Shape(vertexTeapot);
 		tea2 = new Shape(vertexTeapot);
-		tea = new Shape(vertexTeapot);
+		tea3 = new Shape(vertexTeapot);
+
+		sceneManager = new SimpleSceneManager();
+		renderPanel = new SimpleRenderPanel();
+		JFrame jframe = new JFrame("simple");
+		jframe.setSize(500, 500);
+		jframe.setLocationRelativeTo(null);
+		jframe.getContentPane().add(renderPanel.getCanvas());
+		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jframe.setVisible(true);
+	}
+
+	public static void scene() {
+		Shader toon = renderContext.makeShader();
+		Shader diffuse = renderContext.makeShader();
+		Shader phong = renderContext.makeShader();
+		try {
+			toon.load("../jrtr/shaders/toon.vert", "../jrtr/shaders/toon.frag");
+			diffuse.load("../jrtr/shaders/diffuse.vert", "../jrtr/shaders/diffuse.frag");
+			phong.load("../jrtr/shaders/phong.vert", "../jrtr/shaders/phong.frag");
+		} catch (Exception e) {
+			System.out.println("Problem loading shader");
+		}
+
+
 		Material mat1 = new Material();
 		mat1.setMatColor(new Vector3f(1, 1, 1));
+		mat1.setShader(diffuse);
 		Material mat2 = new Material();
 		mat2.setMatColor(new Vector3f(1, 0, 0));
+		mat2.setShader(toon);
+		Material mat3 = new Material();
+		mat2.setMatColor(new Vector3f(0.5f, 0.5f, 0.5f));
+		mat3.setShader(phong);
 		tea1.setMaterial(mat1);
 		tea2.setMaterial(mat2);
-		tea.setMaterial(new Material());
+		tea3.setMaterial(mat3);
 		sceneManager.addShape(tea1);
 		sceneManager.addShape(tea2);
-		sceneManager.addShape(tea);
+		sceneManager.addShape(tea3);
 		Light l1 = new Light();
 		l1.setDirection(new Vector3f(0, 1, 0));
 		l1.setRadiance(new Vector3f(1, 0, 0));
@@ -161,12 +148,5 @@ public class simple41 {
 		sceneManager.addLight(l1);
 		sceneManager.addLight(l2);
 		sceneManager.addLight(l3);
-		renderPanel = new SimpleRenderPanel();
-		JFrame jframe = new JFrame("simple");
-		jframe.setSize(500, 500);
-		jframe.setLocationRelativeTo(null);
-		jframe.getContentPane().add(renderPanel.getCanvas());
-		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jframe.setVisible(true);
 	}
 }
