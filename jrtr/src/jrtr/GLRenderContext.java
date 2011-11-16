@@ -64,20 +64,25 @@ public class GLRenderContext implements RenderContext {
 		defaultShader.use();
 		activeShader = defaultShader;
 
-		GLTexture tex;
 		try {
-			// Load texture from file
-			tex = new GLTexture(gl);
-			tex.load("../jrtr/textures/plant.jpg");
-			// OpenGL calls to activate the texture
-			gl.glActiveTexture(0); // Work with texture unit 0
+			GLTexture plant = new GLTexture(gl);
+			plant.load("../jrtr/textures/plant.jpg");
+			gl.glActiveTexture(GL3.GL_TEXTURE0);
 			gl.glEnable(GL3.GL_TEXTURE_2D);
-			gl.glBindTexture(GL3.GL_TEXTURE_2D, tex.getId());
+			gl.glBindTexture(GL3.GL_TEXTURE_2D, plant.getId());
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
-			int id = gl.glGetUniformLocation(activeShader.programId(), "myTexture");
-			gl.glUniform1i(id, 0);
-			// The variable in the shader needs to be set to the desired texture unit, i.e., 0
+			int id1 = gl.glGetUniformLocation(activeShader.programId(), "plant");
+			gl.glUniform1i(id1, GL3.GL_TEXTURE0);
+			GLTexture gloss = new GLTexture(gl);
+			gloss.load("../jrtr/textures/gloss.jpg");
+			gl.glActiveTexture(GL3.GL_TEXTURE1);
+			gl.glEnable(GL3.GL_TEXTURE_2D);
+			gl.glBindTexture(GL3.GL_TEXTURE_2D, gloss.getId());
+			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
+			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
+			int id2 = gl.glGetUniformLocation(activeShader.programId(), "gloss");
+			gl.glUniform1i(id2, GL3.GL_TEXTURE1);
 		} catch (Exception e) {
 			System.out.print("Could not load texture\n");
 		}

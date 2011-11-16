@@ -111,7 +111,7 @@ public class simple41 {
 		Shader phong = renderContext.makeShader();
 		try {
 			toon.load("../jrtr/shaders/toon.vert", "../jrtr/shaders/toon.frag");
-			diffuse.load("../jrtr/shaders/diffuse.vert", "../jrtr/shaders/diffuse.frag");
+			diffuse.load("../jrtr/shaders/diffuseBsp.vert", "../jrtr/shaders/diffuseBsp.frag");
 			phong.load("../jrtr/shaders/texphong.vert", "../jrtr/shaders/texphong.frag");
 		} catch (Exception e) {
 			System.out.println("Problem loading shader");
@@ -120,13 +120,13 @@ public class simple41 {
 
 		Material mat1 = new Material();
 		mat1.setMatColor(new Vector3f(1, 1, 1));
-		mat1.setShader(phong);
+		mat1.setShader(diffuse);
 		Material mat2 = new Material();
 		mat2.setMatColor(new Vector3f(1, 0, 0));
-		mat2.setShader(phong);
+		mat2.setShader(diffuse);
 		Material mat3 = new Material();
 		mat2.setMatColor(new Vector3f(0.5f, 0.5f, 0.5f));
-		mat3.setShader(phong);
+		mat3.setShader(diffuse);
 		tea1.setMaterial(mat1);
 		tea2.setMaterial(mat2);
 		tea3.setMaterial(mat3);
