@@ -5,7 +5,6 @@
 #define MAX_LIGHTS 5
 
 // Uniform variables passed in from host program
-uniform sampler2D myTexture;
 uniform vec3 kd;
 uniform vec3 ka;
 uniform vec3 ca;
@@ -24,13 +23,7 @@ in vec4 eye;
 out vec4 frag_shaded;
 
 void main()
-{		
-	// The built-in GLSL function "texture" performs the texture lookup
-	// frag_shaded = ndotl * texture(myTexture, frag_texcoord);
-	
-	//Texture
-	vec4 tex = texture(myTexture, frag_texcoord);
-	
+{	
 	//Diffuse
 	vec4 diffuse[MAX_LIGHTS];
 	for (int i = 0; i < MAX_LIGHTS; i++) {

@@ -5,7 +5,8 @@
 #define MAX_LIGHTS 5
 
 // Uniform variables passed in from host program
-uniform sampler2D myTexture;
+uniform sampler2D plant;
+uniform sampler2D gloss;
 uniform vec3 kd;
 uniform vec3 ka;
 uniform vec3 ca;
@@ -29,7 +30,7 @@ void main()
 	// frag_shaded = ndotl * texture(myTexture, frag_texcoord);
 	
 	//Texture
-	vec4 tex = texture(myTexture, frag_texcoord);
+	vec4 tex = texture(plant, frag_texcoord);
 	
 	//Diffuse
 	vec4 diffuse[MAX_LIGHTS];
@@ -41,13 +42,13 @@ void main()
 		dif = dif + diffuse[i];
 	}
 	
-	float gloss = texture(myTexture, frag_texcoord).x + texture(myTexture, frag_texcoord).y + texture(myTexture, frag_texcoord).z;
+	float glossfactor = texture(gloss, frag_texcoord).x + texture(gloss, frag_texcoord).y + texture(gloss, frag_texcoord).z;
 	
 	//Specular
 	vec4 specular[MAX_LIGHTS];
 	for (int i = 0; i < MAX_LIGHTS; i++) {
 		vec4 ref = normalize(reflect(-lightDir[i], frag_normal));
-		specular[i] = radiance[i]  * gloss * pow(max(dot(ref,eye),0),phong);
+		specular[i] = radiance[i]  * glossfactor * pow(max(dot(ref,eye),0),phong);
 	}
 	vec4 spec = specular[0];
 	for (int i = 1; i < MAX_LIGHTS; i++) {

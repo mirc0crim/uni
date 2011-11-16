@@ -48,9 +48,8 @@ public class simple41 {
 			Matrix4f t1 = tea1.getTransformation();
 			Matrix4f t2 = tea2.getTransformation();
 			Matrix4f t3 = tea3.getTransformation();
-			t1.setTranslation(new Vector3f(-1, 1, 0));
-			t2.setTranslation(new Vector3f(1, -1, 0));
-			t3.setScale(0.5f);
+			t1.setTranslation(new Vector3f(-1.25f, 1.25f, 0));
+			t2.setTranslation(new Vector3f(1.25f, -1.25f, 0));
 			tea1.setTransformation(t1);
 			tea2.setTransformation(t2);
 			tea3.setTransformation(t3);
@@ -199,7 +198,7 @@ public class simple41 {
 		if (task == 4) {
 			mat1.setMatColor(new Vector3f(1, 1, 1));
 			mat1.setShader(toon);
-			mat2.setMatColor(new Vector3f(0.5f, 0.5f, 0.5f));
+			mat2.setMatColor(new Vector3f(1, 1, 1));
 			mat2.setShader(brick);
 			mat3.setMatColor(new Vector3f(1, 1, 1));
 			mat3.setShader(neon);

@@ -16,5 +16,5 @@ out vec4 frag_shaded;
 void main()
 {		
 	// The built-in GLSL function "texture" performs the texture lookup
-	frag_shaded = ndotl * texture(plant, frag_texcoord);		
+	frag_shaded = ndotl * texture(gloss, frag_texcoord);
 }
