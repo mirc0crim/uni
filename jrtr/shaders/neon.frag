@@ -6,8 +6,6 @@
 
 // Uniform variables passed in from host program
 uniform vec3 kd;
-uniform vec3 ka;
-uniform vec3 ca;
 uniform vec4 radiance[MAX_LIGHTS];
 
 // Variables passed in from the vertex shader
@@ -28,16 +26,13 @@ void main() {
 		dif = dif + diffuse[i];
 	}
 	
-	//Ambient
-	vec4 ambient = vec4(ka,0) * vec4(ca,0);
+	vec4 neon = dif;
+	if (neon.x > 0.6)
+		neon.x = 1;
+	if (neon.y > 0.6)
+		neon.y = 1;
+	if (neon.z > 0.6)
+		neon.z = 1;
 	
-	vec4 cartoon = dif;
-	if (cartoon.x > 0.5)
-		cartoon.x = 1;
-	if (cartoon.y > 0.5)
-		cartoon.y = 1;
-	if (cartoon.z > 0.5)
-		cartoon.z = 1;
-	
-	frag_shaded = cartoon + ambient;
+	frag_shaded = neon;
 }

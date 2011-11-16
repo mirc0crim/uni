@@ -6,7 +6,6 @@
 
 // Uniform variables passed in from host program
 uniform sampler2D myTexture;
-uniform sampler2D glossMap;
 uniform vec3 kd;
 uniform vec3 ka;
 uniform vec3 ca;
@@ -42,13 +41,13 @@ void main()
 		dif = dif + diffuse[i];
 	}
 	
-	float gloss = texture(glossMap, frag_texcoord).x + texture(glossMap, frag_texcoord).y + texture(glossMap, frag_texcoord).z;
+	float gloss = texture(myTexture, frag_texcoord).x + texture(myTexture, frag_texcoord).y + texture(myTexture, frag_texcoord).z;
 	
 	//Specular
 	vec4 specular[MAX_LIGHTS];
 	for (int i = 0; i < MAX_LIGHTS; i++) {
 		vec4 ref = normalize(reflect(-lightDir[i], frag_normal));
-		specular[i] = radiance[i]  * vec4(ks,0) * pow(max(dot(ref,eye),0),phong);
+		specular[i] = radiance[i]  * gloss * pow(max(dot(ref,eye),0),phong);
 	}
 	vec4 spec = specular[0];
 	for (int i = 1; i < MAX_LIGHTS; i++) {
@@ -58,5 +57,5 @@ void main()
 	//Ambient
 	vec4 ambient = vec4(ka,0) * vec4(ca,0);
 	
-	frag_shaded = tex;
+	frag_shaded = dif + spec + ambient;
 }

@@ -74,15 +74,17 @@ public class GLRenderContext implements RenderContext {
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
 			int id1 = gl.glGetUniformLocation(activeShader.programId(), "plant");
 			gl.glUniform1i(id1, GL3.GL_TEXTURE0);
-			GLTexture gloss = new GLTexture(gl);
-			gloss.load("../jrtr/textures/gloss.jpg");
-			gl.glActiveTexture(GL3.GL_TEXTURE1);
-			gl.glEnable(GL3.GL_TEXTURE_2D);
-			gl.glBindTexture(GL3.GL_TEXTURE_2D, gloss.getId());
-			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
-			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
-			int id2 = gl.glGetUniformLocation(activeShader.programId(), "gloss");
-			gl.glUniform1i(id2, GL3.GL_TEXTURE1);
+			/*
+				GLTexture gloss = new GLTexture(gl);
+				gloss.load("../jrtr/textures/gloss.jpg");
+				gl.glActiveTexture(GL3.GL_TEXTURE1);
+				gl.glEnable(GL3.GL_TEXTURE_2D);
+				gl.glBindTexture(GL3.GL_TEXTURE_2D, gloss.getId());
+				gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
+				gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
+				int id2 = gl.glGetUniformLocation(activeShader.programId(), "gloss");
+				gl.glUniform1i(id2, GL3.GL_TEXTURE1);
+			 */
 		} catch (Exception e) {
 			System.out.print("Could not load texture\n");
 		}

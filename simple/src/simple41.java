@@ -15,6 +15,7 @@ import javax.vecmath.Vector3f;
 import jrtr.Camera;
 import jrtr.GLRenderPanel;
 import jrtr.Light;
+import jrtr.Light.Type;
 import jrtr.Material;
 import jrtr.ObjReader;
 import jrtr.RenderContext;
@@ -32,6 +33,7 @@ public class simple41 {
 	static Shape tea2;
 	static Shape tea3;
 	static float angle;
+	static int task = 4;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
 		@Override
@@ -107,44 +109,118 @@ public class simple41 {
 
 	public static void scene() {
 		Shader toon = renderContext.makeShader();
+		Shader neon = renderContext.makeShader();
+		Shader brick = renderContext.makeShader();
 		Shader diffuse = renderContext.makeShader();
 		Shader phong = renderContext.makeShader();
+		Shader texphong = renderContext.makeShader();
 		try {
 			toon.load("../jrtr/shaders/toon.vert", "../jrtr/shaders/toon.frag");
-			diffuse.load("../jrtr/shaders/diffuseBsp.vert", "../jrtr/shaders/diffuseBsp.frag");
-			phong.load("../jrtr/shaders/texphong.vert", "../jrtr/shaders/texphong.frag");
+			neon.load("../jrtr/shaders/neon.vert", "../jrtr/shaders/neon.frag");
+			brick.load("../jrtr/shaders/brick.vert", "../jrtr/shaders/brick.frag");
+			diffuse.load("../jrtr/shaders/diffuse.vert", "../jrtr/shaders/diffuse.frag");
+			phong.load("../jrtr/shaders/phong.vert", "../jrtr/shaders/phong.frag");
+			texphong.load("../jrtr/shaders/texphong.vert", "../jrtr/shaders/texphong.frag");
 		} catch (Exception e) {
 			System.out.println("Problem loading shader");
 		}
-
-
 		Material mat1 = new Material();
-		mat1.setMatColor(new Vector3f(1, 1, 1));
-		mat1.setShader(diffuse);
 		Material mat2 = new Material();
-		mat2.setMatColor(new Vector3f(1, 0, 0));
-		mat2.setShader(diffuse);
 		Material mat3 = new Material();
-		mat2.setMatColor(new Vector3f(0.5f, 0.5f, 0.5f));
-		mat3.setShader(diffuse);
-		tea1.setMaterial(mat1);
-		tea2.setMaterial(mat2);
-		tea3.setMaterial(mat3);
+		Light l1 = new Light();
+		Light l2 = new Light();
+		Light l3 = new Light();
+		if (task == 1) {
+			mat1.setMatColor(new Vector3f(1, 1, 1));
+			mat1.setShader(diffuse);
+			mat2.setMatColor(new Vector3f(1, 0, 0));
+			mat2.setShader(diffuse);
+			mat3.setMatColor(new Vector3f(0.5f, 0.5f, 0.5f));
+			mat3.setShader(diffuse);
+
+			tea1.setMaterial(mat1);
+			tea2.setMaterial(mat2);
+			tea3.setMaterial(mat3);
+
+			l1.setType(Type.Directional);
+			l1.setDirection(new Vector3f(0, 1, 0));
+			l1.setRadiance(new Vector3f(1, 0, 0));
+			l2.setType(Type.Directional);
+			l2.setDirection(new Vector3f(0, -1, 0));
+			l2.setRadiance(new Vector3f(0, 1, 0));
+			l3.setType(Type.Directional);
+			l3.setDirection(new Vector3f(0, 0, 1));
+			l3.setRadiance(new Vector3f(0, 0, 0.5f));
+		}
+		if (task == 2) {
+			mat1.setMatColor(new Vector3f(1, 1, 1));
+			mat1.setShader(phong);
+			mat2.setMatColor(new Vector3f(1, 1, 1));
+			mat2.setShader(phong);
+			mat3.setMatColor(new Vector3f(1, 1, 1));
+			mat3.setShader(phong);
+
+			tea1.setMaterial(mat1);
+			tea2.setMaterial(mat2);
+			tea3.setMaterial(mat3);
+
+			l1.setType(Type.Point);
+			l1.setPosition(new Vector3f(0, 10, 0));
+			l1.setRadiance(new Vector3f(1, 0, 0));
+			l2.setType(Type.Point);
+			l2.setPosition(new Vector3f(0, -10, 0));
+			l2.setRadiance(new Vector3f(0, 1, 0));
+			l3.setType(Type.Point);
+			l3.setPosition(new Vector3f(0, 0, 10));
+			l3.setRadiance(new Vector3f(0, 0, 0.5f));
+		}
+		if (task == 3) {
+			mat1.setMatColor(new Vector3f(1, 1, 1));
+			mat1.setShader(texphong);
+			mat2.setMatColor(new Vector3f(1, 1, 1));
+			mat2.setShader(texphong);
+			mat3.setMatColor(new Vector3f(1, 1, 1));
+			mat3.setShader(texphong);
+
+			tea1.setMaterial(mat1);
+			tea2.setMaterial(mat2);
+			tea3.setMaterial(mat3);
+
+			l1.setType(Type.Point);
+			l1.setPosition(new Vector3f(0, 10, 0));
+			l1.setRadiance(new Vector3f(1, 0, 0));
+			l2.setType(Type.Point);
+			l2.setPosition(new Vector3f(0, -10, 0));
+			l2.setRadiance(new Vector3f(0, 1, 0));
+			l3.setType(Type.Point);
+			l3.setPosition(new Vector3f(0, 0, 10));
+			l3.setRadiance(new Vector3f(0, 0, 0.5f));
+		}
+		if (task == 4) {
+			mat1.setMatColor(new Vector3f(1, 1, 1));
+			mat1.setShader(toon);
+			mat2.setMatColor(new Vector3f(0.5f, 0.5f, 0.5f));
+			mat2.setShader(brick);
+			mat3.setMatColor(new Vector3f(1, 1, 1));
+			mat3.setShader(neon);
+
+			tea1.setMaterial(mat1);
+			tea2.setMaterial(mat2);
+			tea3.setMaterial(mat3);
+
+			l1.setType(Type.Point);
+			l1.setPosition(new Vector3f(0, 10, 0));
+			l1.setRadiance(new Vector3f(1, 0, 0));
+			l2.setType(Type.Point);
+			l2.setPosition(new Vector3f(0, -10, 0));
+			l2.setRadiance(new Vector3f(0, 1, 0));
+			l3.setType(Type.Point);
+			l3.setPosition(new Vector3f(0, 0, 10));
+			l3.setRadiance(new Vector3f(0, 0, 0.5f));
+		}
 		sceneManager.addShape(tea1);
 		sceneManager.addShape(tea2);
 		sceneManager.addShape(tea3);
-		Light l1 = new Light();
-		l1.setDirection(new Vector3f(0, 1, 0));
-		l1.setRadiance(new Vector3f(1, 0, 0));
-		l1.setPosition(new Vector3f(0, 10, 0));
-		Light l2 = new Light();
-		l2.setDirection(new Vector3f(0, -1, 0));
-		l2.setRadiance(new Vector3f(0, 1, 0));
-		l2.setPosition(new Vector3f(0, -10, 0));
-		Light l3 = new Light();
-		l3.setDirection(new Vector3f(0, 0, 1));
-		l3.setRadiance(new Vector3f(0, 0, 0.5f));
-		l3.setPosition(new Vector3f(0, 0, 10));
 		sceneManager.addLight(l1);
 		sceneManager.addLight(l2);
 		sceneManager.addLight(l3);

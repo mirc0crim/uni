@@ -39,5 +39,5 @@ void main()
 	//Ambient
 	vec4 ambient = vec4(ka,0) * vec4(ca,0);
 	
-	frag_shaded = tex * dif + ambient;
+	frag_shaded = dif + ambient;
 }
