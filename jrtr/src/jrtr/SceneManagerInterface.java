@@ -1,6 +1,5 @@
 package jrtr;
 
-import java.util.Iterator;
 
 /**
  * An interface declaration for scene managers. Scene managers 
@@ -20,7 +19,6 @@ public interface SceneManagerInterface {
 	/**
 	 * @return an iterator to access the lights in the scene.
 	 */
-	public Iterator<Light> lightIterator();
 	
 	public Camera getCamera();
 	

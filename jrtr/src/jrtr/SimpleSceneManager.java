@@ -10,7 +10,7 @@ import java.util.ListIterator;
 public class SimpleSceneManager implements SceneManagerInterface {
 
 	private LinkedList<Shape> shapes;
-	private LinkedList<Light> lights;
+	private static LinkedList<Light> lights;
 	private Camera camera;
 	private Frustum frustum;
 	private final int MAX_LIGHTS = 5;
@@ -56,8 +56,7 @@ public class SimpleSceneManager implements SceneManagerInterface {
 	/**
 	 * To be implemented in the "Textures and Shading" project.
 	 */
-	@Override
-	public Iterator<Light> lightIterator() {
+	public static Iterator<Light> lightIterator() {
 		return lights.iterator();
 	}
 
