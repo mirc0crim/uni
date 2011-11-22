@@ -6,6 +6,8 @@
 
 // Uniform variables, passed in from host program via suitable 
 // variants of glUniform*
+uniform sampler2D plant;
+uniform sampler2D gloss;
 uniform mat4 projection;
 uniform mat4 modelview;
 uniform vec4 lightDirection[MAX_LIGHTS];

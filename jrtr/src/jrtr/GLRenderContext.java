@@ -56,7 +56,7 @@ public class GLRenderContext implements RenderContext {
 		// Load and use default shader
 		GLShader defaultShader = new GLShader(gl);
 		try {
-			defaultShader.load("../jrtr/shaders/phong.vert", "../jrtr/shaders/phong.frag");
+			defaultShader.load("../jrtr/shaders/texphong.vert", "../jrtr/shaders/texphong.frag");
 		} catch (Exception e) {
 			System.out.print("Problem with shader:\n");
 			System.out.print(e.getMessage());
@@ -83,10 +83,6 @@ public class GLRenderContext implements RenderContext {
 		} catch (Exception e) {
 			System.out.print("Could not load texture\n");
 		}
-
-		Vector3f cam = Camera.getCenterOfProjection();
-		int idCam = gl.glGetUniformLocation(activeShader.programId(), "cop");
-		gl.glUniform3f(idCam, cam.getX(), cam.getY(), cam.getZ());
 	}
 
 

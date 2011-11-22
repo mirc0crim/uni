@@ -33,7 +33,7 @@ public class simple41 {
 	static Shape tea2;
 	static Shape tea3;
 	static float angle;
-	static int task = 4;
+	static int task = 3;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
 		@Override

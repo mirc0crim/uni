@@ -31,6 +31,7 @@ void main()
 	
 	//Texture
 	vec4 tex = texture(plant, frag_texcoord);
+	vec4 glo = texture(gloss, frag_texcoord);
 	
 	//Diffuse
 	vec4 diffuse[MAX_LIGHTS];
@@ -42,7 +43,7 @@ void main()
 		dif = dif + diffuse[i];
 	}
 	
-	float glossfactor = texture(gloss, frag_texcoord).x + texture(gloss, frag_texcoord).y + texture(gloss, frag_texcoord).z;
+	float glossfactor = (glo.x + glo.y + glo.z)/3;
 	
 	//Specular
 	vec4 specular[MAX_LIGHTS];
