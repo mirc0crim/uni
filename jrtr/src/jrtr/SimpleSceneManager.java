@@ -56,7 +56,8 @@ public class SimpleSceneManager implements SceneManagerInterface {
 	/**
 	 * To be implemented in the "Textures and Shading" project.
 	 */
-	public static Iterator<Light> lightIterator() {
+	@Override
+	public Iterator<Light> lightIterator() {
 		return lights.iterator();
 	}
 

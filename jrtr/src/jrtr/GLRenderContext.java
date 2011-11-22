@@ -273,7 +273,7 @@ public class GLRenderContext implements RenderContext {
 	 * To be implemented in the "Textures and Shading" project.
 	 */
 	void setLights() {
-		Iterator<Light> itr = SimpleSceneManager.lightIterator();
+		Iterator<Light> itr = sceneManager.lightIterator();
 		int i = 0;
 		float[] dirArray = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		float[] posiArray = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
