@@ -52,7 +52,7 @@ public class GraphSceneManager implements SceneManagerInterface {
 
 		private void makeTree(Node node) {
 			stack.push(new RenderItem(node.getShape(), node.getTransformationMat()));
-			if (hasNext()) {
+			if (node.getChildren() != null) {
 				List<Node> children = node.getChildren();
 				for (Node child : children) {
 					Matrix4f t = node.getTransformationMat();

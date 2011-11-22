@@ -1,30 +1,30 @@
 package jrtr;
 
 
-public class ShapeNode extends Leaf {
-	private Shape shapeNode;
+public class LightNode extends Leaf {
+	private Light lightNode;
 
-	public ShapeNode() {
+	public LightNode() {
 		super();
 	}
 
 	@Override
 	public void setShape(Shape shape) {
-		shapeNode = shape;
 	}
 
 	@Override
 	public Shape getShape() {
-		return shapeNode;
-	}
-
-	@Override
-	public Light getLight() {
 		return null;
 	}
 
 	@Override
+	public Light getLight() {
+		return lightNode;
+	}
+
+	@Override
 	public void setLight(Light light) {
+		lightNode = light;
 	}
 
 }

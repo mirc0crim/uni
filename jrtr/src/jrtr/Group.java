@@ -17,16 +17,25 @@ public abstract class Group implements Node {
 		return null;
 	}
 
+	@Override
+	public void setShape(Shape shape) {
+	}
+
+	@Override
+	public Light getLight() {
+		return null;
+	}
+
+	@Override
+	public void setLight(Light light) {
+	}
+
 	public void addChild(Node child) {
 		children.add(child);
 	}
 
 	public void removeChild(Node child) {
 		children.remove(child);
-	}
-
-	@Override
-	public void setShape(Shape shape) {
 	}
 
 	@Override

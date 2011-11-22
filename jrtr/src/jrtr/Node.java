@@ -12,7 +12,13 @@ public interface Node {
 
 	public void setShape(Shape shape);
 
+	public Light getLight();
+
+	public void setLight(Light light);
+
 	public List<Node> getChildren();
+
+	public void addChild(Node child);
 
 	public Matrix4f getTransformationMat();
 
