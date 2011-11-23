@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Stack;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
 
 public class GraphSceneManager implements SceneManagerInterface {
 
@@ -40,7 +42,7 @@ public class GraphSceneManager implements SceneManagerInterface {
 
 	@Override
 	public SceneManagerIterator iterator() {
-		return new GraphSceneManagerItr(this, true);
+		return new GraphSceneManagerItr(this);
 	}
 
 	private class GraphSceneManagerItr implements SceneManagerIterator {
@@ -49,11 +51,11 @@ public class GraphSceneManager implements SceneManagerInterface {
 		private Stack<RenderItem> stack;
 		private List<Light> lights;
 
-		public GraphSceneManagerItr(GraphSceneManager sceneManager, boolean isShape) {
+		public GraphSceneManagerItr(GraphSceneManager sceneManager) {
 			stack = new Stack<RenderItem>();
 			root = sceneManager.getRoot();
 			lights = new LinkedList<Light>();
-			makeTree(root, isShape);
+			makeTree(root);
 		}
 
 		private boolean shapeNotNull(Node node) {
@@ -76,12 +78,18 @@ public class GraphSceneManager implements SceneManagerInterface {
 			return bol && node.getChildren() != null;
 		}
 
-		private void makeTree(Node node, boolean isShape) {
-			if (isShape) {
+		private void makeTree(Node node) {
+			if (node instanceof ShapeNode) {
 				if (shapeNotNull(node))
 					stack.push(new RenderItem(node.getShape(), node.getTransformationMat()));
-			} else if (node instanceof LightNode)
+			} else if (node instanceof LightNode) {
+				Vector3f pos = node.getLight().getPosition();
+				Vector4f pos4 = new Vector4f(pos.x, pos.y, pos.z, 0);
+				Matrix4f trans = node.getTransformationMat();
+				trans.transform(pos4);
+				node.getLight().setPosition(new Vector3f(pos4.x, pos4.y, pos4.z));
 				lights.add(node.getLight());
+			}
 
 			if (childrenNotNull(node)) {
 				List<Node> children = node.getChildren();
@@ -89,7 +97,7 @@ public class GraphSceneManager implements SceneManagerInterface {
 					Matrix4f t = child.getTransformationMat();
 					t.mul(node.getTransformationMat());
 					child.setTransformationMat(t);
-					makeTree(child, isShape);
+					makeTree(child);
 				}
 			}
 		}
@@ -111,6 +119,6 @@ public class GraphSceneManager implements SceneManagerInterface {
 
 	@Override
 	public Iterator<Light> lightIterator() {
-		return new GraphSceneManagerItr(this, false).getLights().iterator();
+		return new GraphSceneManagerItr(this).getLights().iterator();
 	}
 }

@@ -16,9 +16,11 @@ import jrtr.GLRenderPanel;
 import jrtr.GraphSceneManager;
 import jrtr.Light;
 import jrtr.LightNode;
+import jrtr.Material;
 import jrtr.Node;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
+import jrtr.Shader;
 import jrtr.Shape;
 import jrtr.ShapeNode;
 import jrtr.TransformGroup;
@@ -39,10 +41,13 @@ public class simple51 {
 			renderContext = r;
 			renderContext.setSceneManager(sceneManager);
 
+			scene();
+
 			Timer timer = new Timer();
 			angle = 0.01f;
 			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}
+
 	}
 
 	public static class AnimationTask extends TimerTask {
@@ -64,9 +69,31 @@ public class simple51 {
 		Camera.setCenterOfProjection(new Vector3f(0, 0, 10));
 		sceneManager = new GraphSceneManager();
 
+		renderPanel = new SimpleRenderPanel();
+		JFrame jframe = new JFrame("simple");
+		jframe.setSize(500, 500);
+		jframe.setLocationRelativeTo(null);
+		jframe.getContentPane().add(renderPanel.getCanvas());
+		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jframe.setVisible(true);
+	}
+
+	public static void scene() {
+		Shader diffuse = renderContext.makeShader();
+		try {
+			diffuse.load("../jrtr/shaders/diffuse.vert", "../jrtr/shaders/diffuse.frag");
+		} catch (Exception e) {
+			System.out.println("Problem loading shader");
+		}
+
 		Matrix4f id = new Matrix4f();
 		id.setIdentity();
+
 		Shape torus = simple21.makeTorus(20, 2, 1, 0, 0, 0);
+
+		Material mat = new Material();
+		mat.setShader(diffuse);
+		torus.setMaterial(mat);
 		root = new TransformGroup();
 		root.setTransformationMat(id);
 		tori = new ShapeNode();
@@ -81,13 +108,5 @@ public class simple51 {
 		root.addChild(sun);
 
 		sceneManager.setRoot(root);
-
-		renderPanel = new SimpleRenderPanel();
-		JFrame jframe = new JFrame("simple");
-		jframe.setSize(500, 500);
-		jframe.setLocationRelativeTo(null);
-		jframe.getContentPane().add(renderPanel.getCanvas());
-		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jframe.setVisible(true);
 	}
 }
