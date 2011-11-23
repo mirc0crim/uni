@@ -4,7 +4,6 @@
  * Solution for 5th Exercise
  */
 
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,24 +18,21 @@ import jrtr.Light;
 import jrtr.LightNode;
 import jrtr.Material;
 import jrtr.Node;
-import jrtr.ObjReader;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
 import jrtr.Shader;
 import jrtr.Shape;
 import jrtr.ShapeNode;
 import jrtr.TransformGroup;
-import jrtr.VertexData;
 
 public class simple51 {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static GraphSceneManager sceneManager;
 	static float angle;
-	static Shape tea;
-	static Node root;
-	static ShapeNode tori;
-	static LightNode sun;
+	static Shape torsoCube, armR, armL, legR, legL;
+	static Node torsoGroup, torso, armGroup, legGroup, leftArmGroup, rightArmGroup, leftLegGroup,
+	rightLegGroup, rightArm, leftArm, rightLeg, leftLeg, sun;
 	static int task = 1;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
@@ -69,16 +65,9 @@ public class simple51 {
 
 	public static void main(String[] args)
 	{
-		VertexData vertexTeapot = null;
-		try {
-			vertexTeapot = ObjReader.read("../simple/teapot_tex.obj", 1);
-		} catch (IOException e) {
-			System.out.println("ObjReader Problem");
-		}
 
-		tea = new Shape(vertexTeapot);
 
-		Camera.setCenterOfProjection(new Vector3f(0, 0, 5));
+		Camera.setCenterOfProjection(new Vector3f(5, 5, 10));
 		sceneManager = new GraphSceneManager();
 
 		renderPanel = new SimpleRenderPanel();
@@ -93,31 +82,75 @@ public class simple51 {
 	public static void scene() {
 		Shader diffuse = renderContext.makeShader();
 		try {
-			diffuse.load("../jrtr/shaders/diffuse.vert", "../jrtr/shaders/diffuse.frag");
+			diffuse.load("../jrtr/shaders/default.vert", "../jrtr/shaders/default.frag");
 		} catch (Exception e) {
 			System.out.println("Problem loading shader");
 		}
 
 		Matrix4f id = new Matrix4f();
 		id.setIdentity();
+		Matrix4f bodyT = new Matrix4f(1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		Matrix4f rightArmT = new Matrix4f(1, 0, 0, 1, 0, 1, 0, 2, 0, 0, 1, 0, 0, 0, 0, 1);
+		Matrix4f leftArmT = new Matrix4f(1, 0, 0, -1, 0, 1, 0, 2, 0, 0, 1, 0, 0, 0, 0, 1);
+		Matrix4f rightlegT = new Matrix4f(1, 0, 0, 1, 0, 1, 0, -2, 0, 0, 1, 0, 0, 0, 0, 1);
+		Matrix4f leftLegT = new Matrix4f(1, 0, 0, -1, 0, 1, 0, -2, 0, 0, 1, 0, 0, 0, 0, 1);
+
+		torsoCube = simple21.makeCube();
+		armR = simple21.makeZylinder(20);
+		armL = simple21.makeZylinder(20);
+		legR = simple21.makeZylinder(20);
+		legL = simple21.makeZylinder(20);
+
+		torsoGroup = new TransformGroup();
+		torsoGroup.setTransformationMat(id);
+		armGroup = new TransformGroup();
+		armGroup.setTransformationMat(id);
+		legGroup = new TransformGroup();
+		legGroup.setTransformationMat(id);
 
 		Material mat = new Material();
 		mat.setShader(diffuse);
-		tea.setMaterial(mat);
-		root = new TransformGroup();
-		root.setTransformationMat(id);
-		tori = new ShapeNode();
-		tori.setShape(tea);
-		tori.setTransformationMat(id);
-		root.addChild(tori);
+
+		torso = new ShapeNode();
+		rightArm = new ShapeNode();
+		leftArm = new ShapeNode();
+		rightLeg = new ShapeNode();
+		leftLeg = new ShapeNode();
+
+		torsoCube.setMaterial(mat);
+		armR.setMaterial(mat);
+		armL.setMaterial(mat);
+		legR.setMaterial(mat);
+		legL.setMaterial(mat);
+
+		torso.setShape(torsoCube);
+		rightArm.setShape(armR);
+		leftArm.setShape(armL);
+		rightLeg.setShape(legR);
+		leftLeg.setShape(legL);
+
+		torso.setTransformationMat(bodyT);
+		rightArm.setTransformationMat(rightArmT);
+		leftArm.setTransformationMat(leftArmT);
+		rightLeg.setTransformationMat(rightlegT);
+		leftLeg.setTransformationMat(leftLegT);
+
+		torsoGroup.addChild(torso);
+		torsoGroup.addChild(armGroup);
+		armGroup.addChild(rightArm);
+		armGroup.addChild(leftArm);
+		torsoGroup.addChild(legGroup);
+		legGroup.addChild(rightLeg);
+		legGroup.addChild(leftLeg);
+
 
 		Light l = new Light();
 		l.setPosition(new Vector3f(0, 0, 10));
 		sun = new LightNode();
 		sun.setLight(l);
 		sun.setTransformationMat(id);
-		root.addChild(sun);
+		torsoGroup.addChild(sun);
 
-		sceneManager.setRoot(root);
+		sceneManager.setRoot(torsoGroup);
 	}
 }

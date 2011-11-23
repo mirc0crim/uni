@@ -263,11 +263,15 @@ public class simple21 {
 		Shape torusBack1 = makeTorus(seg, mainRad, rad, 0, 0, 0);
 		Shape house = makeHouse();
 		Shape plane1 = makePlane();
+		Shape cubeSeat1 = makeCube();
+		Shape cubeSteering1 = makeCube();
 
 		zylinder = zylinder1;
 		torusFront = torusFront1;
 		torusBack = torusBack1;
 		plane = plane1;
+		cubeSeat = cubeSeat1;
+		cubeSteering = cubeSteering1;
 
 		if (param == 1) { // Parameter für Bild 1
 			Camera.setCenterOfProjection(new Vector3f(0, 0, 40));
@@ -288,43 +292,10 @@ public class simple21 {
 			Frustum.setFarPlane(100);
 		}
 
-		// Make a simple geometric object: a cube
-		// The vertex positions of the cube
-		float cubeVertex[] = { -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, // front
-				// face
-				-1, -1, -1, -1, -1, 1, -1, 1, 1, -1, 1, -1, // left face
-				1, -1, -1, -1, -1, -1, -1, 1, -1, 1, 1, -1, // back face
-				1, -1, 1, 1, -1, -1, 1, 1, -1, 1, 1, 1, // right face
-				1, 1, 1, 1, 1, -1, -1, 1, -1, -1, 1, 1, // top face
-				-1, -1, 1, -1, -1, -1, 1, -1, -1, 1, -1, 1 }; // bottom face
 
-		// The vertex colors
-		float cubeColors[] = { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-				0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1,
-				0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1 };
-
-
-		// Construct a data structure that stores the vertices, their
-		// attributes, and the triangle mesh connectivity
-
-		VertexData cubeData = new VertexData(24);
-		cubeData.addElement(cubeColors, VertexData.Semantic.COLOR, 3);
-		cubeData.addElement(cubeVertex, VertexData.Semantic.POSITION, 3);
-
-		// The triangles (three vertex indices for each triangle)
-		int cubeFaces[] = { 0, 2, 3, 0, 1, 2, // front face
-				4, 6, 7, 4, 5, 6, // left face
-				8, 10, 11, 8, 9, 10, // back face
-				12, 14, 15, 12, 13, 14, // right face
-				16, 18, 19, 16, 17, 18, // top face
-				20, 22, 23, 20, 21, 22 }; // bottom face
-
-		cubeData.addIndices(cubeFaces);
 
 		// Make a scene manager and add the object
 		sceneManager = new SimpleSceneManager();
-		cubeSeat = new Shape(cubeData);
-		cubeSteering = new Shape(cubeData);
 
 		if (param == 0) {
 			sceneManager.addShape(zylinder);
@@ -684,6 +655,44 @@ public class simple21 {
 		Shape house = new Shape(vertexData);
 
 		return house;
+	}
+
+	public static Shape makeCube() {
+		// Make a simple geometric object: a cube
+		// The vertex positions of the cube
+		float cubeVertex[] = { -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, // front
+				// face
+				-1, -1, -1, -1, -1, 1, -1, 1, 1, -1, 1, -1, // left face
+				1, -1, -1, -1, -1, -1, -1, 1, -1, 1, 1, -1, // back face
+				1, -1, 1, 1, -1, -1, 1, 1, -1, 1, 1, 1, // right face
+				1, 1, 1, 1, 1, -1, -1, 1, -1, -1, 1, 1, // top face
+				-1, -1, 1, -1, -1, -1, 1, -1, -1, 1, -1, 1 }; // bottom face
+
+		// The vertex colors
+		float cubeColors[] = { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+				0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1,
+				0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1 };
+
+		// Construct a data structure that stores the vertices, their
+		// attributes, and the triangle mesh connectivity
+
+		VertexData cubeData = new VertexData(24);
+		cubeData.addElement(cubeColors, VertexData.Semantic.COLOR, 3);
+		cubeData.addElement(cubeVertex, VertexData.Semantic.POSITION, 3);
+
+		// The triangles (three vertex indices for each triangle)
+		int cubeFaces[] = { 0, 2, 3, 0, 1, 2, // front face
+				4, 6, 7, 4, 5, 6, // left face
+				8, 10, 11, 8, 9, 10, // back face
+				12, 14, 15, 12, 13, 14, // right face
+				16, 18, 19, 16, 17, 18, // top face
+				20, 22, 23, 20, 21, 22 }; // bottom face
+
+		cubeData.addIndices(cubeFaces);
+
+		Shape cube = new Shape(cubeData);
+
+		return cube;
 	}
 
 }
