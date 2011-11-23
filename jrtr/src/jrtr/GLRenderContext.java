@@ -178,7 +178,6 @@ public class GLRenderContext implements RenderContext {
 		// Set modelview and projection matrices in shader
 		gl.glUniformMatrix4fv(gl.glGetUniformLocation(activeShader.programId(), "modelview"), 1, false, matrix4fToFloat16(t), 0);
 		gl.glUniformMatrix4fv(gl.glGetUniformLocation(activeShader.programId(), "projection"), 1, false, matrix4fToFloat16(sceneManager.getFrustum().getProjectionMatrix()), 0);
-
 		// Steps to pass vertex data to OpenGL:
 		// 1. For all vertex attributes (position, normal, etc.)
 		// Copy vertex data into float buffers that can be passed to OpenGL

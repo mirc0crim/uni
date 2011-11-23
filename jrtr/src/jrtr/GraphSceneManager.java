@@ -14,12 +14,10 @@ public class GraphSceneManager implements SceneManagerInterface {
 	private Camera camera;
 	private Frustum frustum;
 	private Node root;
-	private LinkedList<Light> lights;
 
 	public GraphSceneManager() {
 		camera = new Camera();
 		frustum = new Frustum();
-		lights = new LinkedList<Light>();
 	}
 
 	@Override

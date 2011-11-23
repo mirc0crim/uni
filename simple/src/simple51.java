@@ -4,6 +4,7 @@
  * Solution for 5th Exercise
  */
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,18 +19,21 @@ import jrtr.Light;
 import jrtr.LightNode;
 import jrtr.Material;
 import jrtr.Node;
+import jrtr.ObjReader;
 import jrtr.RenderContext;
 import jrtr.RenderPanel;
 import jrtr.Shader;
 import jrtr.Shape;
 import jrtr.ShapeNode;
 import jrtr.TransformGroup;
+import jrtr.VertexData;
 
 public class simple51 {
 	static RenderPanel renderPanel;
 	static RenderContext renderContext;
 	static GraphSceneManager sceneManager;
 	static float angle;
+	static Shape tea;
 	static Node root;
 	static ShapeNode tori;
 	static LightNode sun;
@@ -65,8 +69,16 @@ public class simple51 {
 
 	public static void main(String[] args)
 	{
+		VertexData vertexTeapot = null;
+		try {
+			vertexTeapot = ObjReader.read("../simple/teapot_tex.obj", 1);
+		} catch (IOException e) {
+			System.out.println("ObjReader Problem");
+		}
 
-		Camera.setCenterOfProjection(new Vector3f(0, 0, 10));
+		tea = new Shape(vertexTeapot);
+
+		Camera.setCenterOfProjection(new Vector3f(0, 0, 5));
 		sceneManager = new GraphSceneManager();
 
 		renderPanel = new SimpleRenderPanel();
@@ -89,19 +101,18 @@ public class simple51 {
 		Matrix4f id = new Matrix4f();
 		id.setIdentity();
 
-		Shape torus = simple21.makeTorus(20, 2, 1, 0, 0, 0);
-
 		Material mat = new Material();
 		mat.setShader(diffuse);
-		torus.setMaterial(mat);
+		tea.setMaterial(mat);
 		root = new TransformGroup();
 		root.setTransformationMat(id);
 		tori = new ShapeNode();
-		tori.setShape(torus);
+		tori.setShape(tea);
 		tori.setTransformationMat(id);
 		root.addChild(tori);
 
 		Light l = new Light();
+		l.setPosition(new Vector3f(0, 0, 10));
 		sun = new LightNode();
 		sun.setLight(l);
 		sun.setTransformationMat(id);
