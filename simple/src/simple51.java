@@ -30,9 +30,9 @@ public class simple51 {
 	static RenderContext renderContext;
 	static GraphSceneManager sceneManager;
 	static float angle;
-	static Shape torsoCube, armR, armL, legR, legL;
-	static Node torsoGroup, torso, armGroup, legGroup, leftArmGroup, rightArmGroup, leftLegGroup,
-	rightLegGroup, rightArm, leftArm, rightLeg, leftLeg, sun;
+	static Shape torsoS, armRS, armLS, legRS, legLS, headS;
+	static Node torsoTG, torsoN, armTG, legTG, leftArmGroup, rightArmGroup, leftLegGroup,
+	headTG, rightLegGroup, rightArmN, leftArmN, rightLegN, headN, leftLegN, sun;
 	static int task = 1;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
@@ -94,54 +94,65 @@ public class simple51 {
 		Matrix4f leftArmT = new Matrix4f(1, 0, 0, -1, 0, 1, 0, 2, 0, 0, 1, 0, 0, 0, 0, 1);
 		Matrix4f rightlegT = new Matrix4f(1, 0, 0, 1, 0, 1, 0, -2, 0, 0, 1, 0, 0, 0, 0, 1);
 		Matrix4f leftLegT = new Matrix4f(1, 0, 0, -1, 0, 1, 0, -2, 0, 0, 1, 0, 0, 0, 0, 1);
+		Matrix4f headT = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 3, 0, 0, 1, 0, 0, 0, 0, 1);
+		Matrix4f right = new Matrix4f(1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 
-		torsoCube = simple21.makeCube();
-		armR = simple21.makeZylinder(20);
-		armL = simple21.makeZylinder(20);
-		legR = simple21.makeZylinder(20);
-		legL = simple21.makeZylinder(20);
+		torsoS = mesh.makeCube();
+		armRS = mesh.makeZylinder(20);
+		armLS = mesh.makeZylinder(20);
+		legRS = mesh.makeZylinder(20);
+		legLS = mesh.makeZylinder(20);
+		headS = mesh.makeBall(99);
 
-		torsoGroup = new TransformGroup();
-		torsoGroup.setTransformationMat(id);
-		armGroup = new TransformGroup();
-		armGroup.setTransformationMat(id);
-		legGroup = new TransformGroup();
-		legGroup.setTransformationMat(id);
+		torsoTG = new TransformGroup();
+		torsoTG.setTransformationMat(id);
+		armTG = new TransformGroup();
+		armTG.setTransformationMat(id);
+		legTG = new TransformGroup();
+		legTG.setTransformationMat(id);
+		headTG = new TransformGroup();
+		headTG.setTransformationMat(id);
 
 		Material mat = new Material();
 		mat.setShader(diffuse);
 
-		torso = new ShapeNode();
-		rightArm = new ShapeNode();
-		leftArm = new ShapeNode();
-		rightLeg = new ShapeNode();
-		leftLeg = new ShapeNode();
+		torsoN = new ShapeNode();
+		rightArmN = new ShapeNode();
+		leftArmN = new ShapeNode();
+		rightLegN = new ShapeNode();
+		leftLegN = new ShapeNode();
+		headN = new ShapeNode();
 
-		torsoCube.setMaterial(mat);
-		armR.setMaterial(mat);
-		armL.setMaterial(mat);
-		legR.setMaterial(mat);
-		legL.setMaterial(mat);
+		torsoS.setMaterial(mat);
+		armRS.setMaterial(mat);
+		armLS.setMaterial(mat);
+		legRS.setMaterial(mat);
+		legLS.setMaterial(mat);
+		headS.setMaterial(mat);
 
-		torso.setShape(torsoCube);
-		rightArm.setShape(armR);
-		leftArm.setShape(armL);
-		rightLeg.setShape(legR);
-		leftLeg.setShape(legL);
+		torsoN.setShape(torsoS);
+		rightArmN.setShape(armRS);
+		leftArmN.setShape(armLS);
+		rightLegN.setShape(legRS);
+		leftLegN.setShape(legLS);
+		headN.setShape(headS);
 
-		torso.setTransformationMat(bodyT);
-		rightArm.setTransformationMat(rightArmT);
-		leftArm.setTransformationMat(leftArmT);
-		rightLeg.setTransformationMat(rightlegT);
-		leftLeg.setTransformationMat(leftLegT);
+		torsoN.setTransformationMat(bodyT);
+		rightArmN.setTransformationMat(rightArmT);
+		leftArmN.setTransformationMat(leftArmT);
+		rightLegN.setTransformationMat(rightlegT);
+		leftLegN.setTransformationMat(leftLegT);
+		headN.setTransformationMat(headT);
 
-		torsoGroup.addChild(torso);
-		torsoGroup.addChild(armGroup);
-		armGroup.addChild(rightArm);
-		armGroup.addChild(leftArm);
-		torsoGroup.addChild(legGroup);
-		legGroup.addChild(rightLeg);
-		legGroup.addChild(leftLeg);
+		torsoTG.addChild(torsoN);
+		torsoTG.addChild(headTG);
+		torsoTG.addChild(armTG);
+		torsoTG.addChild(legTG);
+		headTG.addChild(headN);
+		armTG.addChild(rightArmN);
+		armTG.addChild(leftArmN);
+		legTG.addChild(rightLegN);
+		legTG.addChild(leftLegN);
 
 
 		Light l = new Light();
@@ -149,8 +160,8 @@ public class simple51 {
 		sun = new LightNode();
 		sun.setLight(l);
 		sun.setTransformationMat(id);
-		torsoGroup.addChild(sun);
+		torsoTG.addChild(sun);
 
-		sceneManager.setRoot(torsoGroup);
+		sceneManager.setRoot(torsoTG);
 	}
 }

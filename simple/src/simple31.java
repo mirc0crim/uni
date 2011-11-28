@@ -35,15 +35,15 @@ public class simple31 {
 
 		int sh = 0;
 		if (sh == 0)
-			shape = simple21.makeTorus(100, 2, 1, 0, 0, 0);
+			shape = mesh.makeTorus(100, 2, 1, 0, 0, 0);
 		if (sh == 1)
-			shape = simple21.makeHouse();
+			shape = mesh.makeHouse();
 		if (sh == 2)
-			shape = simple21.makeZylinder(10);
+			shape = mesh.makeZylinder(10);
 		if (sh == 3)
-			shape = simple21.makeSquare();
+			shape = mesh.makeSquare();
 		if (sh == 4)
-			shape = simple21.makePlane();
+			shape = mesh.makePlane();
 
 		Camera.setCenterOfProjection(new Vector3f(5, 10, -10));
 
