@@ -173,7 +173,6 @@ public class simple51 {
 		headN.setShape(headS);
 
 		torsoN.setTransformationMat(bodyT);
-
 		rightArmN.setTransformationMat(rightArmT);
 		rightArm2N.setTransformationMat(rightArm2T);
 		leftArmN.setTransformationMat(leftArmT);
@@ -198,9 +197,9 @@ public class simple51 {
 		legTG.addChild(leftLegN);
 		legTG.addChild(leftLeg2N);
 
-
 		Light l = new Light();
 		l.setPosition(new Vector3f(0, 0, 10));
+		l.setRadiance(new Vector3f(1, 1, 1));
 		sun = new LightNode();
 		sun.setLight(l);
 		sun.setTransformationMat(id);

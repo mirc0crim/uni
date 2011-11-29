@@ -1,3 +1,6 @@
+import java.io.IOException;
+
+import jrtr.ObjReader;
 import jrtr.Shape;
 import jrtr.VertexData;
 
@@ -13,12 +16,17 @@ public class mesh {
 				0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1,
 				0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1 };
 
+		float normals[] = { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1,
+				0, 0, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+				0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0 };
+
 		int cubeFaces[] = { 0, 2, 3, 0, 1, 2, 4, 6, 7, 4, 5, 6, 8, 10, 11, 8, 9, 10, 12, 14, 15,
 				12, 13, 14, 16, 18, 19, 16, 17, 18, 20, 22, 23, 20, 21, 22 };
 
 		VertexData cubeData = new VertexData(24);
 		cubeData.addElement(cubeColors, VertexData.Semantic.COLOR, 3);
 		cubeData.addElement(cubeVertex, VertexData.Semantic.POSITION, 3);
+		cubeData.addElement(normals, VertexData.Semantic.NORMAL, 3);
 		cubeData.addIndices(cubeFaces);
 		Shape cube = new Shape(cubeData);
 
@@ -381,5 +389,17 @@ public class mesh {
 		ballData.addIndices(faces);
 
 		return new Shape(ballData);
+	}
+
+	public static Shape makeTeapot() {
+
+		VertexData vertexTeapot = null;
+		try {
+			vertexTeapot = ObjReader.read("../simple/teapot_tex.obj", 1);
+		} catch (IOException e) {
+			System.out.println("ObjReader Problem");
+		}
+
+		return new Shape(vertexTeapot);
 	}
 }
