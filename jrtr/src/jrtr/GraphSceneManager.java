@@ -88,7 +88,6 @@ public class GraphSceneManager implements SceneManagerInterface {
 				node.getLight().setPosition(new Vector3f(pos4.x, pos4.y, pos4.z));
 				lights.add(node.getLight());
 			}
-
 			if (childrenNotNull(node)) {
 				List<Node> children = node.getChildren();
 				for (Node child : children) {

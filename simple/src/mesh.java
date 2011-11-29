@@ -307,6 +307,10 @@ public class mesh {
 	}
 
 	public static Shape makeBall(int resolution) {
+		if (resolution < 30)
+			resolution = 30;
+		if (resolution % 2 == 0)
+			resolution++;
 		float color[], ball[];
 		int faces[];
 		double phi = Math.PI * 2 / resolution;
