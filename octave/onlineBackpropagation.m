@@ -1,5 +1,5 @@
 
-function back = backpropagation()
+function back = onlineBackpropagation()
 	numOfInputs = 2;
 	numOfNeurons = 2;
 	maxError = 0.00001;
