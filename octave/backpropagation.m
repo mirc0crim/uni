@@ -16,6 +16,8 @@ function back = backpropagation()
 	o1(1,numOfNeurons+1) = 1;
 
 	gamma = 0.5;
+	time = 0;
+	page_output_immediately(1);
 
 	do
 		error = 0;
@@ -40,10 +42,18 @@ function back = backpropagation()
 			w2 += deltaw2';
 			
 		endfor
+		time++;
+		if (mod(time,1000) == 0)
+			error
+		endif
+		if (mod(time,2000) == 0)
+			gamma*=2
+		endif
+
 	until (error< maxError)
 
-	printf("w1 = %f \n", w1);
-	printf("w2 = %f \n", w2);
+	w1
+	w2
 
 endfunction
 
