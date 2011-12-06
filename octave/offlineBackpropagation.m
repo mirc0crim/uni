@@ -21,6 +21,8 @@ function back = offlineBackpropagation()
 
 	do
 		error = 0;
+		deltaw1 = zeros(numOfInputs+1, numOfNeurons);
+		deltaw2 = zeros(numOfNeurons+1,1);
 		for i=1:size(myInput,1)
 			# define some strange thing written in the pdf ;)
 			o(1,1:numOfInputs) = myInput(i,1:2);
@@ -35,13 +37,13 @@ function back = offlineBackpropagation()
 			error = max(error,abs(myOutput(1,i)-o2));
 			delta2 = d2*e;
 			delta1 = d1 * w2(1:2, 1) * delta2;
-			deltaw2 = -gamma*delta2*o1;
-			deltaw1 = -gamma*delta1*o;
-			
-			w1 += deltaw1';
-			w2 += deltaw2';
-			
+			deltaw2 += (-gamma*delta2*o1)';
+			deltaw1 += (-gamma*delta1*o)';
 		endfor
+			
+		w1 += deltaw1;
+		w2 += deltaw2;
+			
 		time++;
 		if (mod(time,1000) == 0)
 			error
