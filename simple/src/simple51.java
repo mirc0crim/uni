@@ -56,10 +56,8 @@ public class simple51 {
 		public void run() {
 			Matrix4f rotX = new Matrix4f();
 			Matrix4f rotY = new Matrix4f();
-
 			rotX.rotX(angle);
 			rotY.rotY(1.5f * angle);
-
 
 			renderPanel.getCanvas().repaint();
 		}
@@ -67,8 +65,6 @@ public class simple51 {
 
 	public static void main(String[] args)
 	{
-
-
 		Camera.setCenterOfProjection(new Vector3f(5, 5, 15));
 		sceneManager = new GraphSceneManager();
 
@@ -114,7 +110,8 @@ public class simple51 {
 		Matrix4f leftLegT = new Matrix4f(1, 0, 0, -2, 0, 1, 0, -3.5f, 0, 0, 1, 0, 0, 0, 0, 1);
 		leftLegT.mul(rot_20);
 		Matrix4f leftLeg2T = new Matrix4f(1, 0, 0, -2.5f, 0, 1, 0, -5.5f, 0, 0, 1, 0, 0, 0, 0, 1);
-		Matrix4f headT = new Matrix4f(2, 0, 0, 0, 0, 2, 0, 3.5f, 0, 0, 1, 0, 0, 0, 0, 1);
+		Matrix4f headT = new Matrix4f(2, 0, 0, 0, 0, 2, 0, 4, 0, 0, 1, 0, 0, 0, 0, 1);
+		Matrix4f a = new Matrix4f(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0.01f, 0, 0, 0, 1);
 
 		torsoS = mesh.makeCube();
 		armRS = mesh.makeZylinder(20);
@@ -134,9 +131,10 @@ public class simple51 {
 		legTG = new TransformGroup();
 		legTG.setTransformationMat(id);
 		headTG = new TransformGroup();
-		headTG.setTransformationMat(id);
+		headTG.setTransformationMat(a);
 
 		Material mat = new Material();
+		mat.setMatColor(new Vector3f(0.8f, 0.8f, 0.8f));
 		mat.setShader(diffuse);
 
 		torsoN = new ShapeNode();

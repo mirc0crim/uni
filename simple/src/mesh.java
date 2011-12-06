@@ -183,6 +183,7 @@ public class mesh {
 		VertexData vertexData = new VertexData(2 * resolution);
 		vertexData.addElement(zylinderVertex, VertexData.Semantic.POSITION, 3);
 		vertexData.addElement(zylinderColors, VertexData.Semantic.COLOR, 3);
+		vertexData.addElement(zylinderVertex, VertexData.Semantic.NORMAL, 3); // fake normals
 		vertexData.addIndices(zylinderFaces);
 
 		return new Shape(vertexData);
@@ -309,6 +310,7 @@ public class mesh {
 		vertexData.addElement(torusVertex, VertexData.Semantic.POSITION, 3);
 		vertexData.addElement(torusColors, VertexData.Semantic.COLOR, 3);
 		vertexData.addElement(torusTexture, VertexData.Semantic.TEXCOORD, 2);
+		vertexData.addElement(torusVertex, VertexData.Semantic.NORMAL, 3); // fake normals
 		vertexData.addIndices(torusFaces);
 
 		return new Shape(vertexData);
@@ -386,6 +388,7 @@ public class mesh {
 		VertexData ballData = new VertexData(ball.length / 3);
 		ballData.addElement(ball, VertexData.Semantic.POSITION, 3);
 		ballData.addElement(color, VertexData.Semantic.COLOR, 3);
+		ballData.addElement(ball, VertexData.Semantic.NORMAL, 3); // fake normals
 		ballData.addIndices(faces);
 
 		return new Shape(ballData);
