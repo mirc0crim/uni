@@ -41,14 +41,14 @@ function back = offlineBackpropagation()
 			deltaw1 += (-gamma*delta1*o)';
 		endfor
 			
-		w1 += deltaw1;
-		w2 += deltaw2;
+		w1 += deltaw1/size(myInput,1);
+		w2 += deltaw2/size(myInput,1);
 			
 		time++;
 		if (mod(time,1000) == 0)
 			error
 		endif
-		if (mod(time,2000) == 0)
+		if (mod(time,2000) == 0 && error < 0.3)
 			gamma*=2
 		endif
 
