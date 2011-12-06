@@ -7,21 +7,22 @@ function back = backpropagation()
 	myInput = [0 0; 1 0; 0 1; 1 1];
 	myOutput = [0 1 1 0];
 	
-	w1 = rand(3,2);
-	w2 = rand(2,1);
+	w1 = rand(numOfInputs+1,numOfNeurons);
+	w2 = rand(numOfNeurons+1,1);
 
-	o = zeros(1,3);
-	o(1,3) = 1;
-	o1 = zeros(1,3);
-	o1(1,3) = 1;
+	o = zeros(1,numOfInputs+1);
+	o(1,numOfInputs+1) = 1;
+	o1 = zeros(1,numOfNeurons+1);
+	o1(1,numOfNeurons+1) = 1;
 
 	gamma = 0.5;
+
 	do
 		error = 0;
 		for i=1:size(myInput,1)
 			# define some strange thing written in the pdf ;)
-			o(1,1:2) = myInput(i,1:2);
-			o1 = sigmoid(o*w1);
+			o(1,1:numOfInputs) = myInput(i,1:2);
+			o1(1,1:2) = sigmoid(o*w1);
 			o2 = sigmoid(o1*w2);
 			d2 = o2 * (1-o2);
 			d1(1,1) = o1(1,1) * (1-o1(1,1));
