@@ -1,5 +1,7 @@
 import java.io.IOException;
 
+import javax.vecmath.Vector3f;
+
 import jrtr.ObjReader;
 import jrtr.Shape;
 import jrtr.VertexData;
@@ -405,4 +407,24 @@ public class mesh {
 
 		return new Shape(vertexTeapot);
 	}
+
+	public static Shape makeBezier(int resolution, Vector3f[] controlPoints) {
+		if (controlPoints.length < 4 ||
+				controlPoints.length > 4 && (controlPoints.length + 1) % 4 != 0)
+			return null;
+
+		float[] bezierVertex = new float[1];
+		float[] bezierColor = new float[1];
+		float[] bezierNormal = new float[1];
+		int[] bezierFace = new int[1];
+
+		VertexData vertexData = new VertexData(1);
+		vertexData.addElement(bezierVertex, VertexData.Semantic.POSITION, 3);
+		vertexData.addElement(bezierColor, VertexData.Semantic.COLOR, 3);
+		vertexData.addElement(bezierNormal, VertexData.Semantic.NORMAL, 3); // fake normals
+		vertexData.addIndices(bezierFace);
+
+		return new Shape(vertexData);
+	}
+
 }
