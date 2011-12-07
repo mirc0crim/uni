@@ -408,20 +408,125 @@ public class mesh {
 		return new Shape(vertexTeapot);
 	}
 
+	public static float[] calcBezierColor(int seg) {
+		float[] bezierColor = new float[seg];
+		int i = 0;
+		while (i < seg / 3) {
+			bezierColor[3 * i] = 0;
+			if (i % 3 == 0) {
+				bezierColor[3 * i + 1] = 0;
+				bezierColor[3 * i + 2] = 1;
+			} else if (i % 3 == 1) {
+				bezierColor[3 * i + 1] = 1;
+				bezierColor[3 * i + 2] = 0;
+			} else {
+				bezierColor[3 * i + 1] = 1;
+				bezierColor[3 * i + 2] = 1;
+			}
+			i++;
+		}
+		return bezierColor;
+	}
+
 	public static Shape makeBezier(int resolution, Vector3f[] controlPoints) {
 		if (controlPoints.length < 4 ||
-				controlPoints.length > 4 && (controlPoints.length + 1) % 4 != 0)
+				controlPoints.length > 4 && (controlPoints.length + 1) % 4 != 0) {
+			System.out.println("Too much or not enough control points");
 			return null;
+		}
 
-		float[] bezierVertex = new float[1];
-		float[] bezierColor = new float[1];
-		float[] bezierNormal = new float[1];
-		int[] bezierFace = new int[1];
+		int segments = controlPoints.length == 4 ? 1 : (controlPoints.length + 1) / 4;
+		float[] bezierVertex = new float[3 * segments * resolution * resolution];
+		float[] bezierNormal = new float[bezierVertex.length];
+		int[] bezierFace = new int[6 * (resolution * (segments * (resolution - 1) + 1) - 2)];
 
-		VertexData vertexData = new VertexData(1);
+		float interpolatePoint = 0;
+		int i = 0;
+		bezierVertex[i++] = controlPoints[0].x;
+		bezierVertex[i++] = controlPoints[0].y;
+		bezierVertex[i++] = controlPoints[0].z;
+		for (int j = 0; j < segments; j++) { // interpolate
+			for (int k = 0; k < resolution - 1; k++) {
+				interpolatePoint += 1f / (resolution - 1);
+				Vector3f q1 = new Vector3f(controlPoints[0 + 3 * j]);
+				q1.interpolate(controlPoints[1 + 3 * j], interpolatePoint);
+				Vector3f q2 = new Vector3f(controlPoints[1 + 3 * j]);
+				q2.interpolate(controlPoints[2 + 3 * j], interpolatePoint);
+				Vector3f q3 = new Vector3f(controlPoints[2 + 3 * j]);
+				q3.interpolate(controlPoints[3 + 3 * j], interpolatePoint);
+
+				Vector3f r1 = new Vector3f(q1);
+				r1.interpolate(q2, interpolatePoint);
+				Vector3f r2 = new Vector3f(q2);
+				r2.interpolate(q3, interpolatePoint);
+
+				Vector3f x = new Vector3f(r1);
+				x.interpolate(r2, interpolatePoint);
+
+				Vector3f normal = new Vector3f(r2);
+				normal.sub(r1);
+
+				bezierVertex[i] = x.getX();
+				bezierNormal[i++] = normal.getZ();
+				bezierVertex[i] = x.getY();
+				bezierNormal[i++] = 0;
+				bezierVertex[i] = x.getZ();
+				bezierNormal[i++] = -normal.getX();
+
+			}
+			interpolatePoint = 0;
+		}
+
+		double a = 2 * Math.PI / resolution;
+		int resPoint = 0;
+		for (int j = 1; j < resolution; j++) // rotation
+			for (int k = 0; k < (resolution - 1) * segments + 1; k++) {
+				float x = bezierVertex[resPoint];
+				float normalX = bezierNormal[resPoint];
+				float y = bezierVertex[resPoint + 1];
+				float normalY = bezierNormal[resPoint + 1];
+				float z = bezierVertex[k * 3 + 2];
+				float normalZ = bezierNormal[3 * k + 2];
+				float radius = (float) Math.sqrt(x * x + y * y);
+				bezierVertex[i] = (float) Math.cos(j * a) * radius;
+				bezierNormal[i++] = (float) Math.cos(j * a) * normalX;
+				bezierVertex[i] = (float) Math.sin(j * a) * radius;
+				bezierNormal[i++] = (float) Math.sin(j * a) * normalY;
+				bezierVertex[i] = z;
+				bezierNormal[i++] = normalZ;
+				resPoint += 3;
+				resPoint %= 3 * ((resolution - 1) * segments + 1);
+			}
+
+		int row = (resolution - 1) * segments + 1;
+		i = 0; // faces
+		for (int j = 1; j < resolution - 1; j++) {
+			bezierFace[i++] = 0;
+			bezierFace[i++] = j * row;
+			bezierFace[i++] = (j + 1) * row;
+		}
+		int init = row - 1;
+		for (int j = 1; j < resolution - 1; j++) {
+			bezierFace[i++] = init;
+			bezierFace[i++] = init + j * row;
+			bezierFace[i++] = init + (j + 1) * row;
+		}
+		for (int j = 0; j < row - 1; j++)
+			for (int k = 0; k < resolution; k++) {
+				bezierFace[i++] = j + k * row;
+				bezierFace[i++] = j + k * row + 1;
+				bezierFace[i++] = (j + 1 + (k + 1) * row) % (resolution * row);
+				bezierFace[i++] = j + k * row;
+				bezierFace[i++] = (j + 1 + (k + 1) * row) % (resolution * row);
+				bezierFace[i++] = (j + 1 + (k + 1) * row) % (resolution * row) - 1;
+			}
+
+		float[] bezierColor = calcBezierColor(bezierVertex.length);
+
+		VertexData vertexData = new VertexData(bezierVertex.length / 3);
 		vertexData.addElement(bezierVertex, VertexData.Semantic.POSITION, 3);
 		vertexData.addElement(bezierColor, VertexData.Semantic.COLOR, 3);
-		vertexData.addElement(bezierNormal, VertexData.Semantic.NORMAL, 3); // fake normals
+		vertexData.addElement(bezierNormal, VertexData.Semantic.NORMAL, 3);
 		vertexData.addIndices(bezierFace);
 
 		return new Shape(vertexData);
