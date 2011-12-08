@@ -436,6 +436,8 @@ public class mesh {
 			System.out.println("Too much or not enough control points");
 			return null;
 		}
+		if (resolution < 2)
+			resolution = 2;
 
 		int segments = controlPoints.length == 4 ? 1 : (controlPoints.length - 4) / 3 + 1;
 		float[] bezierVertex = new float[3 * segments * resolution * resolution];
@@ -530,6 +532,7 @@ public class mesh {
 		vertexData.addElement(bezierVertex, VertexData.Semantic.POSITION, 3);
 		vertexData.addElement(bezierColor, VertexData.Semantic.COLOR, 3);
 		vertexData.addElement(bezierNormal, VertexData.Semantic.NORMAL, 3);
+
 		vertexData.addIndices(bezierFace);
 
 		return new Shape(vertexData);
