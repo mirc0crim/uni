@@ -29,6 +29,8 @@ public class simple61 {
 	static float angle;
 	static int task = 1;
 	static Shape wine;
+	static Shape wine2;
+	static Shape table;
 
 	public final static class SimpleRenderPanel extends GLRenderPanel {
 		@Override
@@ -38,14 +40,29 @@ public class simple61 {
 
 			scene();
 
-			Matrix4f t = wine.getTransformation();
+			Matrix4f wineTransform = wine.getTransformation();
+			Matrix4f wine2Transform = wine2.getTransformation();
+			Matrix4f tableTransform = table.getTransformation();
 			Matrix4f flip = new Matrix4f();
 			flip.rotX((float) Math.PI / -2);
-			t.mul(flip);
-			wine.setTransformation(t);
+			Matrix4f makeSmaller = new Matrix4f(0.25f, 0, 0, 0, 0, 0.25f, 0, 0, 0, 0, 0.25f, 0, 0,
+					0, 0, 1);
+			Matrix4f moveWine = new Matrix4f(1, 0, 0, -2, 0, 1, 0, 5, 0, 0, 1, 0, 0, 0, 0, 1);
+			Matrix4f moveWine2 = new Matrix4f(1, 0, 0, 2, 0, 1, 0, 5, 0, 0, 1, 0, 0, 0, 0, 1);
+			Matrix4f moveTable = new Matrix4f(1, 0, 0, 0, 0, 1, 0, -3.25f, 0, 0, 1, 0, 0, 0, 0, 1);
+			wineTransform.mul(moveWine);
+			wineTransform.mul(flip);
+			wineTransform.mul(makeSmaller);
+			wine2Transform.mul(moveWine2);
+			wine2Transform.mul(flip);
+			wine2Transform.mul(makeSmaller);
+			tableTransform.mul(moveTable);
+			tableTransform.mul(flip);
+			wine.setTransformation(wineTransform);
+			wine2.setTransformation(wine2Transform);
+			table.setTransformation(tableTransform);
 
 			Timer timer = new Timer();
-			angle = 0.01f;
 			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}
 
@@ -54,26 +71,13 @@ public class simple61 {
 	public static class AnimationTask extends TimerTask {
 		@Override
 		public void run() {
-			Matrix4f rotX = new Matrix4f();
-			Matrix4f rotY = new Matrix4f();
-			Matrix4f rotZ = new Matrix4f();
-			rotX.rotX(angle);
-			rotY.rotY(1.5f * angle);
-			rotZ.rotZ(2.5f * angle);
-
-			Matrix4f t = wine.getTransformation();
-			t.mul(rotX);
-			t.mul(rotY);
-			t.mul(rotZ);
-			wine.setTransformation(t);
-
 			renderPanel.getCanvas().repaint();
 		}
 	}
 
 	public static void main(String[] args)
 	{
-		Camera.setCenterOfProjection(new Vector3f(0, 10, 20));
+		Camera.setCenterOfProjection(new Vector3f(0, 10, 15));
 		sceneManager = new SimpleSceneManager();
 
 		renderPanel = new SimpleRenderPanel();
@@ -92,24 +96,49 @@ public class simple61 {
 		} catch (Exception e) {
 			System.out.println("Problem loading shader");
 		}
-		Vector3f[] point = new Vector3f[7];
-		point[0] = new Vector3f(3, 0, 7);
-		point[1] = new Vector3f(4, 0, 4);
-		point[2] = new Vector3f(3, 0, 2);
-		point[3] = new Vector3f(0.5f, 0, 0.5f);
-		point[4] = new Vector3f(0.5f, 0, -3);
-		point[5] = new Vector3f(0.5f, 0, -5);
-		point[6] = new Vector3f(2, 0, -5);
-		wine = mesh.makeBezier(50, point);
-		Material m = new Material();
-		m.setShader(diffuse);
-		m.setMatColor(new Vector3f(1, 1, 1));
-		wine.setMaterial(m);
+		Vector3f[] winePoints = new Vector3f[7];
+		winePoints[0] = new Vector3f(3, 0, 7);
+		winePoints[1] = new Vector3f(4, 0, 4);
+		winePoints[2] = new Vector3f(3, 0, 2);
+		winePoints[3] = new Vector3f(0.5f, 0, 0.5f);
+		winePoints[4] = new Vector3f(0.5f, 0, -3);
+		winePoints[5] = new Vector3f(0.5f, 0, -5);
+		winePoints[6] = new Vector3f(2.5f, 0, -5);
+		wine = mesh.makeBezier(50, winePoints);
+		wine2 = mesh.makeBezier(50, winePoints);
+		Vector3f[] tablePoints = new Vector3f[10];
+		tablePoints[0] = new Vector3f(0, 0, 7);
+		tablePoints[1] = new Vector3f(0, 0, 7);
+		tablePoints[2] = new Vector3f(5, 0, 7);
+		tablePoints[3] = new Vector3f(5, 0, 7);
+		tablePoints[4] = new Vector3f(1, 0, 6);
+		tablePoints[5] = new Vector3f(0.5f, 0, 2);
+		tablePoints[6] = new Vector3f(0.5f, 0, 1);
+		tablePoints[7] = new Vector3f(0.5f, 0, -3);
+		tablePoints[8] = new Vector3f(1, 0, -5);
+		tablePoints[9] = new Vector3f(2, 0, -5);
+		table = mesh.makeBezier(50, tablePoints);
+		Material wineMat = new Material();
+		wineMat.setShader(diffuse);
+		wineMat.setMatColor(new Vector3f(1, 1, 2));
+		wine.setMaterial(wineMat);
+		wine2.setMaterial(wineMat);
+		Material tableMat = new Material();
+		tableMat.setShader(diffuse);
+		tableMat.setMatColor(new Vector3f(0.4f, 0.27f, 0.13f));
+		table.setMaterial(tableMat);
 		Light l = new Light();
 		l.setType(Type.Directional);
 		l.setDirection(new Vector3f(-1, -1, -1));
-		l.setRadiance(new Vector3f(0.3f, 0.3f, 1));
+		l.setRadiance(new Vector3f(1, 1, 1));
+		Light l2 = new Light();
+		l2.setType(Type.Directional);
+		l2.setDirection(new Vector3f(1, -1, -1));
+		l2.setRadiance(new Vector3f(1, 1, 1));
 		sceneManager.addLight(l);
+		sceneManager.addLight(l2);
 		sceneManager.addShape(wine);
+		sceneManager.addShape(wine2);
+		sceneManager.addShape(table);
 	}
 }

@@ -32,10 +32,10 @@ void main()
 	// the light direction, i.e., it stays in camera coordinates
 	for (int i = 0; i< MAX_LIGHTS; i++) {
 		if (type[i] == 1){
-			ndotl[i] = max(dot(modelview * vec4(normal,0), lightDirection[i]),0);
+			ndotl[i] = max(dot(modelview * vec4(normal,0), lightDirection[i]),0.05);
 		}
 		if (type[i] == 2){
-			ndotl[i] = max(dot(modelview * vec4(normal,0), (posLight[i]-modelview*position)/length(posLight[i]-modelview*position)),0);
+			ndotl[i] = max(dot(modelview * vec4(normal,0), (posLight[i]-modelview*position)/length(posLight[i]-modelview*position)),0.05);
 		}
 	}
 

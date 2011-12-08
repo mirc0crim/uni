@@ -430,12 +430,12 @@ public class mesh {
 
 	public static Shape makeBezier(int resolution, Vector3f[] controlPoints) {
 		if (controlPoints.length < 4 ||
-				controlPoints.length > 4 && (controlPoints.length + 1) % 4 != 0) {
+				controlPoints.length > 4 && (controlPoints.length - 4) % 3 != 0) {
 			System.out.println("Too much or not enough control points");
 			return null;
 		}
 
-		int segments = controlPoints.length == 4 ? 1 : (controlPoints.length + 1) / 4;
+		int segments = controlPoints.length == 4 ? 1 : (controlPoints.length - 4) / 3 + 1;
 		float[] bezierVertex = new float[3 * segments * resolution * resolution];
 		float[] bezierNormal = new float[bezierVertex.length];
 		int[] bezierFace = new int[6 * (resolution * (segments * (resolution - 1) + 1) - 2)];
@@ -465,6 +465,7 @@ public class mesh {
 
 				Vector3f normal = new Vector3f(r2);
 				normal.sub(r1);
+				normal.normalize();
 
 				bezierVertex[i] = x.getX();
 				bezierNormal[i++] = normal.getZ();
