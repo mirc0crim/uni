@@ -87,11 +87,13 @@ public class mesh {
 	public static Shape makePlane() {
 		float planeVertex[] = { -5, -3, 5, -5, -3, -5, 5, -3, -5, 5, -3, 5 };
 		float planeColors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
+		float planeNormal[] = { 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0 };
 		int planeFaces[] = { 0, 1, 2, 0, 3, 2 };
 
 		VertexData planeData = new VertexData(4);
 		planeData.addElement(planeColors, VertexData.Semantic.COLOR, 3);
 		planeData.addElement(planeVertex, VertexData.Semantic.POSITION, 3);
+		planeData.addElement(planeNormal, VertexData.Semantic.NORMAL, 3);
 		planeData.addIndices(planeFaces);
 
 		return new Shape(planeData);
