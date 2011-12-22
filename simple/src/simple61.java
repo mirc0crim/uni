@@ -156,7 +156,6 @@ public class simple61 {
 			stick2.setTransformation(stick2Transform);
 			stick3.setTransformation(stick3Transform);
 			stick4.setTransformation(stick4Transform);
-
 			Timer timer = new Timer();
 			timer.scheduleAtFixedRate(new AnimationTask(), 0, 10);
 		}
@@ -252,10 +251,10 @@ public class simple61 {
 		stickPoints[1] = new Vector3f(0.25f, 0, 2);
 		stickPoints[2] = new Vector3f(0.5f, 0, 1);
 		stickPoints[3] = new Vector3f(0.5f, 0, 0);
-		stick = mesh.makeBezier(10, stickPoints);
-		stick2 = mesh.makeBezier(10, stickPoints);
-		stick3 = mesh.makeBezier(10, stickPoints);
-		stick4 = mesh.makeBezier(10, stickPoints);
+		stick = mesh.makeBezier(4, stickPoints);
+		stick2 = mesh.makeBezier(4, stickPoints);
+		stick3 = mesh.makeBezier(4, stickPoints);
+		stick4 = mesh.makeBezier(4, stickPoints);
 		Material wineMat = new Material();
 		wineMat.setShader(diffuse);
 		wineMat.setMatColor(new Vector3f(1, 1, 2));

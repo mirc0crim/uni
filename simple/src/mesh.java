@@ -469,14 +469,15 @@ public class mesh {
 
 				Vector3f normal = new Vector3f(r2);
 				normal.sub(r1);
+				normal.cross(normal, new Vector3f(0, 1, 0));
 				normal.normalize();
 
 				bezierVertex[i] = x.getX();
-				bezierNormal[i++] = normal.getZ();
+				bezierNormal[i++] = normal.getX();
 				bezierVertex[i] = x.getY();
 				bezierNormal[i++] = 0;
 				bezierVertex[i] = x.getZ();
-				bezierNormal[i++] = -normal.getX();
+				bezierNormal[i++] = -normal.getZ();
 
 			}
 			interpolatePoint = 0;
