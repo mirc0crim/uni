@@ -1,0 +1,25 @@
+\frametitle{More info}
+
+For more details, see corresponding manuals and guides:
+
+\begin{itemize}
+\item \LaTeX\ in general
+
+{\footnotesize Wiki: \verb|http://en.wikibooks.org/wiki/LaTeX|}
+
+\item Document class used: \verb|beamer|
+
+% Manual: http://www.tex.ac.uk/tex-archive/macros/latex/contrib/beamer/doc/beameruserguide.pdf
+{\footnotesize Tutorial: \verb|http://www.math.umbc.edu/~rouben/beamer/|}
+
+\item Verbatim environments: \verb|fancyvrb|
+
+{\footnotesize Manual: \verb|http://mirror.hmc.edu/ctan/macros/latex/contrib/fancyvrb/fancyvrb.pdf|}
+{\footnotesize Tutorial: \verb|http://code.haskell.org/SLPJ-collaborative-papers/styles/fancyvrb.pdf|}
+
+\item Proof trees: \verb|bussproofs|
+
+{\footnotesize Guide: \verb|http://www.logicmatters.net/resources/pdfs/latex/BussGuide2.pdf|}
+
+\end{itemize}
+

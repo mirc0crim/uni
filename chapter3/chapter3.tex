@@ -1,0 +1,181 @@
+\input{preamble.tex}
+
+\title{Coq Proof Assistant: Propositions and Proofs}
+\author{Mirco Kocher}
+\institute{
+	Logic and Theory Group\\
+	Institute of Computer Science and Applied Mathematics\\
+	Universität Bern
+}
+\date{2012}
+
+\begin{document}
+
+{ \logo{} % Suppress logo for title page
+\begin{frame} % Title page
+
+	\begin{center}
+		\includegraphics{coq_logo.png}
+	\end{center}
+	
+	\titlepage
+	
+\end{frame}
+}
+
+\begin{frame}{Frame title goes here}
+
+	Header text of the slide
+
+	\begin{itemize}
+
+	\item First part of the slide.
+
+	\pause		
+	
+	\item Second part of the slide, to be uncovered later.
+	
+	\begin{itemize}
+		\item It has two sub-items, one immediately visible.
+
+		\pause	
+	
+		\item And the other uncovered with the next page.
+	\end{itemize}		
+	
+	\pause	
+	
+	\item Last part of the slide, to be uncovered later still.	
+	
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{Emphasis is everything}
+
+	The following word is \highlight{emphasized} is a way that's \highlight{clearly visible} on a beamer.
+	In case you want a \highlight{stronger} emphasis, it's \Highlight{possible too}.
+	
+	\bigskip
+	
+	Commands used for that are defined in preamble.tex, you can tweak the visual style from one place.
+
+\end{frame}
+
+\begin{frame}{Columns and paragraphs}
+
+	\begin{center}
+
+		It makes sense to center-align text sometimes.		
+		
+	\end{center}
+
+	\begin{columns}
+		
+		\begin{column}{0.4\textwidth}
+		
+			Arranging it in columns is also a possibility.
+			
+		\end{column}	
+		
+		\begin{column}{0.6\textwidth}
+		
+			Note that column width can be custom.		
+		
+		\end{column}		
+		
+	\end{columns}
+	
+	\bigskip
+	
+	Don't neglect commands for manual spacing: 
+	\smallskip
+	
+	smallskip,
+	\medskip
+	
+	medskip,
+	\bigskip	
+	
+	bigskip.
+
+\end{frame}
+
+% ! IMPORTANT !
+% Note the use of [fragile] in \frame
+% It is ALWAYS needed if you use any verbatim-like environments or \verb|...|
+\begin{frame}[fragile]{Verbatim and Coq environments}
+
+	\begin{verbatim}
+		Sometimes you need verbatim text.
+		Note: that makes \frame [fragile].
+	\end{verbatim}
+	
+	Preamble defines two color-coded environments for Coq code and output, namely \verb|user| and \verb|coq|:
+	
+	% Note: fancyvrb ignores tabs - to use indented code, you need to use spaces
+	\begin{user}
+		Theorem Fermat:
+		  forall x y z n : nat, x ^ n + y ^ n = z ^ n -> n <= 2.
+		Proof.
+		  intros.
+	\end{user}
+	
+	\begin{coq}
+		1 subgoal
+		x : nat
+		y : nat
+		z : nat
+		n : nat
+		H : x ^ n + y ^ n = z ^ n
+		______________________________________(1/1)
+		n <= 2
+	\end{coq}
+
+\end{frame}
+
+\begin{frame}{Inference trees}
+
+	You can use \highlight{bussproofs} to display inference rules and derivations:
+	
+	\begin{prooftree}	
+		\AxiomC{$\top_1$} % first child of binary inference
+		\AxiomC{$\top_2$} % grandchild of binary inference
+		\RightLabel{\scriptsize($\vee_2$)} % label of unary inference
+		\UnaryInfC{$\bot \vee \top_2$} % second child of binary inference
+		\RightLabel{\scriptsize($\wedge$)} % label of binary inference
+		\BinaryInfC{$\top_1 \wedge (\bot \vee \top_2)$} % root
+	\end{prooftree}	
+	
+	Note: it works like a stack.
+
+\end{frame}
+
+\begin{frame}[fragile]{More info}
+	
+	For more details, see corresponding manuals and guides:
+	
+	\begin{itemize}
+		\item \LaTeX\ in general
+		
+		{\footnotesize Wiki: \verb|http://en.wikibooks.org/wiki/LaTeX|}
+	
+		\item Document class used: \verb|beamer|
+		
+		% Manual: http://www.tex.ac.uk/tex-archive/macros/latex/contrib/beamer/doc/beameruserguide.pdf
+		{\footnotesize Tutorial: \verb|http://www.math.umbc.edu/~rouben/beamer/|}
+		
+		\item Verbatim environments: \verb|fancyvrb|
+		
+		{\footnotesize Manual: \verb|http://mirror.hmc.edu/ctan/macros/latex/contrib/fancyvrb/fancyvrb.pdf|}
+		{\footnotesize Tutorial: \verb|http://code.haskell.org/SLPJ-collaborative-papers/styles/fancyvrb.pdf|}
+		
+		\item Proof trees: \verb|bussproofs|
+
+		{\footnotesize Guide: \verb|http://www.logicmatters.net/resources/pdfs/latex/BussGuide2.pdf|}
+	
+	\end{itemize}
+	
+\end{frame}
+
+\end{document}

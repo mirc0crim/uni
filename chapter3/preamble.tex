@@ -1,0 +1,52 @@
+\documentclass[10pt,a4paper]{beamer}
+\usetheme{Singapore}
+\setbeamercovered{transparent}
+\beamertemplatenavigationsymbolsempty % Comment this out if you want a navigation bar
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+%math packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+%package for rule inferences
+\usepackage{bussproofs}
+
+%package for handling verbatim
+\usepackage{fancyvrb}
+
+% packages for drawing
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,matrix}
+
+% package for strikethrough text
+\usepackage{ulem}
+
+\logo{
+	\includegraphics[height=1cm]{coq_logo.png}
+}
+
+% uncover everything in a step-wise fashion
+%\beamerdefaultoverlayspecification{<+->}
+
+\usepackage{color}
+\usepackage{xcolor}
+
+\definecolor{coqGreen}{rgb}{0,0.5,0}
+
+% Environment for user input / source code
+\DefineVerbatimEnvironment
+{user}{Verbatim}
+{formatcom=\color{coqGreen}}
+
+% Environment for Coq output
+\DefineVerbatimEnvironment
+{coq}{Verbatim}
+{formatcom=\color{blue}}
+
+% Customizable emphasis
+\providecommand{\highlight}[1]{\textcolor{red}{#1}}
+\providecommand{\Highlight}[1]{\textcolor{red}{\textbf{#1}}}
