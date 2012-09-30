@@ -15,6 +15,7 @@ public class ItemOverlay extends ItemizedOverlay {
 
 	public ItemOverlay(Drawable marker) {
 		super(boundCenterBottom(marker));
+		populate();
 	}
 
 	public ItemOverlay(Drawable defaultMarker, Context context) {
@@ -27,8 +28,9 @@ public class ItemOverlay extends ItemizedOverlay {
 		populate();
 	}
 
-	public void removeAll() {
+	public void clear() {
 		mOverlays.clear();
+		setLastFocusedIndex(-1);
 		populate();
 	}
 

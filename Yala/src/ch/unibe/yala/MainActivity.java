@@ -41,15 +41,11 @@ public class MainActivity extends MapActivity implements LocationListener {
 		map.setBuiltInZoomControls(true);
 
 		mapController = map.getController();
-		mapController.setZoom(16);
+		mapController.setZoom(18);
 
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
 		geocoder = new Geocoder(this);
-
-		Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		if (location != null)
-			onLocationChanged(location);
 
 		mapPin = getResources().getDrawable(R.drawable.androidmarker);
 		itemizedoverlay = new ItemOverlay(mapPin, this);
@@ -85,18 +81,24 @@ public class MainActivity extends MapActivity implements LocationListener {
 			int longitude = (int) (location.getLongitude() * 1000000);
 
 			GeoPoint point = new GeoPoint(latitude, longitude);
-			mapController.animateTo(point);
-			OverlayItem overlayitem = new OverlayItem(point, "Hello :)", "Lat: " + latitude
-					+ "\nLong: " + longitude + "\nNumber: " + (itemizedoverlay.size() + 1));
+			OverlayItem overlayitem = new OverlayItem(point, "Position: "
+					+ (itemizedoverlay.size() + 1), "Lat: " + location.getLatitude() + "\nLong: "
+					+ location.getLongitude());
 			itemizedoverlay.addOverlay(overlayitem);
 			mapOverlays.add(itemizedoverlay);
-
+			mapController.animateTo(point);
 		} catch (IOException e) {
 		}
 	}
 
 	public void reset(View view) {
-		itemizedoverlay.removeAll();
+		OverlayItem last = itemizedoverlay.getItem(itemizedoverlay.size() - 1);
+		OverlayItem first = new OverlayItem(last.getPoint(), "Position: 1", last.getSnippet());
+		map.getOverlays().clear();
+		map.removeAllViews();
+		itemizedoverlay.clear();
+		itemizedoverlay.addOverlay(first);
+		mapOverlays.add(itemizedoverlay);
 	}
 
 	@Override
