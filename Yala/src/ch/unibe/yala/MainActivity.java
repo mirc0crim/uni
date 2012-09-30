@@ -3,18 +3,22 @@ package ch.unibe.yala;
 import java.io.IOException;
 import java.util.List;
 
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
 
 public class MainActivity extends MapActivity implements LocationListener {
 
@@ -23,6 +27,9 @@ public class MainActivity extends MapActivity implements LocationListener {
 	TextView locationText;
 	MapView map;
 	MapController mapController;
+	Drawable mapPin;
+	List<Overlay> mapOverlays;
+	ItemOverlay itemizedoverlay;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +41,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		map.setBuiltInZoomControls(true);
 
 		mapController = map.getController();
-		mapController.setZoom(8);
+		mapController.setZoom(16);
 
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -43,6 +50,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 		Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (location != null)
 			onLocationChanged(location);
+
+		mapPin = getResources().getDrawable(R.drawable.androidmarker);
+		itemizedoverlay = new ItemOverlay(mapPin, this);
+		mapOverlays = map.getOverlays();
 	}
 
 	@Override
@@ -75,27 +86,32 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 			GeoPoint point = new GeoPoint(latitude, longitude);
 			mapController.animateTo(point);
+			OverlayItem overlayitem = new OverlayItem(point, "Hello :)", "Lat: " + latitude
+					+ "\nLong: " + longitude + "\nNumber: " + (itemizedoverlay.size() + 1));
+			itemizedoverlay.addOverlay(overlayitem);
+			mapOverlays.add(itemizedoverlay);
 
 		} catch (IOException e) {
 		}
 	}
 
+	public void reset(View view) {
+		itemizedoverlay.removeAll();
+	}
+
 	@Override
 	public void onProviderDisabled(String provider) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override

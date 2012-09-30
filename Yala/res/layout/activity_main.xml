@@ -10,6 +10,13 @@
         android:padding="@dimen/padding_medium"
         android:text="@string/hello_world"
         android:id="@+id/myText"/>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="reset"
+        android:text="@string/reset" />
     
     <com.google.android.maps.MapView
       xmlns:android="http://schemas.android.com/apk/res/android"
