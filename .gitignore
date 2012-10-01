@@ -1,7 +1,8 @@
-
 *.project
 *.classpath
 *.class
 /.metadata
 hs_err_pid*.log
 *.psd
+*.aux
+*.log
