@@ -1,5 +1,4 @@
-\input{preamble.tex}
-
+\input{preamble}
 \title{Coq Proof Assistant: Propositions and Proofs}
 \author{Mirco Kocher}
 \institute{
@@ -8,136 +7,262 @@
 	Universität Bern
 }
 \date{2012}
-
 \begin{document}
 
 { \logo{} % Suppress logo for title page
 \begin{frame} % Title page
-
 	\begin{center}
 		\includegraphics{coq_logo.png}
-	\end{center}
-	
-	\titlepage
-	
+	\end{center}	
+	\titlepage	
 \end{frame}
 }
 
-\begin{frame}{Frame title goes here}
-
-	Header text of the slide
-
-	\begin{itemize}
-
-	\item First part of the slide.
-
-	\pause		
-	
-	\item Second part of the slide, to be uncovered later.
-	
-	\begin{itemize}
-		\item It has two sub-items, one immediately visible.
-
-		\pause	
-	
-		\item And the other uncovered with the next page.
-	\end{itemize}		
-	
-	\pause	
-	
-	\item Last part of the slide, to be uncovered later still.	
-	
-	\end{itemize}
-	
+\begin{frame}{Overview}
+\tableofcontents[pausesections, pausesubsections]
 \end{frame}
+
+\section{Minimal Propositional Logic}
+
+\subsection{Basics}
+\begin{frame}{Truth table}
+	$(P \rightarrow Q)$
+	\begin{itemize}
+		\item Classical logic
+		\pause
+		\item Assign to every variable a denotation true or false
+		\pause		
+		\item Formula is valid iff true in all cases
+		\pause
+		\item Question "is the proposition P true?"
+	\end{itemize}
+\end{frame}
+\begin{frame}{Coq system}
+	$(P \rightarrow Q)$
+	\begin{itemize}
+		\item Intuitionistic logic
+		\pause
+		\item Obtain a proof of Q from a proof of P
+		\pause		
+		\item Arbitrary proof of P constructs a proof of Q
+		\pause
+		\item Question "what are the proof of P (if any)?"
+	\end{itemize}
+\end{frame}
+
+\subsection{Definition}
+\begin{frame}[fragile]{Hypothesis}
+	\begin{user}
+	Hypothesis h:P
+	\end{user}
+	\begin{itemize}
+		\item Local declaration
+		\pause
+		\item $h$ is the name of the hypothesis
+		\pause
+		\item P is its statement
+		\pause
+		\item Synonymous to
+		\begin{user}
+		Variable h:P
+		\end{user}
+		\pause
+		\item Use
+		\begin{user}
+		Hypotheses
+		\end{user}
+		or
+		\begin{user}
+		Variables
+		\end{user}
+		to declare several at a time
+	\end{itemize}
+\end{frame}
+\begin{frame}[fragile]{Section}
+	The section contains all Hypoteses / Variables from the Context\\
+	\pause
+	\medskip
+	Start section sec1 with
+	\begin{user}
+	Section sec1
+	\end{user}
+	\pause
+	\medskip
+	End section sec1 with
+	\begin{user}
+	End sec1
+	\end{user}
+\end{frame}
+\begin{frame}[fragile]{Axiom}
+	\begin{user}
+	Axiom x:P
+	\end{user}
+	\begin{itemize}
+		\item Global declaration
+		\pause
+		\item Synonymous to
+		\begin{user}
+		Parameter x:P
+		\end{user}
+	\end{itemize}
+	\pause
+	\medskip
+	Environment contains axioms\\
+	\pause
+	\medskip
+	Context contains hypotheses\\
+	\pause
+	\medskip
+	$E, \Gamma \vdash \pi : P$
+\end{frame}
+\begin{frame}{Goals and Tactics}
+	Goals: what needs to be proven\\
+	\medskip
+	\pause
+	Goal: $E, \Gamma \vdash P$\\
+	\pause
+	Construct a proof of P. Should be a well-formed term $t$ in the environment $E$ and context $\Gamma$\\
+	\pause
+	Term $t$ is called a $solution$\\
+	\pause
+	\bigskip
+	Tactics: commands to decompose this goal into simpler goals\\
+	\pause
+	\medskip
+	$g$ ist input goal and $g_1$, $g_2$, ..., $g_k$ are output goals\\
+	\pause
+	Possible to construct a solution of $g$ from the solutions of goals $g_i$	
+\end{frame}
+
+\section{Example}
+
+\subsection{Definition}
+\begin{frame}[fragile]{intros}
+	Goal: $(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$ \\
+	\medskip
+	\pause
+	\begin{user}
+	intros H H' p
+	\end{user}
+	\pause
+	\begin{itemize}
+		\item Transform the task of construction a proof into proving R with those hypotheses added
+		\pause
+		\item $H:P \rightarrow Q$
+		\pause
+		\item $H':Q \rightarrow R$ and
+		\pause
+		\item $p:P$
+		\pause
+		\item New subgoal: $R$
+	\end{itemize}
+	\pause
+	Simplifies the statement to prove and increases the resources available
+\end{frame}
+\begin{frame}[fragile]{apply}
+	Subgoal: $R$\\
+	\medskip
+	Hypothesis $H': Q \rightarrow R$ and $H:P \rightarrow Q$
+	\medskip
+	\pause
+	\begin{user}
+	apply H'
+	\end{user}
+	\begin{itemize}
+		\item Use the hypothesis $H'$ to advance our proof
+		\pause
+		\item Argument has to be a premise and a conclusion
+		\pause
+		\item Creates new goal for the premise
+		\pause
+		\item New subgoal: $Q$
+	\end{itemize}
+	\pause
+	Applying hypothesis H gives the new subgoal $P$
+\end{frame}
+\begin{frame}[fragile]{assumption}
+	Subgoal: $P$\\
+	\medskip
+	Hypothesis $p: P$
+	\medskip
+	\pause
+	\begin{user}
+	assumption
+	\end{user}
+	\begin{itemize}
+		\item Statement to proof is exactly statement of hypothesis $p$
+		\pause
+		\item Succeeds without generating any new goal
+	\end{itemize}
+	\pause
+	\medskip
+	\begin{coq}
+	No more subgoals
+	\end{coq}
+	\pause
+	Proof complete
+\end{frame}
+\begin{frame}[fragile]{Finish}
+	\begin{user}
+	Qed
+	\end{user}
+	\pause
+	\begin{itemize}
+		\item Saves the theorem's name, statement and proof term
+		\pause
+		\item Displays the sequence of tactics.
+	\end{itemize}
+	\begin{coq}
+	intros H H' p.
+	apply H'.
+	apply H.
+	assumption.
+	\end{coq}
+	\pause
+	\medskip
+	\begin{user}
+	Print theorem-name
+	\end{user}
+	\pause
+	\begin{itemize}
+		\item Shows the proof like any $Gallina$ definition
+	\end{itemize}
+	\begin{coq}
+	theorem-name = fun (H:P -> Q)(H':Q -> R)(p:P) => H' (H p)
+		 : (P -> Q) -> (Q -> R) -> P -> R
+	\end{coq}
+\end{frame}
+
+\subsection{Demo}
+\begin{frame}{Transitivity}
+	\begin{center}
+		$(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$
+	\end{center}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%
+
+\section{Default}
 
 \begin{frame}{Emphasis is everything}
-
 	The following word is \highlight{emphasized} is a way that's \highlight{clearly visible} on a beamer.
-	In case you want a \highlight{stronger} emphasis, it's \Highlight{possible too}.
-	
-	\bigskip
-	
-	Commands used for that are defined in preamble.tex, you can tweak the visual style from one place.
-
-\end{frame}
-
-\begin{frame}{Columns and paragraphs}
-
-	\begin{center}
-
-		It makes sense to center-align text sometimes.		
-		
-	\end{center}
-
-	\begin{columns}
-		
-		\begin{column}{0.4\textwidth}
-		
-			Arranging it in columns is also a possibility.
-			
-		\end{column}	
-		
-		\begin{column}{0.6\textwidth}
-		
-			Note that column width can be custom.		
-		
-		\end{column}		
-		
-	\end{columns}
-	
-	\bigskip
-	
-	Don't neglect commands for manual spacing: 
-	\smallskip
-	
-	smallskip,
-	\medskip
-	
-	medskip,
+	In case you want a \highlight{stronger} emphasis, it's \Highlight{possible too}.	
 	\bigskip	
-	
-	bigskip.
-
+	Commands used for that are defined in preamble.tex, you can tweak the visual style from one place.
 \end{frame}
-
-% ! IMPORTANT !
-% Note the use of [fragile] in \frame
-% It is ALWAYS needed if you use any verbatim-like environments or \verb|...|
-\begin{frame}[fragile]{Verbatim and Coq environments}
-
-	\begin{verbatim}
-		Sometimes you need verbatim text.
-		Note: that makes \frame [fragile].
-	\end{verbatim}
-	
-	Preamble defines two color-coded environments for Coq code and output, namely \verb|user| and \verb|coq|:
-	
-	% Note: fancyvrb ignores tabs - to use indented code, you need to use spaces
-	\begin{user}
-		Theorem Fermat:
-		  forall x y z n : nat, x ^ n + y ^ n = z ^ n -> n <= 2.
-		Proof.
-		  intros.
-	\end{user}
-	
-	\begin{coq}
-		1 subgoal
-		x : nat
-		y : nat
-		z : nat
-		n : nat
-		H : x ^ n + y ^ n = z ^ n
-		______________________________________(1/1)
-		n <= 2
-	\end{coq}
-
+\begin{frame}{Columns and paragraphs}
+	\begin{columns}		
+		\begin{column}{0.4\textwidth}		
+			Arranging it in columns is also a possibility.			
+		\end{column}			
+		\begin{column}{0.6\textwidth}		
+			Note that column width can be custom.				
+		\end{column}				
+	\end{columns}	
 \end{frame}
-
 \begin{frame}{Inference trees}
-
-	You can use \highlight{bussproofs} to display inference rules and derivations:
-	
+	You can use \highlight{bussproofs} to display inference rules and derivations:	
 	\begin{prooftree}	
 		\AxiomC{$\top_1$} % first child of binary inference
 		\AxiomC{$\top_2$} % grandchild of binary inference
@@ -146,36 +271,7 @@
 		\RightLabel{\scriptsize($\wedge$)} % label of binary inference
 		\BinaryInfC{$\top_1 \wedge (\bot \vee \top_2)$} % root
 	\end{prooftree}	
-	
 	Note: it works like a stack.
-
-\end{frame}
-
-\begin{frame}[fragile]{More info}
-	
-	For more details, see corresponding manuals and guides:
-	
-	\begin{itemize}
-		\item \LaTeX\ in general
-		
-		{\footnotesize Wiki: \verb|http://en.wikibooks.org/wiki/LaTeX|}
-	
-		\item Document class used: \verb|beamer|
-		
-		% Manual: http://www.tex.ac.uk/tex-archive/macros/latex/contrib/beamer/doc/beameruserguide.pdf
-		{\footnotesize Tutorial: \verb|http://www.math.umbc.edu/~rouben/beamer/|}
-		
-		\item Verbatim environments: \verb|fancyvrb|
-		
-		{\footnotesize Manual: \verb|http://mirror.hmc.edu/ctan/macros/latex/contrib/fancyvrb/fancyvrb.pdf|}
-		{\footnotesize Tutorial: \verb|http://code.haskell.org/SLPJ-collaborative-papers/styles/fancyvrb.pdf|}
-		
-		\item Proof trees: \verb|bussproofs|
-
-		{\footnotesize Guide: \verb|http://www.logicmatters.net/resources/pdfs/latex/BussGuide2.pdf|}
-	
-	\end{itemize}
-	
 \end{frame}
 
 \end{document}
