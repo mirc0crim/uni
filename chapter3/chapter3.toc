@@ -1,9 +1,0 @@
-\beamer@endinputifotherversion {3.22pt}
-\select@language {english}
-\beamer@sectionintoc {1}{Minimal Propositional Logic}{9}{0}{1}
-\beamer@subsectionintoc {1}{1}{Basics}{9}{0}{1}
-\beamer@subsectionintoc {1}{2}{Definition}{17}{0}{1}
-\beamer@sectionintoc {2}{Example}{37}{0}{2}
-\beamer@subsectionintoc {2}{1}{Definition}{37}{0}{2}
-\beamer@subsectionintoc {2}{2}{Demo}{61}{0}{2}
-\beamer@sectionintoc {3}{Default}{62}{0}{3}

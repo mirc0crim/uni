@@ -240,38 +240,121 @@
 	\end{center}
 \end{frame}
 
+\section{Structure}
 
-%%%%%%%%%%%%%%%%
-
-\section{Default}
-
-\begin{frame}{Emphasis is everything}
-	The following word is \highlight{emphasized} is a way that's \highlight{clearly visible} on a beamer.
-	In case you want a \highlight{stronger} emphasis, it's \Highlight{possible too}.	
-	\bigskip	
-	Commands used for that are defined in preamble.tex, you can tweak the visual style from one place.
+\subsection{Tactics}
+\begin{frame}[fragile]{One Shot}
+	Not all the details for the proof is needed\\
+	\medskip
+	\pause
+	A few automatic tactics are able to solve this goal
+	\pause
+	\begin{user}
+	Theorem transitivity : (P->Q) -> (Q->R) -> P -> R.
+	Proof.
+	\end{user}
+	\pause
+	\begin{user}
+		auto.
+	Qed.
+	\end{user}
+	\pause
+	Good usage requires the command Proof after Theorem or Lemma\\
+	\smallskip
+	Makes the proof documents more readable
 \end{frame}
-\begin{frame}{Columns and paragraphs}
-	\begin{columns}		
-		\begin{column}{0.4\textwidth}		
-			Arranging it in columns is also a possibility.			
-		\end{column}			
-		\begin{column}{0.6\textwidth}		
-			Note that column width can be custom.				
-		\end{column}				
-	\end{columns}	
+\begin{frame}[fragile]{exact}
+	The exact tactic takes any term (with right type) as argument\\
+	\pause
+	\smallskip
+	The whole proof could be given as an argument\\
+	\pause
+	\medskip
+	\begin{user}
+	Theorem delta : (P->P->Q) -> P -> Q.
+	Proof.
+	\end{user}
+	\pause
+	\begin{user}
+	exact (fun (H:P->P->Q)(p:P) => H p p).
+	Qed.
+	\end{user}
+	\pause
+	\medskip
+	Or even shorter:
+	\begin{user}
+	Theorem delta : (P->P->Q) -> P -> Q.
+	Proof (fun (H:P->P->Q)(p:P) => H p p).
+	\end{user}
 \end{frame}
-\begin{frame}{Inference trees}
-	You can use \highlight{bussproofs} to display inference rules and derivations:	
-	\begin{prooftree}	
-		\AxiomC{$\top_1$} % first child of binary inference
-		\AxiomC{$\top_2$} % grandchild of binary inference
-		\RightLabel{\scriptsize($\vee_2$)} % label of unary inference
-		\UnaryInfC{$\bot \vee \top_2$} % second child of binary inference
-		\RightLabel{\scriptsize($\wedge$)} % label of binary inference
-		\BinaryInfC{$\top_1 \wedge (\bot \vee \top_2)$} % root
-	\end{prooftree}	
-	Note: it works like a stack.
+\begin{frame}[fragile]{Modus Ponens}
+	apply tactic uses the Modus Ponens\\
+	\pause
+	\medskip
+	\begin{prooftree}
+	\AxiomC{$E,\Gamma \vdash t : P \rightarrow Q$}
+	\AxiomC{$E,\Gamma \vdash t' : P$}
+	\BinaryInfC{$E, \Gamma \vdash t t' : Q$}\textbf{App}
+	\end{prooftree}
+	\pause
+	Term t : $P_1 \rightarrow P_2 \rightarrow ... \rightarrow P_n \rightarrow Q$ \\
+	Goal : $P_k \rightarrow P_{k+1} \rightarrow ... \rightarrow P_n \rightarrow Q$
+	\pause
+	\medskip
+	\begin{user}
+	apply t
+	\end{user}
+	generates k-1 goals with statements $P_1, ..., P_{k-1}$\\
+	\pause
+	\smallskip
+	if new goals have solution $t_1, t_2, ..., t_{k-1}$\\
+	solution is $t$ $t_1$ $t_2$ ... $t_{k-1}$ for initial goal
+\end{frame}
+\begin{frame}[fragile]{intros}
+	\begin{user}
+	intros v_1, v_2, ..., v_n
+	\end{user}
+	is the same as
+	\begin{user}
+	intro v_1, intro v_2, ..., intro v_n
+	\end{user}
+	\pause
+	intro $v_1$ takes the first implication as a hypothesis called $v_1$\\
+	\bigskip
+	\pause
+	Proof Theorem K : $P \rightarrow Q \rightarrow P$\\
+	\pause
+	Goal is  $P \rightarrow Q \rightarrow P$\\
+	\pause
+	\begin{user}
+	intro p.
+	\end{user}
+	Hypothesis $p:P$ and new Goal $Q \rightarrow P$
+\end{frame}
+\begin{frame}[fragile]{Handling}
+	\begin{user}
+		Show i
+	\end{user}
+	Display goal $i$ with complete context\\
+	Coq displays the goals after each proof step
+	\pause
+	\medskip
+	\begin{user}
+		Undo n
+	\end{user}
+	Go back $n$ steps and try an alternative if goal can not be solved
+	\pause
+	\medskip
+	\begin{user}
+		Restart
+	\end{user}
+	Go back to the beginning of the proof
+	\pause
+	\medskip
+	\begin{user}
+		Abort
+	\end{user}
+	Abandon the proof
 \end{frame}
 
 \end{document}

@@ -6,3 +6,8 @@ hs_err_pid*.log
 *.psd
 *.aux
 *.log
+*.nav
+*.out
+*.synctex.gz
+*.toc
+*.vrb
