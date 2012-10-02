@@ -242,7 +242,7 @@
 
 \section{Structure}
 
-\subsection{Tactics}
+\subsection{Tactics explenation}
 \begin{frame}[fragile]{One Shot}
 	Not all the details for the proof is needed\\
 	\medskip
@@ -355,6 +355,108 @@
 		Abort
 	\end{user}
 	Abandon the proof
+\end{frame}
+
+\subsection{Composing tactics}
+\begin{frame}[fragile]{Simple composing}
+	Combine tactics without stopping at intermediary subgoals\\
+	\pause
+	\medskip
+	Goal: $P \rightarrow Q \rightarrow (P \rightarrow Q \rightarrow R) \rightarrow R$
+	\pause
+	\begin{user}
+	intros p q H; apply H; assumption.
+	\end{user}
+	\pause
+	Like chess: forsee results of tactics\\
+	\pause
+	\medskip
+	If any tatcic fails, then the whole combination fails
+\end{frame}
+\begin{frame}[fragile]{General composing}
+	Tactics can generate multiple subgoals \\
+	\pause
+	\medskip
+	Goal: $(P \rightarrow Q \rightarrow R) \rightarrow (P \rightarrow Q) \rightarrow (P \rightarrow R)$
+	\pause
+	\begin{user}
+	intros H H' p; apply H; [assumption | apply H'; assumption].
+	\end{user}
+	\pause
+	Two subgoals $P$ and $Q$\\
+	\pause
+	\medskip
+	First is solved with assumption\\
+	\pause
+	Other one first has to apply H' and then use assumption
+\end{frame}
+\begin{frame}[fragile]{More composing}
+	If a tactic fails automatically use another tactic
+	\pause
+	\begin{user}
+	intros H p; apply H; (assumption || intro H').
+	\end{user}
+	\pause
+	If assumption fails, then intro H' is used\\
+	\pause
+	\bigskip
+	A tactic can be left unchanged to finish every subgoal in one go\\
+	\pause
+	\smallskip
+	Goal: $(P \rightarrow Q) \rightarrow (P \rightarrow R) \rightarrow (P \rightarrow Q \rightarrow R \rightarrow T) \rightarrow P \rightarrow T$
+	\pause
+	\begin{user}
+		intros H H0 H1 p.
+		apply H1; [idtac | apply H | apply H0]; assumption
+	\end{user}
+\end{frame}
+\begin{frame}[fragile]{Fail}
+	Tactic that always fails \\
+	\pause
+	\medskip
+	Goal: $(P \rightarrow Q) \rightarrow (P \rightarrow Q)$
+	\pause
+	\begin{user}
+	intro X; apply X; fail.
+	\end{user}
+	\pause
+	This combination succeeds; there are no more subgoals after "apply X"\\
+	\pause
+	\medskip
+	Goal: $((P \rightarrow P) \rightarrow (Q \rightarrow Q) \rightarrow R) \rightarrow R$
+	\begin{user}
+	intro X; apply X; fail.
+	\end{user}
+	\pause
+	This combination fails; there are subgoals left after "apply X"
+\end{frame}
+\begin{frame}[fragile]{Try}
+	Combination of tactics that never fail \\
+	\pause
+	\medskip
+	Goal: $(P \rightarrow Q \rightarrow R \rightarrow T) \rightarrow (P \rightarrow Q) \rightarrow (P \rightarrow R \rightarrow T)$
+	\pause
+	\begin{user}
+	intros H H' p r.
+	apply H; try assumption; apply H'; assumption.
+	\end{user}
+	\pause
+	"try tac" behaves like "tac $\|$ idtac"\\
+	\pause
+	\medskip
+	tac is either applied or the subgoal is left unchanged
+\end{frame}
+\begin{frame}[fragile]{Unprovalbe Propositions}
+	There are goals with no solution at all\\
+	\pause
+	\medskip
+	Even though they are valid in classical logic\\
+	\pause
+	\medskip
+	Peirce's formula: $(((P \rightarrow Q) \rightarrow P) \rightarrow P)$\\
+	\pause
+	\medskip
+	Truth table shows it is a valid formula
 \end{frame}
 
 \end{document}
