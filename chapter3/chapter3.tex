@@ -25,32 +25,88 @@
 \section{Minimal Propositional Logic}
 
 \subsection{Basics}
-\begin{frame}{Truth table}
-	$(P \rightarrow Q)$
+\begin{frame}{Propositional logic}
+	$(P \Rightarrow Q) \Rightarrow ((Q \Rightarrow R) \Rightarrow (P \Rightarrow R))$
 	\begin{itemize}
+		\item $P$, $Q$, $R$ are propositions
+		\pause
+		\item Goal is to prove the implication
+	\end{itemize}
+\end{frame}
+\begin{frame}{Tarski approach}
+	$(P \Rightarrow Q)$
+	\begin{itemize}
+		\item Question "is the proposition P true?"
+		\pause
 		\item Classical logic
 		\pause
 		\item Assign to every variable a denotation true or false
+		\pause
+		\item Truth table
 		\pause		
 		\item Formula is valid iff true in all cases
-		\pause
-		\item Question "is the proposition P true?"
 	\end{itemize}
 \end{frame}
-\begin{frame}{Coq system}
-	$(P \rightarrow Q)$
+\begin{frame}{Heyting approach}
+	$(P \Rightarrow Q)$
 	\begin{itemize}
+		\item Question "what are the proofs of P (if any)?"
+		\pause
 		\item Intuitionistic logic
 		\pause
 		\item Obtain a proof of Q from a proof of P
 		\pause		
 		\item Arbitrary proof of P constructs a proof of Q
 		\pause
-		\item Question "what are the proof of P (if any)?"
+		\item Coq system follows this approach
+	\end{itemize}
+\end{frame}
+\begin{frame}{Translate from Heyting into Coq}
+	$(P \Rightarrow Q)$
+	\begin{itemize}
+		\item Curry-Howard isomorphism is the direct relationship between computer programs and proofs
+		\pause
+		\item Proofs are seen as programs
+		\item Statements are treated as specifications
+		\pause
+		\item The "$\Rightarrow$" becomes "$\rightarrow$"
+	\end{itemize}
+	\pause
+	$(P \rightarrow Q)$
+\end{frame}
+\begin{frame}{Overview}
+	Today:
+	\begin{itemize}
+		\item Present tools used to make theorem proving easier
+		\pause
+		\item Use tactics to obtain proofs in a semi-automatic way
+		\pause
+		\item Proof irrelevance:\\
+		It doesn't matter how complex a proof is, it's enough to find one. Unlike programs where more efficient ones must be preferred
+	\pause
+	\end{itemize}
+	Next Week:
+	\begin{itemize}
+		\item More details on tactics
+		\pause
+		\item Composing
+		\pause
+		\item Proof irrelevance
 	\end{itemize}
 \end{frame}
 
 \subsection{Definition}
+\begin{frame}{Sorts} %%%%%%%% TO DO %%%%%%%%
+	Prop is one of the predefined sorts
+	\begin{itemize}
+		\item Plays a similar role as set 
+		\pause
+		\item Set is for programs and specifications ($nat -> nat, bool$)\\
+		Prop is for proofs and Propositions ($P, Q, R$)
+	\end{itemize}
+	\pause
+	Definition: Every type $P$ whose type is the sort $Prop$ is called a proposition. Any term $t$ whose type is a propostion is called a proof term (=proof).
+\end{frame}
 \begin{frame}[fragile]{Hypothesis}
 	\begin{user}
 	Hypothesis h:P
@@ -78,21 +134,6 @@
 		to declare several at a time
 	\end{itemize}
 \end{frame}
-\begin{frame}[fragile]{Section}
-	The section contains all Hypoteses / Variables from the Context\\
-	\pause
-	\medskip
-	Start section sec1 with
-	\begin{user}
-	Section sec1
-	\end{user}
-	\pause
-	\medskip
-	End section sec1 with
-	\begin{user}
-	End sec1
-	\end{user}
-\end{frame}
 \begin{frame}[fragile]{Axiom}
 	\begin{user}
 	Axiom x:P
@@ -115,28 +156,71 @@
 	\medskip
 	$E, \Gamma \vdash \pi : P$
 \end{frame}
+
+
+\section{Goal-directed proof}
+
+\subsection{Definition}
 \begin{frame}{Goals and Tactics}
-	Goals: what needs to be proven\\
+	A goal is the pairing of two pieces of information: a local context $\Gamma$ and a type $t$ that is well-formed in this context.\\
 	\medskip
 	\pause
-	Goal: $E, \Gamma \vdash P$\\
-	\pause
-	Construct a proof of P. Should be a well-formed term $t$ in the environment $E$ and context $\Gamma$\\
+	Goal: $E, \Gamma \vdash^? P$\\
 	\pause
 	Term $t$ is called a $solution$\\
 	\pause
 	\bigskip
-	Tactics: commands to decompose this goal into simpler goals\\
+	Tactics:\\
+	Can be applied to a goal.\\
+	Decompose this goal into simpler goals and create new goals\\
 	\pause
 	\medskip
-	$g$ ist input goal and $g_1$, $g_2$, ..., $g_k$ are output goals\\
+	If $g$ is input goal and $g_1$, $g_2$, ..., $g_k$ are output goals, then it's possible to construct a solution of $g$ from the solutions of goals $g_i$.
+\end{frame}
+\begin{frame}{Transitivity}
+	\begin{center}
+		$(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$
+	\end{center}
+\end{frame}
+\begin{frame}[fragile]{Example 1}
+	$(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$
 	\pause
-	Possible to construct a solution of $g$ from the solutions of goals $g_i$	
+	\begin{user}
+		Section Example1.
+		Variables P Q R T : Prop.
+	\end{user}
+	\pause
+	\begin{coq}
+		P is assumed
+		Q is assumed
+		R is assumed
+		T is assumed
+	\end{coq}
+\end{frame}
+\begin{frame}[fragile]{Example 1}
+	$(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$
+	\pause
+	\begin{user}
+		Theorem imp_trans : (P->Q) -> (Q->R) -> P -> R.
+	\end{user}
+	\pause
+	\begin{coq}
+		1 subgoal
+
+		P : Prop
+		Q : Prop
+		R : Prop
+		T : Prop
+		===============
+		 (P->Q) -> (Q->R) -> P -> R
+	\end{coq}
+	\pause
+	\begin{user}
+		Proof.
+	\end{user}
 \end{frame}
 
-\section{Example}
-
-\subsection{Definition}
+\subsection{Tactics}
 \begin{frame}[fragile]{intros}
 	Goal: $(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$ \\
 	\medskip
@@ -159,6 +243,27 @@
 	\pause
 	Simplifies the statement to prove and increases the resources available
 \end{frame}
+\begin{frame}[fragile]{Example 1}
+	$(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$
+	\pause
+	\begin{user}
+		intros H H' p.
+	\end{user}
+	\pause
+	\begin{coq}
+		1 subgoal
+
+		P : Prop
+		Q : Prop
+		R : Prop
+		T : Prop
+		H : P->Q
+		H' : Q->R
+		p : P
+		===============
+		 R
+	\end{coq}
+\end{frame}
 \begin{frame}[fragile]{apply}
 	Subgoal: $R$\\
 	\medskip
@@ -180,14 +285,56 @@
 	\pause
 	Applying hypothesis H gives the new subgoal $P$
 \end{frame}
-\begin{frame}[fragile]{assumption}
+\begin{frame}[fragile]{Example 1}
+	$(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$
+	\pause
+	\begin{user}
+		apply H'.
+	\end{user}
+	\pause
+	\begin{coq}
+		1 subgoal
+
+		P : Prop
+		Q : Prop
+		R : Prop
+		T : Prop
+		H : P->Q
+		H' : Q->R
+		p : P
+		===============
+		 Q
+	\end{coq}
+\end{frame}
+\begin{frame}[fragile]{Example 1}
+	$(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$
+	\pause
+	\begin{user}
+		apply H.
+	\end{user}
+	\pause
+	\begin{coq}
+		1 subgoal
+
+		P : Prop
+		Q : Prop
+		R : Prop
+		T : Prop
+		H : P->Q
+		H' : Q->R
+		p : P
+		===============
+		 P
+	\end{coq}
+\end{frame}
+\begin{frame}[fragile]{Tactic assumption}
 	Subgoal: $P$\\
 	\medskip
 	Hypothesis $p: P$
 	\medskip
 	\pause
 	\begin{user}
-	assumption
+		assumption
 	\end{user}
 	\begin{itemize}
 		\item Statement to proof is exactly statement of hypothesis $p$
@@ -208,60 +355,94 @@
 	\end{user}
 	\pause
 	\begin{itemize}
+		\item Every proof should be terminated by the Qed command
+		\pause
 		\item Saves the theorem's name, statement and proof term
 		\pause
 		\item Displays the sequence of tactics.
 	\end{itemize}
 	\begin{coq}
-	intros H H' p.
-	apply H'.
-	apply H.
-	assumption.
+		intros H H' p.
+		apply H'.
+		apply H.
+		assumption.
 	\end{coq}
 	\pause
 	\medskip
 	\begin{user}
-	Print theorem-name
+		Print imp_trans
 	\end{user}
 	\pause
 	\begin{itemize}
 		\item Shows the proof like any $Gallina$ definition
 	\end{itemize}
 	\begin{coq}
-	theorem-name = fun (H:P -> Q)(H':Q -> R)(p:P) => H' (H p)
-		 : (P -> Q) -> (Q -> R) -> P -> R
+		imp-trans = fun (H:P->Q)(H':Q->R)(p:P) => H' (H p)
+		 : (P->Q) -> (Q->R) -> P -> R
 	\end{coq}
-\end{frame}
-
-\subsection{Demo}
-\begin{frame}{Transitivity}
-	\begin{center}
-		$(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$
-	\end{center}
 \end{frame}
 
 \section{Structure}
 
-\subsection{Tactics explenation}
-\begin{frame}[fragile]{One Shot}
+\subsection{Typing rules}
+\begin{frame}[fragile]{Tactic auto}
 	Not all the details for the proof is needed\\
 	\medskip
 	\pause
+	Transitivity is a rather trivial statement \\
 	A few automatic tactics are able to solve this goal
 	\pause
 	\begin{user}
-	Theorem transitivity : (P->Q) -> (Q->R) -> P -> R.
-	Proof.
+		Theorem transitivity : (P->Q) -> (Q->R) -> P -> R.
+		Proof.
 	\end{user}
 	\pause
 	\begin{user}
 		auto.
-	Qed.
+		Qed.
+	\end{user}
+\end{frame}
+\begin{frame}[fragile]{Building Rules}
+	Same kind of typing rules that control the construction of proposition as those used to build simple specifications.\\
+	\medskip
+	\pause
+	Difference is in the use of $Prop$ instead of $Set$.\\
+	\pause
+	\medskip
+	$E, \Gamma \vdash id : Prop$\\
+	\pause
+	\medskip
+	\begin{user}
+		Check id.
 	\end{user}
 	\pause
-	Good usage requires the command Proof after Theorem or Lemma\\
-	\smallskip
-	Makes the proof documents more readable
+	\begin{coq}
+		id : Prop
+	\end{coq}
+\end{frame}
+\begin{frame}[fragile]{General Prod}
+	\begin{prooftree}
+		\AxiomC{$E,\Gamma \vdash P : Prop$}
+		\AxiomC{$E,\Gamma \vdash Q : Prop$}
+		\BinaryInfC{$E, \Gamma \vdash P \rightarrow Q : Prop$}\textbf{Prod-Prop}
+	\end{prooftree}
+	\pause
+	As the rules Prod-Set and Prod-Prop only differ in their use of sorts they can be presented as a single rule with parameter sort $s$
+	\pause
+	\begin{prooftree}
+		\AxiomC{$E,\Gamma \vdash A : s$}
+		\AxiomC{$E,\Gamma \vdash B : s$}
+		\BinaryInfC{$E, \Gamma \vdash A \rightarrow B : s$}\textbf{Prod}
+	\end{prooftree}
+	\begin{center}
+		With $s \in$ \{Set, Prop\}
+	\end{center}
+\end{frame}
+\begin{frame}[fragile]{Var rule}
+	\begin{prooftree}
+		\AxiomC{$(x:P) \in E \cup \Gamma$}
+		\UnaryInfC{$E, \Gamma \vdash x : P$}\textbf{Var}
+	\end{prooftree}
 \end{frame}
 \begin{frame}[fragile]{exact}
 	The exact tactic takes any term (with right type) as argument\\
@@ -271,38 +452,42 @@
 	\pause
 	\medskip
 	\begin{user}
-	Theorem delta : (P->P->Q) -> P -> Q.
-	Proof.
+		Theorem delta : (P->P->Q) -> P -> Q.
+		Proof.
 	\end{user}
 	\pause
 	\begin{user}
-	exact (fun (H:P->P->Q)(p:P) => H p p).
-	Qed.
+		exact (fun (H:P->P->Q)(p:P) => H p p).
+		Qed.
 	\end{user}
 	\pause
 	\medskip
 	Or even shorter:
 	\begin{user}
-	Theorem delta : (P->P->Q) -> P -> Q.
-	Proof (fun (H:P->P->Q)(p:P) => H p p).
+		Theorem delta : (P->P->Q) -> P -> Q.
+		Proof (fun (H:P->P->Q)(p:P) => H p p).
 	\end{user}
+	\pause
+	Uses the context hypotheses
 \end{frame}
 \begin{frame}[fragile]{Modus Ponens}
-	apply tactic uses the Modus Ponens\\
+	Apply tactic uses the Modus Ponens\\
 	\pause
 	\medskip
 	\begin{prooftree}
-	\AxiomC{$E,\Gamma \vdash t : P \rightarrow Q$}
-	\AxiomC{$E,\Gamma \vdash t' : P$}
-	\BinaryInfC{$E, \Gamma \vdash t t' : Q$}\textbf{App}
+		\AxiomC{$E,\Gamma \vdash t : P \rightarrow Q$}
+		\AxiomC{$E,\Gamma \vdash t' : P$}
+		\BinaryInfC{$E, \Gamma \vdash t t' : Q$}\textbf{App}
 	\end{prooftree}
 	\pause
-	Term t : $P_1 \rightarrow P_2 \rightarrow ... \rightarrow P_n \rightarrow Q$ \\
-	Goal : $P_k \rightarrow P_{k+1} \rightarrow ... \rightarrow P_n \rightarrow Q$
+	Term $t$ : $P_1 \rightarrow P_2 \rightarrow ... \rightarrow P_n \rightarrow Q$ \\
+	Goal : $P_k \rightarrow P_{k+1} \rightarrow ... \rightarrow P_n \rightarrow Q$, also called "head type" of rank $k$\\
+	The term $Q$ is called "final type" if it's not an arrow type.\\
+	Head and final types play a role in later tactics
 	\pause
 	\medskip
 	\begin{user}
-	apply t
+		apply t
 	\end{user}
 	generates k-1 goals with statements $P_1, ..., P_{k-1}$\\
 	\pause
@@ -310,39 +495,64 @@
 	if new goals have solution $t_1, t_2, ..., t_{k-1}$\\
 	solution is $t$ $t_1$ $t_2$ ... $t_{k-1}$ for initial goal
 \end{frame}
+\begin{frame}[fragile]{Lam rule}
+	Proof of $P \rightarrow Q$ is a function mapping any proof of $P$ to a proof of $Q$
+	\pause
+	\begin{prooftree}
+		\AxiomC{$E, \Gamma :: (H : P) \vdash t : Q$}
+		\UnaryInfC{$E, \Gamma \vdash$ fun $H : P \Rightarrow t : P \rightarrow Q$}\textbf{Lam}
+	\end{prooftree}
+	\pause
+	$\Gamma \vdash^? P \rightarrow Q$\\
+	\medskip
+	\pause
+	$\Gamma :: (H : P) \vdash^? Q$\\
+	\pause
+	\medskip
+	If term $t$ is a solution to the subgoal then "fun $H : P \Rightarrow t$" is a solution to the initial goal.
+\end{frame}
 \begin{frame}[fragile]{intros}
 	\begin{user}
-	intros v_1, v_2, ..., v_n
+		intros v_1, v_2, ..., v_n
 	\end{user}
 	is the same as
 	\begin{user}
-	intro v_1, intro v_2, ..., intro v_n
+		intro v_1, intro v_2, ..., intro v_n
 	\end{user}
 	\pause
 	intro $v_1$ takes the first implication as a hypothesis called $v_1$\\
-	\bigskip
+	\medskip
 	\pause
 	Proof Theorem K : $P \rightarrow Q \rightarrow P$\\
 	\pause
 	Goal is  $P \rightarrow Q \rightarrow P$\\
 	\pause
 	\begin{user}
-	intro p.
+		intro p.
 	\end{user}
-	Hypothesis $p:P$ and new Goal $Q \rightarrow P$
+	Hypothesis $p:P$ and new Goal $Q \rightarrow P$\\
+	\pause
+	\bigskip
+	Without a name intro resp intros generate exactly one hypothese resp as many hypotheses as possible.
 \end{frame}
 \begin{frame}[fragile]{Handling}
 	\begin{user}
 		Show i
 	\end{user}
 	Display goal $i$ with complete context\\
-	Coq displays the goals after each proof step
+	Coq displays the current goal after each proof step
 	\pause
 	\medskip
 	\begin{user}
 		Undo n
 	\end{user}
 	Go back $n$ steps and try an alternative if goal can not be solved
+	\pause
+	\medskip
+	\begin{user}
+		Focus n
+	\end{user}
+	Focus the attention on the $n$th subgoal to prove
 	\pause
 	\medskip
 	\begin{user}
@@ -365,7 +575,7 @@
 	Goal: $P \rightarrow Q \rightarrow (P \rightarrow Q \rightarrow R) \rightarrow R$
 	\pause
 	\begin{user}
-	intros p q H; apply H; assumption.
+		intros p q H; apply H; assumption.
 	\end{user}
 	\pause
 	Like chess: forsee results of tactics\\
@@ -380,7 +590,7 @@
 	Goal: $(P \rightarrow Q \rightarrow R) \rightarrow (P \rightarrow Q) \rightarrow (P \rightarrow R)$
 	\pause
 	\begin{user}
-	intros H H' p; apply H; [assumption | apply H'; assumption].
+		intros H H' p; apply H; [assumption | apply H'; assumption].
 	\end{user}
 	\pause
 	Two subgoals $P$ and $Q$\\
@@ -394,7 +604,7 @@
 	If a tactic fails automatically use another tactic
 	\pause
 	\begin{user}
-	intros H p; apply H; (assumption || intro H').
+		intros H p; apply H; (assumption || intro H').
 	\end{user}
 	\pause
 	If assumption fails, then intro H' is used\\
@@ -417,7 +627,7 @@
 	Goal: $(P \rightarrow Q) \rightarrow (P \rightarrow Q)$
 	\pause
 	\begin{user}
-	intro X; apply X; fail.
+		intro X; apply X; fail.
 	\end{user}
 	\pause
 	This combination succeeds; there are no more subgoals after "apply X"\\
@@ -425,7 +635,7 @@
 	\medskip
 	Goal: $((P \rightarrow P) \rightarrow (Q \rightarrow Q) \rightarrow R) \rightarrow R$
 	\begin{user}
-	intro X; apply X; fail.
+		intro X; apply X; fail.
 	\end{user}
 	\pause
 	This combination fails; there are subgoals left after "apply X"
@@ -437,8 +647,8 @@
 	Goal: $(P \rightarrow Q \rightarrow R \rightarrow T) \rightarrow (P \rightarrow Q) \rightarrow (P \rightarrow R \rightarrow T)$
 	\pause
 	\begin{user}
-	intros H H' p r.
-	apply H; try assumption; apply H'; assumption.
+		intros H H' p r.
+		apply H; try assumption; apply H'; assumption.
 	\end{user}
 	\pause
 	"try tac" behaves like "tac $\|$ idtac"\\
@@ -457,6 +667,19 @@
 	\pause
 	\medskip
 	Truth table shows it is a valid formula
+\end{frame}
+
+\begin{frame}[fragile]{Overview}
+	Next Week:
+	\begin{itemize}
+		\item finish typing rules
+		\pause
+		\item More details on tactics
+		\pause
+		\item Composing
+		\pause
+		\item Proof irrelevance
+	\end{itemize}
 \end{frame}
 
 \end{document}
