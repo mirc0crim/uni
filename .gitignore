@@ -12,3 +12,5 @@ hs_err_pid*.log
 *.toc
 *.vrb
 *.snm
+*.ap_
+*.dex

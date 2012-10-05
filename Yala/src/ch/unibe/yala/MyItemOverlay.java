@@ -9,16 +9,16 @@ import android.graphics.drawable.Drawable;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
-public class ItemOverlay extends ItemizedOverlay {
+public class MyItemOverlay extends ItemizedOverlay {
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context mContext;
 
-	public ItemOverlay(Drawable marker) {
+	public MyItemOverlay(Drawable marker) {
 		super(boundCenterBottom(marker));
 		populate();
 	}
 
-	public ItemOverlay(Drawable defaultMarker, Context context) {
+	public MyItemOverlay(Drawable defaultMarker, Context context) {
 		super(boundCenterBottom(defaultMarker));
 		mContext = context;
 	}

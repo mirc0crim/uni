@@ -1,10 +1,12 @@
 package ch.unibe.yala;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,7 +31,12 @@ public class MainActivity extends MapActivity implements LocationListener {
 	MapController mapController;
 	Drawable mapPin;
 	List<Overlay> mapOverlays;
-	ItemOverlay itemizedoverlay;
+	MyItemOverlay itemizedoverlay;
+	Boolean started;
+	List<GeoPoint> myPoints;
+	List<Date> myDates;
+	Date launchTime;
+	AlertDialog.Builder builder;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,15 +48,82 @@ public class MainActivity extends MapActivity implements LocationListener {
 		map.setBuiltInZoomControls(true);
 
 		mapController = map.getController();
-		mapController.setZoom(18);
 
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
 		geocoder = new Geocoder(this);
 
 		mapPin = getResources().getDrawable(R.drawable.androidmarker);
-		itemizedoverlay = new ItemOverlay(mapPin, this);
+		itemizedoverlay = new MyItemOverlay(mapPin, this);
 		mapOverlays = map.getOverlays();
+
+		started = false;
+		myPoints = new ArrayList<GeoPoint>();
+		myPoints.clear();
+		launchTime = new Date();
+
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					doReset();
+					break;
+				case DialogInterface.BUTTON_NEGATIVE:
+					break;
+				}
+			}
+		};
+		builder = new AlertDialog.Builder(this);
+		builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+		.setNegativeButton("No", dialogClickListener);
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		String text = String.format("%f / %f / %f", location.getLatitude(),
+				location.getLongitude(), location.getAltitude());
+		locationText.setText(text);
+
+		if (!started)
+			return;
+
+		int latitude = (int) (location.getLatitude() * 1000000);
+		int longitude = (int) (location.getLongitude() * 1000000);
+
+		GeoPoint point = new GeoPoint(latitude, longitude);
+		OverlayItem overlayitem = new OverlayItem(point, "Position: "
+				+ (itemizedoverlay.size() + 1), "Lat: " + location.getLatitude() + "\nLong: "
+				+ location.getLongitude());
+		itemizedoverlay.addOverlay(overlayitem);
+		mapOverlays.add(itemizedoverlay);
+		mapController.animateTo(point);
+	}
+
+	public void doReset() {
+		map.getOverlays().clear();
+		map.removeAllViews();
+		itemizedoverlay.clear();
+		mapOverlays.add(itemizedoverlay);
+		started = false;
+		myPoints.clear();
+	}
+
+	public void start(View view) {
+		started = true;
+		onResume();
+		mapController.setZoom(20);
+		locationText.setText("Waiting for GPS signal");
+	}
+
+	public void reset(View view) {
+		if (!started || itemizedoverlay == null)
+			return;
+		builder.show();
+	}
+
+	public void finish(View view) {
+		locationText.setText((new Date().getTime() - launchTime.getTime()) / 1000 + "s");
 	}
 
 	@Override
@@ -65,60 +139,19 @@ public class MainActivity extends MapActivity implements LocationListener {
 	}
 
 	@Override
-	public void onLocationChanged(Location location) {
-		String text = String.format("Lat:\t %f\nLong:\t %f\nAlt:\t %f\nBearing:\t %f",
-				location.getLatitude(), location.getLongitude(), location.getAltitude(),
-				location.getBearing());
-		locationText.setText(text);
-
-		try {
-			List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),
-					location.getLongitude(), 10);
-			for (Address address : addresses)
-				locationText.append("\n" + address.getAddressLine(0));
-
-			int latitude = (int) (location.getLatitude() * 1000000);
-			int longitude = (int) (location.getLongitude() * 1000000);
-
-			GeoPoint point = new GeoPoint(latitude, longitude);
-			OverlayItem overlayitem = new OverlayItem(point, "Position: "
-					+ (itemizedoverlay.size() + 1), "Lat: " + location.getLatitude() + "\nLong: "
-					+ location.getLongitude());
-			itemizedoverlay.addOverlay(overlayitem);
-			mapOverlays.add(itemizedoverlay);
-			mapController.animateTo(point);
-		} catch (IOException e) {
-		}
-	}
-
-	public void reset(View view) {
-		OverlayItem last = itemizedoverlay.getItem(itemizedoverlay.size() - 1);
-		OverlayItem first = new OverlayItem(last.getPoint(), "Position: 1", last.getSnippet());
-		map.getOverlays().clear();
-		map.removeAllViews();
-		itemizedoverlay.clear();
-		itemizedoverlay.addOverlay(first);
-		mapOverlays.add(itemizedoverlay);
-	}
-
-	@Override
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
