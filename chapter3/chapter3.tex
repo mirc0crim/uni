@@ -75,37 +75,32 @@
 	$(P \rightarrow Q)$
 \end{frame}
 \begin{frame}{Overview}
-	Today:
 	\begin{itemize}
-		\item Present tools used to make theorem proving easier
+		\item Present types and tools used to reason in Coq
 		\pause
 		\item Use tactics to obtain proofs in a semi-automatic way
 		\pause
-		\item Proof irrelevance:\\
-		It doesn't matter how complex a proof is, it's enough to find one. Unlike programs where more efficient ones must be preferred
-	\pause
-	\end{itemize}
-	Next Week:
-	\begin{itemize}
-		\item More details on tactics
+		\item Control the flow of an interactive proof
+		\pause				
+		\item More details on tactics and corrresponting typing rules
 		\pause
-		\item Composing
+		\item Composing tactics, tacticals
 		\pause
 		\item Proof irrelevance
 	\end{itemize}
 \end{frame}
 
 \subsection{Definition}
-\begin{frame}{Sorts} %%%%%%%% TO DO %%%%%%%%
+\begin{frame}[fragile]{Sorts}
 	Prop is one of the predefined sorts
 	\begin{itemize}
-		\item Plays a similar role as set 
+		\item Plays a similar role as Set 
 		\pause
-		\item Set is for programs and specifications ($nat -> nat, bool$)\\
+		\item Set is for programs and specifications (\verb|nat -> nat|, \verb|bool|)\\
 		Prop is for proofs and Propositions ($P, Q, R$)
 	\end{itemize}
 	\pause
-	Definition: Every type $P$ whose type is the sort $Prop$ is called a proposition. Any term $t$ whose type is a propostion is called a proof term (=proof).
+	Definition: Every type $P$ whose type is the sort \verb|Prop| is called a proposition. Any term $t$ whose type is a propostion is called a proof term (=proof).
 \end{frame}
 \begin{frame}[fragile]{Hypothesis}
 	\begin{user}
@@ -162,12 +157,12 @@
 
 \subsection{Definition}
 \begin{frame}{Goals and Tactics}
-	A goal is the pairing of two pieces of information: a local context $\Gamma$ and a type $t$ that is well-formed in this context.\\
+	A goal is the pairing of two pieces of information: a local context $\Gamma$ and a type $P$ that is well-formed in this context.\\
 	\medskip
 	\pause
 	Goal: $E, \Gamma \vdash^? P$\\
 	\pause
-	Term $t$ is called a $solution$\\
+	Term $t$ of type $P$ is called a $solution$\\
 	\pause
 	\bigskip
 	Tactics:\\
@@ -178,6 +173,7 @@
 	If $g$ is input goal and $g_1$, $g_2$, ..., $g_k$ are output goals, then it's possible to construct a solution of $g$ from the solutions of goals $g_i$.
 \end{frame}
 \begin{frame}{Transitivity}
+	Proove this implication by introducing tactics as needed
 	\begin{center}
 		$(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow (P \rightarrow R)$
 	\end{center}
@@ -226,11 +222,11 @@
 	\medskip
 	\pause
 	\begin{user}
-	intros H H' p
+	intros H H' p.
 	\end{user}
 	\pause
 	\begin{itemize}
-		\item Transform the task of construction a proof into proving R with those hypotheses added
+		\item Transform the task of constructing a proof into proving R with those hypotheses added
 		\pause
 		\item $H:P \rightarrow Q$
 		\pause
@@ -271,7 +267,7 @@
 	\medskip
 	\pause
 	\begin{user}
-	apply H'
+	apply H'.
 	\end{user}
 	\begin{itemize}
 		\item Use the hypothesis $H'$ to advance our proof
@@ -334,7 +330,7 @@
 	\medskip
 	\pause
 	\begin{user}
-		assumption
+		assumption.
 	\end{user}
 	\begin{itemize}
 		\item Statement to proof is exactly statement of hypothesis $p$
@@ -351,7 +347,7 @@
 \end{frame}
 \begin{frame}[fragile]{Finish}
 	\begin{user}
-	Qed
+	Qed.
 	\end{user}
 	\pause
 	\begin{itemize}
@@ -370,7 +366,7 @@
 	\pause
 	\medskip
 	\begin{user}
-		Print imp_trans
+		Print imp_trans.
 	\end{user}
 	\pause
 	\begin{itemize}
@@ -381,12 +377,31 @@
 		 : (P->Q) -> (Q->R) -> P -> R
 	\end{coq}
 \end{frame}
+\begin{frame}[fragile]{Reading the proof term}
+	\begin{user}
+		Print imp_trans.
+	\end{user}
+	\begin{coq}
+		imp-trans = fun (H:P->Q)(H':Q->R)(p:P) => H' (H p)
+		 : (P->Q) -> (Q->R) -> P -> R
+	\end{coq}
+	\pause
+	(H) : Assume P $\rightarrow$ Q\\
+	(H') : Assume Q $\rightarrow$ R\\
+	(p) : Assume P\\
+	(1) : By using (p) we get P\\
+	(2) : By applyig (H) we get Q\\
+	(3) : By applying (H') we get R\\
+	\pause
+	\medskip
+	Discharging H, H' and p, we get $(P \rightarrow Q) \rightarrow (Q \rightarrow R) \rightarrow P \rightarrow R$
+\end{frame}
 
 \section{Structure}
 
 \subsection{Typing rules}
 \begin{frame}[fragile]{Tactic auto}
-	Not all the details for the proof is needed\\
+	Not all the details for the proof are needed\\
 	\medskip
 	\pause
 	Transitivity is a rather trivial statement \\
@@ -443,6 +458,8 @@
 		\AxiomC{$(x:P) \in E \cup \Gamma$}
 		\UnaryInfC{$E, \Gamma \vdash x : P$}\textbf{Var}
 	\end{prooftree}
+	\pause
+	This corresponds to the tactic \verb|assumption| or, if $x$ is not in the context, \verb|exact x|.
 \end{frame}
 \begin{frame}[fragile]{exact}
 	The exact tactic takes any term (with right type) as argument\\
@@ -509,7 +526,10 @@
 	$\Gamma :: (H : P) \vdash^? Q$\\
 	\pause
 	\medskip
-	If term $t$ is a solution to the subgoal then "fun $H : P \Rightarrow t$" is a solution to the initial goal.
+	If term $t$ is a solution to the subgoal then "fun $H : P \Rightarrow t$" is a solution to the initial goal.\\
+	\pause
+	\medskip
+	This corresponds to the tactic intro
 \end{frame}
 \begin{frame}[fragile]{intros}
 	\begin{user}
@@ -533,7 +553,7 @@
 	Hypothesis $p:P$ and new Goal $Q \rightarrow P$\\
 	\pause
 	\bigskip
-	Without a name intro resp intros generate exactly one hypothese resp as many hypotheses as possible.
+	Without a name intro (resp intros) generates exactly one hypothese (resp as many hypotheses as possible) and automatically names them.
 \end{frame}
 \begin{frame}[fragile]{Handling}
 	\begin{user}
