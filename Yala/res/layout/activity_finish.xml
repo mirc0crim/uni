@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bgsilver">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:text="@string/stats"
+        android:id="@+id/stats"/>
+    <LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="300dp"
+			android:layout_marginRight="30dp"
+			android:id="@+id/graph" />
+    
+	<com.google.android.maps.MapView
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/route"
+			android:layout_width="fill_parent"
+			android:layout_height="400dp"
+			android:clickable="true"
+			android:apiKey="0WMU7EdDjvw5h2qlFhhBNEXagUsEz5vJJoyipww"/>
+			<!-- android:apiKey="0WMU7EdDjvw4nq6eV8u_iaApruL8LcxqrZN7_1Q"/> for final apiKey-->
+
+</LinearLayout>
+</ScrollView>

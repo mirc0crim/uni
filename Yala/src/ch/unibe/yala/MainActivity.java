@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
 import android.location.Location;
@@ -124,6 +125,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 	public void finish(View view) {
 		locationText.setText((new Date().getTime() - launchTime.getTime()) / 1000 + "s");
+		Intent intent = new Intent(this, FinishActivity.class);
+		startActivity(intent);
 	}
 
 	@Override
