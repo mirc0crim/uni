@@ -36,9 +36,9 @@ public class MainActivity extends MapActivity implements LocationListener {
 	Boolean started;
 	List<GeoPoint> myPoints;
 	List<Date> myDates;
-	Date launchTime;
 	AlertDialog.Builder builder;
 	static GeoPoint[] points;
+	static Date[] times;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 		started = false;
 		myPoints = new ArrayList<GeoPoint>();
 		myPoints.clear();
-		launchTime = new Date();
+		myDates = new ArrayList<Date>();
+		myDates.clear();
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 			@Override
@@ -94,6 +95,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		int longitude = (int) (location.getLongitude() * 1000000);
 
 		myPoints.add(new GeoPoint(latitude, longitude));
+		myDates.add(new Date());
 
 		GeoPoint point = new GeoPoint(latitude, longitude);
 		OverlayItem overlayitem = new OverlayItem(point, "Position: "
@@ -111,6 +113,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		mapOverlays.add(itemizedoverlay);
 		started = false;
 		myPoints.clear();
+		myDates.clear();
 	}
 
 	public void start(View view) {
@@ -128,9 +131,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 	public void finish(View view) {
 		started = false;
-		locationText.setText((new Date().getTime() - launchTime.getTime()) / 1000 + "s");
 		points = new GeoPoint[myPoints.size()];
 		points = myPoints.toArray(points);
+		times = new Date[myDates.size()];
+		times = myDates.toArray(times);
 		Intent intent = new Intent(this, FinishActivity.class);
 		startActivity(intent);
 	}

@@ -6,7 +6,7 @@
     <string name="start">Start</string>
     <string name="reset">Reset</string>
     <string name="finish">Finish</string>
-    <string name="stats">Statistics are evaluated</string>
+    <string name="stats">Statistics\n\nare\n\nevaluated\n</string>
     <color name="bgsilver">#C0C0C0</color>
 
 </resources>
