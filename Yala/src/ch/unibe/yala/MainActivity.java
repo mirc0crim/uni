@@ -38,6 +38,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	List<Date> myDates;
 	Date launchTime;
 	AlertDialog.Builder builder;
+	static GeoPoint[] points;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 		int latitude = (int) (location.getLatitude() * 1000000);
 		int longitude = (int) (location.getLongitude() * 1000000);
 
+		myPoints.add(new GeoPoint(latitude, longitude));
+
 		GeoPoint point = new GeoPoint(latitude, longitude);
 		OverlayItem overlayitem = new OverlayItem(point, "Position: "
 				+ (itemizedoverlay.size() + 1), "Lat: " + location.getLatitude() + "\nLong: "
@@ -124,7 +127,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 	}
 
 	public void finish(View view) {
+		started = false;
 		locationText.setText((new Date().getTime() - launchTime.getTime()) / 1000 + "s");
+		points = new GeoPoint[myPoints.size()];
+		points = myPoints.toArray(points);
 		Intent intent = new Intent(this, FinishActivity.class);
 		startActivity(intent);
 	}
