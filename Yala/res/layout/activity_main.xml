@@ -3,46 +3,50 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_medium"
+        android:gravity="center_horizontal"
         android:text="@string/press"
+        android:textColor="#177BBD"
+        android:textSize="15dp"
         android:id="@+id/myText"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
         <Button
             android:id="@+id/buttonStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="start"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dp"
-            android:text="@string/start" />
-
+            android:text="@string/start"
+            android:textColor="#177BBD"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:textSize="20dp" />
         <Button
             android:id="@+id/buttonReset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="reset"
-            android:layout_centerInParent="true"
-            android:text="@string/reset" />
-
+            android:text="@string/reset"
+            android:textColor="#177BBD"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:textSize="20dp" />
         <Button
             android:id="@+id/buttonFinish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="finish"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:text="@string/finish" />
-
-    </RelativeLayout>
-    
+            android:text="@string/finish"
+            android:textColor="#177BBD"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:textSize="20dp" />
+    </LinearLayout>
     <com.google.android.maps.MapView
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/map"
@@ -51,5 +55,4 @@
       android:clickable="true"
       android:apiKey="0WMU7EdDjvw5h2qlFhhBNEXagUsEz5vJJoyipww"/>
       <!-- android:apiKey="0WMU7EdDjvw4nq6eV8u_iaApruL8LcxqrZN7_1Q"/> for final apiKey-->
-
 </LinearLayout>

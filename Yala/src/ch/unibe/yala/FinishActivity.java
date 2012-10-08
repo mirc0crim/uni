@@ -64,7 +64,7 @@ public class FinishActivity extends MapActivity {
 			vLabel[1] = Math.round(avgValue(speeds)) + "m/s";
 			vLabel[2] = Math.round(minValue(speeds)) + "m/s";
 		} else {
-			gvd = new GraphViewData[] { new GraphViewData(1, 2.0d), new GraphViewData(1, 3.0d) };
+			gvd = new GraphViewData[] { new GraphViewData(1, 2.0d), new GraphViewData(2, 3.0d) };
 			vLabel = new String[] { "fast", "average", "slow" };
 		}
 
@@ -105,6 +105,11 @@ public class FinishActivity extends MapActivity {
 
 	private double avgValue(Double[] myArray) {
 		return (maxValue(myArray) + minValue(myArray)) / 2;
+	}
+
+	@Override
+	public void onBackPressed() {
+		finish();
 	}
 
 }

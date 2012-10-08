@@ -118,7 +118,6 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 	public void start(View view) {
 		started = true;
-		onResume();
 		mapController.setZoom(20);
 		locationText.setText("Waiting for GPS signal");
 	}
@@ -142,6 +141,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		doReset();
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
 	}
 
