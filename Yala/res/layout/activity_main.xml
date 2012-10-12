@@ -47,12 +47,12 @@
             android:layout_weight="1"
             android:textSize="20dp" />
     </LinearLayout>
-    <com.google.android.maps.MapView
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/map"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:clickable="true"
-      android:apiKey="0WMU7EdDjvw5h2qlFhhBNEXagUsEz5vJJoyipww"/>
-      <!-- android:apiKey="0WMU7EdDjvw4nq6eV8u_iaApruL8LcxqrZN7_1Q"/> for final apiKey-->
+	<com.google.android.maps.MapView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+      	android:id="@+id/map"
+		android:layout_width="fill_parent"
+      	android:layout_height="fill_parent"
+      	android:clickable="true"
+		android:apiKey="0WMU7EdDjvw5h2qlFhhBNEXagUsEz5vJJoyipww"/>
+      	<!-- android:apiKey="0WMU7EdDjvw4nq6eV8u_iaApruL8LcxqrZN7_1Q"/> for final apiKey-->
 </LinearLayout>

@@ -77,10 +77,8 @@ public class FinishActivity extends MapActivity {
 		layout.addView(graphView);
 
 		MapView routeMap = (MapView) findViewById(R.id.route);
-		MapController mMapController;
-		routeMap.setBuiltInZoomControls(true);
-		mMapController = routeMap.getController();
-		mMapController.setZoom(18);
+		MapController mMapController = routeMap.getController();
+		mMapController.setZoom(16);
 		if (MainActivity.points.length > 0) {
 			mMapController.setCenter(MainActivity.points[0]);
 			MyMapOverlay mapOvlay = new MyMapOverlay(MainActivity.points);
@@ -94,12 +92,12 @@ public class FinishActivity extends MapActivity {
 	}
 
 	private double minValue(Double[] myArray) {
-		List b = Arrays.asList(myArray);
+		List<Double> b = Arrays.asList(myArray);
 		return Collections.min(b);
 	}
 
 	private double maxValue(Double[] myArray) {
-		List b = Arrays.asList(myArray);
+		List<Double> b = Arrays.asList(myArray);
 		return Collections.max(b);
 	}
 

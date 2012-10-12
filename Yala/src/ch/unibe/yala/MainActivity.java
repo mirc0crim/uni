@@ -39,6 +39,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 	AlertDialog.Builder builder;
 	static GeoPoint[] points;
 	static Date[] times;
+	Boolean first;
+	GeoPoint lastPoint;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,11 +49,16 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 		locationText = (TextView) findViewById(R.id.myText);
 		map = (MapView) findViewById(R.id.map);
-		map.setBuiltInZoomControls(true);
+		map.setSatellite(false);
+
+		lastPoint = new GeoPoint(46700000, 7500000);
 
 		mapController = map.getController();
+		mapController.setZoom(10);
+		mapController.animateTo(lastPoint);
 
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 25, this);
 
 		geocoder = new Geocoder(this);
 
@@ -60,6 +67,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		mapOverlays = map.getOverlays();
 
 		started = false;
+		first = true;
 		myPoints = new ArrayList<GeoPoint>();
 		myPoints.clear();
 		myDates = new ArrayList<Date>();
@@ -98,11 +106,14 @@ public class MainActivity extends MapActivity implements LocationListener {
 		myDates.add(new Date());
 
 		GeoPoint point = new GeoPoint(latitude, longitude);
-		OverlayItem overlayitem = new OverlayItem(point, "Position: "
-				+ (itemizedoverlay.size() + 1), "Lat: " + location.getLatitude() + "\nLong: "
-				+ location.getLongitude());
-		itemizedoverlay.addOverlay(overlayitem);
-		mapOverlays.add(itemizedoverlay);
+		if (first) {
+			OverlayItem overlayitem = new OverlayItem(point, "Position: "
+					+ (itemizedoverlay.size() + 1), "Lat: " + location.getLatitude() + "\nLong: "
+							+ location.getLongitude());
+			itemizedoverlay.addOverlay(overlayitem);
+			mapOverlays.add(itemizedoverlay);
+			first = false;
+		}
 		mapController.animateTo(point);
 	}
 
@@ -112,6 +123,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		itemizedoverlay.clear();
 		mapOverlays.add(itemizedoverlay);
 		started = false;
+		first = true;
 		myPoints.clear();
 		myDates.clear();
 	}
@@ -134,6 +146,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 		points = myPoints.toArray(points);
 		times = new Date[myDates.size()];
 		times = myDates.toArray(times);
+		lastPoint = points[points.length - 1];
+		doReset();
 		Intent intent = new Intent(this, FinishActivity.class);
 		startActivity(intent);
 	}
@@ -141,14 +155,12 @@ public class MainActivity extends MapActivity implements LocationListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		doReset();
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
+		mapController.animateTo(lastPoint);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		locationManager.removeUpdates(this);
 	}
 
 	@Override
