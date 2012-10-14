@@ -36,9 +36,11 @@ public class MainActivity extends MapActivity implements LocationListener {
 	Boolean started;
 	List<GeoPoint> myPoints;
 	List<Date> myDates;
+	List<Double> myAlti;
 	AlertDialog.Builder builder;
 	static GeoPoint[] points;
 	static Date[] times;
+	static Double[] alti;
 	Boolean first;
 	GeoPoint lastPoint;
 
@@ -58,11 +60,11 @@ public class MainActivity extends MapActivity implements LocationListener {
 		mapController.animateTo(lastPoint);
 
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 25, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, this);
 
 		geocoder = new Geocoder(this);
 
-		mapPin = getResources().getDrawable(R.drawable.androidmarker);
+		mapPin = getResources().getDrawable(R.drawable.mappin);
 		itemizedoverlay = new MyItemOverlay(mapPin, this);
 		mapOverlays = map.getOverlays();
 
@@ -72,6 +74,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 		myPoints.clear();
 		myDates = new ArrayList<Date>();
 		myDates.clear();
+		myAlti = new ArrayList<Double>();
+		myAlti.clear();
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 			@Override
@@ -104,6 +108,9 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 		myPoints.add(new GeoPoint(latitude, longitude));
 		myDates.add(new Date());
+		myAlti.add(location.getAltitude());
+
+		lastPoint = new GeoPoint(latitude, longitude);
 
 		GeoPoint point = new GeoPoint(latitude, longitude);
 		if (first) {
@@ -126,6 +133,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		first = true;
 		myPoints.clear();
 		myDates.clear();
+		myAlti.clear();
 	}
 
 	public void start(View view) {
@@ -146,8 +154,12 @@ public class MainActivity extends MapActivity implements LocationListener {
 		points = myPoints.toArray(points);
 		times = new Date[myDates.size()];
 		times = myDates.toArray(times);
-		lastPoint = points[points.length - 1];
+		alti = new Double[myAlti.size()];
+		alti = myAlti.toArray(alti);
+		if (points.length > 0)
+			lastPoint = points[points.length - 1];
 		doReset();
+		locationManager.removeUpdates(this);
 		Intent intent = new Intent(this, FinishActivity.class);
 		startActivity(intent);
 	}
@@ -156,6 +168,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	protected void onResume() {
 		super.onResume();
 		mapController.animateTo(lastPoint);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, this);
 	}
 
 	@Override
