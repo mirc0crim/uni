@@ -88,8 +88,8 @@ public class FinishActivity extends MapActivity {
 			long sec = 0;
 			long min = 0;
 			long hour = 0;
-			sec = MainActivity.times[MainActivity.times.length - 1].getTime()
-					- MainActivity.times[0].getTime();
+			sec = (MainActivity.times[MainActivity.times.length - 1].getTime() - MainActivity.times[0]
+					.getTime()) / 1000;
 			if (sec / 60 > 1) {
 				min = (long) Math.floor(sec / 60);
 				sec = sec - min * 60;
@@ -106,7 +106,7 @@ public class FinishActivity extends MapActivity {
 			stats.append("Elevation: " + elev + " m\n");
 			stats.append("Average Speed: " + Math.round(avgValue(speeds)) * 3.6 + " km/h ("
 					+ Math.round(avgValue(speeds)) + " m/s)\n");
-			stats.append("Distance: " + dist + " m\n");
+			stats.append("Distance: " + (int) dist + " m\n");
 		} else {
 			gvd = new GraphViewData[] { new GraphViewData(1, 2.0d), new GraphViewData(2, 3.0d) };
 			gvdA = new GraphViewData[] { new GraphViewData(1, 3.0d), new GraphViewData(2, 2.0d) };
@@ -115,7 +115,7 @@ public class FinishActivity extends MapActivity {
 			stats.setText("Duration: 0:0:0 (h:m:s)\n");
 			stats.append("Elevation: 0 m\n");
 			stats.append("Average Speed: 0 km/h (0 m/s)\n");
-			stats.append("Distance: 0 m\n");
+			stats.append("Distance: 0 m");
 		}
 
 		GraphViewSeries seriesSpeed = new GraphViewSeries(gvd);
