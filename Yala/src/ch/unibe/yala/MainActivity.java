@@ -14,6 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
@@ -43,6 +44,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 	static Double[] alti;
 	Boolean first;
 	GeoPoint lastPoint;
+	Double lastAlti;
+	Button startButton;
+	Button resetButton;
+	Button finishButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,14 +58,22 @@ public class MainActivity extends MapActivity implements LocationListener {
 		map = (MapView) findViewById(R.id.map);
 		map.setSatellite(false);
 
+		startButton = (Button) findViewById(R.id.buttonStart);
+		resetButton = (Button) findViewById(R.id.buttonReset);
+		finishButton = (Button) findViewById(R.id.buttonFinish);
+
+		resetButton.setEnabled(false);
+		finishButton.setEnabled(false);
+
 		lastPoint = new GeoPoint(46700000, 7500000);
+		lastAlti = 0d;
 
 		mapController = map.getController();
 		mapController.setZoom(10);
 		mapController.animateTo(lastPoint);
 
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
 
 		geocoder = new Geocoder(this);
 
@@ -96,32 +109,39 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		String text = String.format("%f / %f / %f", location.getLatitude(),
-				location.getLongitude(), location.getAltitude());
+		String text = String.format("%f / %f / %d", location.getLatitude(),
+				location.getLongitude(), (int) location.getAltitude());
 		locationText.setText(text);
-
-		if (!started)
-			return;
 
 		int latitude = (int) (location.getLatitude() * 1000000);
 		int longitude = (int) (location.getLongitude() * 1000000);
 
+		lastPoint = new GeoPoint(latitude, longitude);
+		GeoPoint point = new GeoPoint(latitude, longitude);
+		mapController.animateTo(point);
+
+		if (!started)
+			return;
+
 		myPoints.add(new GeoPoint(latitude, longitude));
 		myDates.add(new Date());
-		myAlti.add(location.getAltitude());
+		if (location.getAltitude() > 1) {
+			myAlti.add(location.getAltitude());
+			lastAlti = location.getAltitude();
+		} else
+			myAlti.add(lastAlti);
 
-		lastPoint = new GeoPoint(latitude, longitude);
-
-		GeoPoint point = new GeoPoint(latitude, longitude);
 		if (first) {
-			OverlayItem overlayitem = new OverlayItem(point, "Position: "
-					+ (itemizedoverlay.size() + 1), "Lat: " + location.getLatitude() + "\nLong: "
-							+ location.getLongitude());
+			OverlayItem overlayitem = new OverlayItem(point, "Start", "Lat: "
+					+ location.getLatitude() + "\nLong: " + location.getLongitude());
 			itemizedoverlay.addOverlay(overlayitem);
 			mapOverlays.add(itemizedoverlay);
 			first = false;
 		}
-		mapController.animateTo(point);
+
+		if (myPoints.size() > 2)
+			finishButton.setEnabled(true);
+
 	}
 
 	public void doReset() {
@@ -131,6 +151,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 		mapOverlays.add(itemizedoverlay);
 		started = false;
 		first = true;
+		resetButton.setEnabled(false);
+		finishButton.setEnabled(false);
 		myPoints.clear();
 		myDates.clear();
 		myAlti.clear();
@@ -138,6 +160,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 	public void start(View view) {
 		started = true;
+		resetButton.setEnabled(true);
 		mapController.setZoom(20);
 		locationText.setText("Waiting for GPS signal");
 	}
@@ -168,7 +191,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	protected void onResume() {
 		super.onResume();
 		mapController.animateTo(lastPoint);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
 	}
 
 	@Override
@@ -193,4 +216,17 @@ public class MainActivity extends MapActivity implements LocationListener {
 		return false;
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		locationManager.removeUpdates(this);
+		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		locationManager.removeUpdates(this);
+		finish();
+	}
 }
