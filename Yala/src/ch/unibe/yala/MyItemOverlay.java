@@ -49,7 +49,8 @@ public class MyItemOverlay extends ItemizedOverlay<OverlayItem> {
 		OverlayItem item = mOverlays.get(index);
 		AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
 		dialog.setTitle(item.getTitle());
-		dialog.setMessage(item.getSnippet());
+		if (item.getSnippet().toString().length() > 0)
+			dialog.setMessage(item.getSnippet());
 		dialog.show();
 		return true;
 	}

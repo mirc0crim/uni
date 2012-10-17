@@ -57,6 +57,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	Long pauseBegin;
 	int startState;
 	Boolean paused;
+	MyMapOverlay seg;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
 		geocoder = new Geocoder(this);
-		mapPin = getResources().getDrawable(R.drawable.mappin);
+		mapPin = getResources().getDrawable(R.drawable.startpin);
 		itemizedoverlay = new MyItemOverlay(mapPin, this);
 		mapOverlays = map.getOverlays();
 
@@ -131,8 +132,6 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 		lastPoint = new GeoPoint(latitude, longitude);
 		GeoPoint point = new GeoPoint(latitude, longitude);
-		if (!first)
-			mapController.setZoom(20);
 		mapController.animateTo(point);
 
 		if (!started)
@@ -147,8 +146,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 			myAlti.add(lastAlti);
 
 		if (first) {
-			OverlayItem overlayitem = new OverlayItem(point, "Start", "Lat: "
-					+ location.getLatitude() + "\nLong: " + location.getLongitude());
+			OverlayItem overlayitem = new OverlayItem(point, "Start", "");
 			itemizedoverlay.addOverlay(overlayitem);
 			mapOverlays.add(itemizedoverlay);
 			first = false;
@@ -158,13 +156,21 @@ public class MainActivity extends MapActivity implements LocationListener {
 		if (myPoints.size() > 2)
 			finishButton.setEnabled(true);
 
+		if (myPoints.size() > 1) {
+			GeoPoint[] segments = new GeoPoint[myPoints.size()];
+			segments = myPoints.toArray(segments);
+			seg = new MyMapOverlay(segments);
+			int i = map.getOverlays().indexOf(seg);
+			if (i >= 0)
+				map.getOverlays().remove(i);
+			map.getOverlays().add(seg);
+		}
+
 	}
 
 	public void doReset() {
 		map.getOverlays().clear();
 		map.removeAllViews();
-		itemizedoverlay.clear();
-		mapOverlays.add(itemizedoverlay);
 		started = false;
 		paused = false;
 		first = true;
@@ -237,6 +243,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		calledFinish = false;
 		mapController.animateTo(lastPoint);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
+		removeNotification();
 	}
 
 	@Override

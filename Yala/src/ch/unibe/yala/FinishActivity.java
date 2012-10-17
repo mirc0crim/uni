@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -41,9 +43,9 @@ public class FinishActivity extends MapActivity {
 		String[] vLabelAlti = new String[3];
 
 		TextView stats = (TextView) findViewById(R.id.stats);
-
-		if (MainActivity.points.length > 1) {
-			for (int i = 0; i < MainActivity.points.length - 1; i++) {
+		int ptsLen = MainActivity.points.length;
+		if (ptsLen > 1) {
+			for (int i = 0; i < ptsLen - 1; i++) {
 				float[] result = new float[3];
 				Location.distanceBetween(MainActivity.points[i].getLatitudeE6() / 1E6,
 						MainActivity.points[i].getLongitudeE6() / 1E6,
@@ -54,7 +56,7 @@ public class FinishActivity extends MapActivity {
 				myTimes.add(timeDiff / 1000);
 				myHeight.add(MainActivity.alti[i]);
 			}
-			myHeight.add(MainActivity.alti[MainActivity.points.length - 1]);
+			myHeight.add(MainActivity.alti[ptsLen - 1]);
 
 			times = new Double[myTimes.size()];
 			times = myTimes.toArray(times);
@@ -78,12 +80,12 @@ public class FinishActivity extends MapActivity {
 					thatTime += times[i - 1];
 				gvdA[i] = new GraphViewData(thatTime, height[i]);
 			}
-			vLabelSpeed[0] = Math.round(maxValue(speeds)) + "m/s";
-			vLabelSpeed[1] = Math.round(avgValue(speeds)) + "m/s";
-			vLabelSpeed[2] = Math.round(minValue(speeds)) + "m/s";
-			vLabelAlti[0] = Math.round(maxValue(height)) + "m";
-			vLabelAlti[1] = Math.round(avgValue(height)) + "m";
-			vLabelAlti[2] = Math.round(minValue(height)) + "m";
+			vLabelSpeed[0] = Math.round(maxValue(speeds) * 3.6) + " km/h";
+			vLabelSpeed[1] = Math.round(avgValue(speeds) * 3.6) + " km/h";
+			vLabelSpeed[2] = Math.round(minValue(speeds) * 3.6) + " km/h";
+			vLabelAlti[0] = Math.round(maxValue(height)) + " m";
+			vLabelAlti[1] = Math.round(avgValue(height)) + " m";
+			vLabelAlti[2] = Math.round(minValue(height)) + " m";
 
 			long sec = 0;
 			long min = 0;
@@ -105,7 +107,10 @@ public class FinishActivity extends MapActivity {
 			stats.append("Elevation: " + elev + " m\n");
 			stats.append("Average Speed: " + Math.round(avgValue(speeds) * 3.6) + " km/h ("
 					+ Math.round(avgValue(speeds)) + " m/s)\n");
-			stats.append("Distance: " + (int) dist + " m\n");
+			if (dist > 1000)
+				stats.append("Distance: " + Math.round(dist / 10) / 100f + " km");
+			else
+				stats.append("Distance: " + (int) dist + " m");
 		} else {
 			gvd = new GraphViewData[] { new GraphViewData(1, 2.0d), new GraphViewData(2, 3.0d) };
 			gvdA = new GraphViewData[] { new GraphViewData(1, 3.0d), new GraphViewData(2, 2.0d) };
@@ -136,10 +141,22 @@ public class FinishActivity extends MapActivity {
 		MapView routeMap = (MapView) findViewById(R.id.route);
 		MapController mMapController = routeMap.getController();
 		mMapController.setZoom(16);
-		if (MainActivity.points.length > 0) {
+		if (ptsLen > 0) {
 			mMapController.setCenter(MainActivity.points[0]);
 			MyMapOverlay mapOvlay = new MyMapOverlay(MainActivity.points);
 			routeMap.getOverlays().add(mapOvlay);
+		}
+		if (ptsLen > 1) {
+			Drawable startPin = getResources().getDrawable(R.drawable.startpin);
+			Drawable endPin = getResources().getDrawable(R.drawable.endpin);
+			MyItemOverlay startOverlay = new MyItemOverlay(startPin, this);
+			MyItemOverlay endOverlay = new MyItemOverlay(endPin, this);
+			OverlayItem startItem = new OverlayItem(MainActivity.points[0], "Start", "");
+			OverlayItem endItem = new OverlayItem(MainActivity.points[ptsLen - 1], "End", "");
+			startOverlay.addOverlay(startItem);
+			endOverlay.addOverlay(endItem);
+			routeMap.getOverlays().add(startOverlay);
+			routeMap.getOverlays().add(endOverlay);
 		}
 	}
 
