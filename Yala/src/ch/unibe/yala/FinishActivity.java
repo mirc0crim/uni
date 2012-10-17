@@ -104,7 +104,7 @@ public class FinishActivity extends MapActivity {
 				dist += distance;
 			stats.setText("Duration: " + hour + ":" + min + ":" + sec + " (h:m:s)\n");
 			stats.append("Elevation: " + elev + " m\n");
-			stats.append("Average Speed: " + Math.round(avgValue(speeds)) * 3.6 + " km/h ("
+			stats.append("Average Speed: " + Math.round(avgValue(speeds) * 3.6) + " km/h ("
 					+ Math.round(avgValue(speeds)) + " m/s)\n");
 			stats.append("Distance: " + (int) dist + " m\n");
 		} else {

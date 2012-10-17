@@ -16,7 +16,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -52,7 +51,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	Button startButton;
 	Button resetButton;
 	Button finishButton;
-	static NotificationManager mNotificationManager;
+	NotificationManager mNotificationManager;
 	Boolean calledFinish;
 
 	@Override
@@ -67,30 +66,25 @@ public class MainActivity extends MapActivity implements LocationListener {
 		startButton = (Button) findViewById(R.id.buttonStart);
 		resetButton = (Button) findViewById(R.id.buttonReset);
 		finishButton = (Button) findViewById(R.id.buttonFinish);
-
 		resetButton.setEnabled(false);
 		finishButton.setEnabled(false);
 
 		lastPoint = new GeoPoint(46700000, 7500000);
 		lastAlti = 0d;
 
-		calledFinish = false;
-
 		mapController = map.getController();
 		mapController.setZoom(10);
 		mapController.animateTo(lastPoint);
-
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
-
 		geocoder = new Geocoder(this);
-
 		mapPin = getResources().getDrawable(R.drawable.mappin);
 		itemizedoverlay = new MyItemOverlay(mapPin, this);
 		mapOverlays = map.getOverlays();
 
 		started = false;
 		first = true;
+		calledFinish = false;
 		myPoints = new ArrayList<GeoPoint>();
 		myPoints.clear();
 		myDates = new ArrayList<Date>();
@@ -193,6 +187,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 			lastPoint = points[points.length - 1];
 		doReset();
 		locationManager.removeUpdates(this);
+		removeNotification();
 		Intent intent = new Intent(this, FinishActivity.class);
 		startActivity(intent);
 	}
@@ -210,7 +205,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		super.onPause();
 		if (isFinishing()) {
 			locationManager.removeUpdates(this);
-			Log.d("loc", "finishing onPause");
+			removeNotification();
 		} else
 			showRunningNotification();
 	}
@@ -237,7 +232,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		super.onStop();
 		if (isFinishing()) {
 			locationManager.removeUpdates(this);
-			Log.d("loc", "finishing onStop");
+			removeNotification();
 		} else
 			showRunningNotification();
 	}
@@ -246,6 +241,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	public void onBackPressed() {
 		super.onBackPressed();
 		locationManager.removeUpdates(this);
+		removeNotification();
 		finish();
 	}
 
@@ -264,7 +260,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 		mNotificationManager.notify(1, noti);
 	}
 
-	protected static void removeNotification() {
-		mNotificationManager.cancel(1);
+	private void removeNotification() {
+		if (mNotificationManager != null)
+			mNotificationManager.cancel(1);
 	}
 }
