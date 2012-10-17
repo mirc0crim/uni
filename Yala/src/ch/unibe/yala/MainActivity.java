@@ -39,11 +39,11 @@ public class MainActivity extends MapActivity implements LocationListener {
 	MyItemOverlay itemizedoverlay;
 	Boolean started;
 	List<GeoPoint> myPoints;
-	List<Date> myDates;
+	List<Long> myTimes;
 	List<Double> myAlti;
 	AlertDialog.Builder builder;
 	static GeoPoint[] points;
-	static Date[] times;
+	static Long[] times;
 	static Double[] alti;
 	Boolean first;
 	GeoPoint lastPoint;
@@ -53,6 +53,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 	Button finishButton;
 	NotificationManager mNotificationManager;
 	Boolean calledFinish;
+	Long pauseTime;
+	Long pauseBegin;
+	int startState;
+	Boolean paused;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 		lastPoint = new GeoPoint(46700000, 7500000);
 		lastAlti = 0d;
+		startState = 0;
+		pauseTime = 0l;
 
 		mapController = map.getController();
 		mapController.setZoom(10);
@@ -83,12 +89,13 @@ public class MainActivity extends MapActivity implements LocationListener {
 		mapOverlays = map.getOverlays();
 
 		started = false;
+		paused = false;
 		first = true;
 		calledFinish = false;
 		myPoints = new ArrayList<GeoPoint>();
 		myPoints.clear();
-		myDates = new ArrayList<Date>();
-		myDates.clear();
+		myTimes = new ArrayList<Long>();
+		myTimes.clear();
 		myAlti = new ArrayList<Double>();
 		myAlti.clear();
 
@@ -111,6 +118,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
+
+		if (paused)
+			return;
+
 		String text = String.format("%f / %f / %d", location.getLatitude(),
 				location.getLongitude(), (int) location.getAltitude());
 		locationText.setText(text);
@@ -120,13 +131,15 @@ public class MainActivity extends MapActivity implements LocationListener {
 
 		lastPoint = new GeoPoint(latitude, longitude);
 		GeoPoint point = new GeoPoint(latitude, longitude);
+		if (!first)
+			mapController.setZoom(20);
 		mapController.animateTo(point);
 
 		if (!started)
 			return;
 
 		myPoints.add(new GeoPoint(latitude, longitude));
-		myDates.add(new Date());
+		myTimes.add(new Date().getTime() - pauseTime);
 		if (location.getAltitude() > 1) {
 			myAlti.add(location.getAltitude());
 			lastAlti = location.getAltitude();
@@ -139,6 +152,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 			itemizedoverlay.addOverlay(overlayitem);
 			mapOverlays.add(itemizedoverlay);
 			first = false;
+			mapController.setZoom(18);
 		}
 
 		if (myPoints.size() > 2)
@@ -152,20 +166,44 @@ public class MainActivity extends MapActivity implements LocationListener {
 		itemizedoverlay.clear();
 		mapOverlays.add(itemizedoverlay);
 		started = false;
+		paused = false;
 		first = true;
 		resetButton.setEnabled(false);
 		finishButton.setEnabled(false);
+		startButton.setText("Start");
+		startState = 0;
 		myPoints.clear();
-		myDates.clear();
+		myTimes.clear();
 		myAlti.clear();
 	}
 
 	public void start(View view) {
+		switch (startState) {
+		case 0:
+			startButton.setText("Pause");
+			startState = 1;
+			locationText.setText("Waiting for GPS signal");
+			break;
+		case 1:
+			startButton.setText("Resume");
+			pauseBegin = new Date().getTime();
+			paused = true;
+			startState = 2;
+			locationText.setText("Paused");
+			break;
+		case 2:
+			startButton.setText("Pause");
+			pauseTime = new Date().getTime() - pauseBegin;
+			paused = false;
+			startState = 1;
+			locationText.setText("Resumed");
+			break;
+		default:
+			break;
+		}
 		calledFinish = false;
 		started = true;
 		resetButton.setEnabled(true);
-		mapController.setZoom(20);
-		locationText.setText("Waiting for GPS signal");
 	}
 
 	public void reset(View view) {
@@ -177,10 +215,11 @@ public class MainActivity extends MapActivity implements LocationListener {
 	public void finish(View view) {
 		calledFinish = true;
 		started = false;
+		paused = false;
 		points = new GeoPoint[myPoints.size()];
 		points = myPoints.toArray(points);
-		times = new Date[myDates.size()];
-		times = myDates.toArray(times);
+		times = new Long[myTimes.size()];
+		times = myTimes.toArray(times);
 		alti = new Double[myAlti.size()];
 		alti = myAlti.toArray(alti);
 		if (points.length > 0)

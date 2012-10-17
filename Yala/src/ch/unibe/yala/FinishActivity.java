@@ -50,7 +50,7 @@ public class FinishActivity extends MapActivity {
 						MainActivity.points[i + 1].getLatitudeE6() / 1E6,
 						MainActivity.points[i + 1].getLongitudeE6() / 1E6, result);
 				myDistances.add(Double.valueOf(result[0]));
-				double timeDiff = MainActivity.times[i + 1].getTime() - MainActivity.times[i].getTime();
+				double timeDiff = MainActivity.times[i + 1] - MainActivity.times[i];
 				myTimes.add(timeDiff / 1000);
 				myHeight.add(MainActivity.alti[i]);
 			}
@@ -88,8 +88,7 @@ public class FinishActivity extends MapActivity {
 			long sec = 0;
 			long min = 0;
 			long hour = 0;
-			sec = (MainActivity.times[MainActivity.times.length - 1].getTime() - MainActivity.times[0]
-					.getTime()) / 1000;
+			sec = (MainActivity.times[MainActivity.times.length - 1] - MainActivity.times[0]) / 1000;
 			if (sec / 60 > 1) {
 				min = (long) Math.floor(sec / 60);
 				sec = sec - min * 60;
