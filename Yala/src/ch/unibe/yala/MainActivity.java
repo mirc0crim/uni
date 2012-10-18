@@ -34,9 +34,9 @@ public class MainActivity extends MapActivity implements LocationListener {
 	TextView locationText;
 	MapView map;
 	MapController mapController;
-	Drawable mapPin;
+	Drawable startPin;
 	List<Overlay> mapOverlays;
-	MyItemOverlay itemizedoverlay;
+	MyItemOverlay startOverlay;
 	Boolean started;
 	List<GeoPoint> myPoints;
 	List<Long> myTimes;
@@ -58,6 +58,9 @@ public class MainActivity extends MapActivity implements LocationListener {
 	int startState;
 	Boolean paused;
 	MyMapOverlay seg;
+	GeoPoint startPoint;
+	Drawable endPin;
+	MyItemOverlay endOverlay;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		finishButton.setEnabled(false);
 
 		lastPoint = new GeoPoint(46700000, 7500000);
+		startPoint = new GeoPoint(46700000, 7500000);
 		lastAlti = 0d;
 		startState = 0;
 		pauseTime = 0l;
@@ -85,8 +89,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
 		geocoder = new Geocoder(this);
-		mapPin = getResources().getDrawable(R.drawable.startpin);
-		itemizedoverlay = new MyItemOverlay(mapPin, this);
+		startPin = getResources().getDrawable(R.drawable.startpin);
+		endPin = getResources().getDrawable(R.drawable.endpin);
+		startOverlay = new MyItemOverlay(startPin, this);
+		endOverlay = new MyItemOverlay(endPin, this);
 		mapOverlays = map.getOverlays();
 
 		started = false;
@@ -146,9 +152,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 			myAlti.add(lastAlti);
 
 		if (first) {
-			OverlayItem overlayitem = new OverlayItem(point, "Start", "");
-			itemizedoverlay.addOverlay(overlayitem);
-			mapOverlays.add(itemizedoverlay);
+			startPoint = point;
+			OverlayItem startItem = new OverlayItem(startPoint, "Start", "");
+			startOverlay.addOverlay(startItem);
+			mapOverlays.add(startOverlay);
 			first = false;
 			mapController.setZoom(18);
 		}
@@ -157,13 +164,20 @@ public class MainActivity extends MapActivity implements LocationListener {
 			finishButton.setEnabled(true);
 
 		if (myPoints.size() > 1) {
+			map.getOverlays().clear();
+			map.removeAllViews();
+			startOverlay.clear();
+			endOverlay.clear();
 			GeoPoint[] segments = new GeoPoint[myPoints.size()];
 			segments = myPoints.toArray(segments);
 			seg = new MyMapOverlay(segments);
-			int i = map.getOverlays().indexOf(seg);
-			if (i >= 0)
-				map.getOverlays().remove(i);
 			map.getOverlays().add(seg);
+			OverlayItem startItem = new OverlayItem(startPoint, "Start", "");
+			startOverlay.addOverlay(startItem);
+			mapOverlays.add(startOverlay);
+			OverlayItem endItem = new OverlayItem(point, "Current Location", "");
+			endOverlay.addOverlay(endItem);
+			mapOverlays.add(endOverlay);
 		}
 
 	}
@@ -213,7 +227,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	}
 
 	public void reset(View view) {
-		if (!started || itemizedoverlay == null)
+		if (!started || startOverlay == null)
 			return;
 		builder.show();
 	}
