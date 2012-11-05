@@ -61,6 +61,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 	GeoPoint startPoint;
 	Drawable endPin;
 	MyItemOverlay endOverlay;
+	List<GeoPoint> myPausePoints;
+	static GeoPoint[] pausePoints;
+	List<Long> myPauseTimes;
+	static Long[] pauseTimes;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 		myTimes.clear();
 		myAlti = new ArrayList<Double>();
 		myAlti.clear();
+		myPausePoints = new ArrayList<GeoPoint>();
+		myPausePoints.clear();
+		myPauseTimes = new ArrayList<Long>();
+		myPauseTimes.clear();
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 			@Override
@@ -126,15 +134,18 @@ public class MainActivity extends MapActivity implements LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
 
-		if (paused)
+		int latitude = (int) (location.getLatitude() * 1000000);
+		int longitude = (int) (location.getLongitude() * 1000000);
+
+		if (paused) {
+			if (myPauseTimes.size() + 1 > myPausePoints.size())
+				myPausePoints.add(new GeoPoint(latitude, longitude));
 			return;
+		}
 
 		String text = String.format("%f / %f / %d", location.getLatitude(),
 				location.getLongitude(), (int) location.getAltitude());
 		locationText.setText(text);
-
-		int latitude = (int) (location.getLatitude() * 1000000);
-		int longitude = (int) (location.getLongitude() * 1000000);
 
 		lastPoint = new GeoPoint(latitude, longitude);
 		GeoPoint point = new GeoPoint(latitude, longitude);
@@ -195,6 +206,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 		myPoints.clear();
 		myTimes.clear();
 		myAlti.clear();
+		myPausePoints.clear();
+		myPauseTimes.clear();
 	}
 
 	public void start(View view) {
@@ -215,6 +228,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 			startButton.setText("Pause");
 			pauseTime = new Date().getTime() - pauseBegin;
 			paused = false;
+			myPauseTimes.add(pauseTime);
 			startState = 1;
 			locationText.setText("Resumed");
 			break;
@@ -242,6 +256,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 		times = myTimes.toArray(times);
 		alti = new Double[myAlti.size()];
 		alti = myAlti.toArray(alti);
+		pausePoints = new GeoPoint[myPausePoints.size()];
+		pausePoints = myPausePoints.toArray(pausePoints);
+		pauseTimes = new Long[myPauseTimes.size()];
+		pauseTimes = myPauseTimes.toArray(pauseTimes);
 		if (points.length > 0)
 			lastPoint = points[points.length - 1];
 		doReset();

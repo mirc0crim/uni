@@ -3,6 +3,7 @@ package ch.unibe.yala;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import android.graphics.drawable.Drawable;
@@ -157,6 +158,14 @@ public class FinishActivity extends MapActivity {
 			endOverlay.addOverlay(endItem);
 			routeMap.getOverlays().add(startOverlay);
 			routeMap.getOverlays().add(endOverlay);
+		}
+		for (int i = 0; i < MainActivity.pauseTimes.length; i++) {
+			Drawable pausePin = getResources().getDrawable(R.drawable.startpin);
+			MyItemOverlay pauseOverlay = new MyItemOverlay(pausePin, this);
+			OverlayItem pauseItem = new OverlayItem(MainActivity.pausePoints[i], "Pause: "
+					+ new Date(MainActivity.pauseTimes[i]).getDate(), "");
+			pauseOverlay.addOverlay(pauseItem);
+			routeMap.getOverlays().add(pauseOverlay);
 		}
 	}
 

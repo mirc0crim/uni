@@ -15,3 +15,6 @@ hs_err_pid*.log
 *.ap_
 *.dex
 *R.java
+*.cache
+*/.settings
+
