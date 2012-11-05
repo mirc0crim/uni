@@ -104,15 +104,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 		first = true;
 		calledFinish = false;
 		myPoints = new ArrayList<GeoPoint>();
-		myPoints.clear();
 		myTimes = new ArrayList<Long>();
-		myTimes.clear();
 		myAlti = new ArrayList<Double>();
-		myAlti.clear();
 		myPausePoints = new ArrayList<GeoPoint>();
-		myPausePoints.clear();
 		myPauseTimes = new ArrayList<Long>();
-		myPauseTimes.clear();
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 			@Override
@@ -134,14 +129,11 @@ public class MainActivity extends MapActivity implements LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
 
+		if (paused)
+			return;
+
 		int latitude = (int) (location.getLatitude() * 1000000);
 		int longitude = (int) (location.getLongitude() * 1000000);
-
-		if (paused) {
-			if (myPauseTimes.size() + 1 > myPausePoints.size())
-				myPausePoints.add(new GeoPoint(latitude, longitude));
-			return;
-		}
 
 		String text = String.format("%f / %f / %d", location.getLatitude(),
 				location.getLongitude(), (int) location.getAltitude());
@@ -229,6 +221,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 			pauseTime = new Date().getTime() - pauseBegin;
 			paused = false;
 			myPauseTimes.add(pauseTime);
+			myPausePoints.add(lastPoint);
 			startState = 1;
 			locationText.setText("Resumed");
 			break;

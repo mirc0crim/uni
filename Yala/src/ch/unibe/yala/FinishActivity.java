@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import android.graphics.drawable.Drawable;
@@ -15,6 +14,7 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -92,25 +92,15 @@ public class FinishActivity extends MapActivity {
 			vLabelAlti[2] = Math.round(minValue(height)) + " m";
 
 			long sec = 0;
-			long min = 0;
-			long hour = 0;
 			sec = (MainActivity.times[MainActivity.times.length - 1] - MainActivity.times[0]) / 1000;
-			if (sec / 60 > 1) {
-				min = (long) Math.floor(sec / 60);
-				sec = sec - min * 60;
-				if (min / 60 > 1) {
-					hour = (long) Math.floor(min / 60);
-					min = min - hour * 60;
-				}
-			}
 			double elev = Math.round(maxValue(height)) - Math.round(minValue(height));
 			double dist = 0;
 			for (Double distance : distances)
 				dist += distance;
-			stats.setText("Duration: " + hour + ":" + min + ":" + sec + " (h:m:s)\n");
+			stats.setText("Duration: " + secToTimeString(sec) + "\n");
 			stats.append("Elevation: " + elev + " m\n");
-			stats.append("Average Speed: " + Math.round(avgValue(speeds) * 3.6) + " km/h ("
-					+ Math.round(avgValue(speeds)) + " m/s)\n");
+			stats.append("Average Speed: " + Math.round(dist / sec) * 3.6 + " km/h ("
+					+ Math.round(dist / sec) + " m/s)\n");
 			if (dist > 1000)
 				stats.append("Distance: " + Math.round(dist / 10) / 100f + " km");
 			else
@@ -165,16 +155,22 @@ public class FinishActivity extends MapActivity {
 		Drawable pausePin = getResources().getDrawable(R.drawable.pausepin);
 		MyItemOverlay pauseOverlay = new MyItemOverlay(pausePin, this);
 		for (int i = 0; i < MainActivity.pauseTimes.length; i++) {
-			String locationText = "Pause " + new Date(MainActivity.pauseTimes[i]).getDate() + "\n";
+			long sec = MainActivity.pauseTimes[i] / 1000;
+			String locTitle = "Paused: " + secToTimeString(sec) + "\n";
+			String locSnippet = "";
+			GeoPoint point = MainActivity.pausePoints[i];
 			try {
 				List<Address> addresses = new Geocoder(this).getFromLocation(
-						MainActivity.pausePoints[i].getLatitudeE6(),
-						MainActivity.pausePoints[i].getLongitudeE6(), 10);
-				for (Address address : addresses)
-					locationText += "\n" + address.getAddressLine(0);
+						point.getLatitudeE6() / 1E6, point.getLongitudeE6() / 1E6, 10);
+				for (Address address : addresses) {
+					locSnippet += address.getAddressLine(0);
+					if (addresses.get(addresses.size() - 1) != address)
+						locSnippet += "\n";
+				}
+				locSnippet.substring(20);
 			} catch (IOException e) {
 			}
-			OverlayItem pauseItem = new OverlayItem(MainActivity.pausePoints[i], locationText, "");
+			OverlayItem pauseItem = new OverlayItem(point, locTitle, locSnippet);
 			pauseOverlay.addOverlay(pauseItem);
 			routeMap.getOverlays().add(pauseOverlay);
 		}
@@ -197,6 +193,20 @@ public class FinishActivity extends MapActivity {
 
 	private double avgValue(Double[] myArray) {
 		return (maxValue(myArray) + minValue(myArray)) / 2;
+	}
+
+	private String secToTimeString(long sec) {
+		long min = 0;
+		long hour = 0;
+		if (sec / 60 > 1) {
+			min = (long) Math.floor(sec / 60);
+			sec = sec - min * 60;
+			if (min / 60 > 1) {
+				hour = (long) Math.floor(min / 60);
+				min = min - hour * 60;
+			}
+		}
+		return hour + ":" + min + ":" + sec + " (h:m:s)";
 	}
 
 	@Override
