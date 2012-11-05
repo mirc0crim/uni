@@ -99,7 +99,7 @@ public class FinishActivity extends MapActivity {
 				dist += distance;
 			stats.setText("Duration: " + secToTimeString(sec) + "\n");
 			stats.append("Elevation: " + elev + " m\n");
-			stats.append("Average Speed: " + Math.round(dist / sec) * 3.6 + " km/h ("
+			stats.append("Avg Speed: " + Math.round(dist / sec * 3.6) + " km/h ("
 					+ Math.round(dist / sec) + " m/s)\n");
 			if (dist > 1000)
 				stats.append("Distance: " + Math.round(dist / 10) / 100f + " km");
