@@ -1,5 +1,6 @@
 package ch.unibe.yala;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -159,11 +162,19 @@ public class FinishActivity extends MapActivity {
 			routeMap.getOverlays().add(startOverlay);
 			routeMap.getOverlays().add(endOverlay);
 		}
+		Drawable pausePin = getResources().getDrawable(R.drawable.pausepin);
+		MyItemOverlay pauseOverlay = new MyItemOverlay(pausePin, this);
 		for (int i = 0; i < MainActivity.pauseTimes.length; i++) {
-			Drawable pausePin = getResources().getDrawable(R.drawable.startpin);
-			MyItemOverlay pauseOverlay = new MyItemOverlay(pausePin, this);
-			OverlayItem pauseItem = new OverlayItem(MainActivity.pausePoints[i], "Pause: "
-					+ new Date(MainActivity.pauseTimes[i]).getDate(), "");
+			String locationText = "Pause " + new Date(MainActivity.pauseTimes[i]).getDate() + "\n";
+			try {
+				List<Address> addresses = new Geocoder(this).getFromLocation(
+						MainActivity.pausePoints[i].getLatitudeE6(),
+						MainActivity.pausePoints[i].getLongitudeE6(), 10);
+				for (Address address : addresses)
+					locationText += "\n" + address.getAddressLine(0);
+			} catch (IOException e) {
+			}
+			OverlayItem pauseItem = new OverlayItem(MainActivity.pausePoints[i], locationText, "");
 			pauseOverlay.addOverlay(pauseItem);
 			routeMap.getOverlays().add(pauseOverlay);
 		}
