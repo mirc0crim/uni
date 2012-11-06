@@ -91,7 +91,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		mapController.setZoom(10);
 		mapController.animateTo(lastPoint);
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 		geocoder = new Geocoder(this);
 		startPin = getResources().getDrawable(R.drawable.startpin);
 		endPin = getResources().getDrawable(R.drawable.endpin);
@@ -110,7 +110,6 @@ public class MainActivity extends MapActivity implements LocationListener {
 		myPauseTimes = new ArrayList<Long>();
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case DialogInterface.BUTTON_POSITIVE:
@@ -126,7 +125,6 @@ public class MainActivity extends MapActivity implements LocationListener {
 		.setNegativeButton("No", dialogClickListener);
 	}
 
-	@Override
 	public void onLocationChanged(Location location) {
 
 		if (paused)
@@ -267,7 +265,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		super.onResume();
 		calledFinish = false;
 		mapController.animateTo(lastPoint);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 		removeNotification();
 	}
 
@@ -281,15 +279,12 @@ public class MainActivity extends MapActivity implements LocationListener {
 			showRunningNotification();
 	}
 
-	@Override
 	public void onProviderDisabled(String provider) {
 	}
 
-	@Override
 	public void onProviderEnabled(String provider) {
 	}
 
-	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 

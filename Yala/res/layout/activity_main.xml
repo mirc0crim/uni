@@ -54,6 +54,7 @@
 		android:layout_width="fill_parent"
       	android:layout_height="fill_parent"
       	android:clickable="true"
-		android:apiKey="0WMU7EdDjvw5h2qlFhhBNEXagUsEz5vJJoyipww"/>
+		android:apiKey="0WMU7EdDjvw5j3nsWNPiXKXjYgheA9UsbHxoL6w"/>
+		<!-- android:apiKey="0WMU7EdDjvw5h2qlFhhBNEXagUsEz5vJJoyipww"/> for dv7 apiKey-->
       	<!-- android:apiKey="0WMU7EdDjvw4nq6eV8u_iaApruL8LcxqrZN7_1Q"/> for final apiKey-->
 </LinearLayout>

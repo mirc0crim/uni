@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.x">
+<Placemark>
+    <name>1</name>
+        <Point><coordinates>7.4395,46.9539,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>2</name>
+        <Point><coordinates>7.4395,46.9543,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>3</name>
+        <Point><coordinates>7.4395,46.9550,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>4</name>
+        <Point><coordinates>7.4396,46.9554,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>5</name>
+        <Point><coordinates>7.4397,46.9560,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>6</name>
+        <Point><coordinates>7.4397,46.9563,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>7</name>
+        <Point><coordinates>7.4399,46.9566,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>8</name>
+        <Point><coordinates>7.4403,46.9568,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>9</name>
+        <Point><coordinates>7.4405,46.9572,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>10</name>
+        <Point><coordinates>7.4406,46.9576,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>11</name>
+        <Point><coordinates>7.4407,46.9580,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>12</name>
+        <Point><coordinates>7.4409,46.9584,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>13</name>
+        <Point><coordinates>7.4411,46.9591,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>14</name>
+        <Point><coordinates>7.4406,46.9592,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>15</name>
+        <Point><coordinates>7.4400,46.9593,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>16</name>
+        <Point><coordinates>7.4397,46.9590,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>17</name>
+        <Point><coordinates>7.4396,46.9587,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>18</name>
+        <Point><coordinates>7.4391,46.9583,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>19</name>
+        <Point><coordinates>7.4389,46.9580,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>20</name>
+        <Point><coordinates>7.4386,46.9578,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>21</name>
+        <Point><coordinates>7.4384,46.9575,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>22</name>
+        <Point><coordinates>7.4383,46.9573,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>23</name>
+        <Point><coordinates>7.4381,46.9568,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>24</name>
+        <Point><coordinates>7.4380,46.9567,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>25</name>
+        <Point><coordinates>7.4379,46.9566,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>26</name>
+        <Point><coordinates>7.4383,46.9561,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>27</name>
+        <Point><coordinates>7.4385,46.9558,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>28</name>
+        <Point><coordinates>7.4387,46.9555,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>29</name>
+        <Point><coordinates>7.4389,46.9552,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>30</name>
+        <Point><coordinates>7.4390,46.9549,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>31</name>
+        <Point><coordinates>7.4390,46.9545,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>32</name>
+        <Point><coordinates>7.4391,46.9540,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>33</name>
+        <Point><coordinates>7.4391,46.9536,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>34</name>
+        <Point><coordinates>7.4394,46.9534,0</coordinates></Point>
+</Placemark>
+</kml>
