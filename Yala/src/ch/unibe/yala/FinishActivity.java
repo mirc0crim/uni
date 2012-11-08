@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -26,11 +27,18 @@ import com.jjoe64.graphview.LineGraphView;
 
 public class FinishActivity extends MapActivity {
 
+	ProgressDialog pd;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_finish);
+
+		pd = new ProgressDialog(this);
+		pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		pd.show();
+		pd.setProgress(0);
+		pd.setMessage("Loading...");
 
 		List<Double> myDistances = new ArrayList<Double>();
 		List<Double> myTimes = new ArrayList<Double>();
@@ -50,6 +58,7 @@ public class FinishActivity extends MapActivity {
 		TextView stats = (TextView) findViewById(R.id.stats);
 		int ptsLen = MainActivity.points.length;
 		if (ptsLen > 1) {
+			pd.setProgress(5);
 			for (int i = 0; i < ptsLen - 1; i++) {
 				float[] result = new float[3];
 				Location.distanceBetween(MainActivity.points[i].getLatitudeE6() / 1E6,
@@ -117,6 +126,8 @@ public class FinishActivity extends MapActivity {
 			stats.append("Distance: 0 m");
 		}
 
+		pd.setProgress(50);
+
 		GraphViewSeries seriesSpeed = new GraphViewSeries(gvd);
 		GraphView graphSpeed = new LineGraphView(this, "Speed / Time");
 		graphSpeed.addSeries(seriesSpeed);
@@ -125,6 +136,8 @@ public class FinishActivity extends MapActivity {
 		LinearLayout layoutSpeed = (LinearLayout) findViewById(R.id.graphSpeed);
 		layoutSpeed.addView(graphSpeed);
 
+		pd.setProgress(60);
+
 		GraphViewSeries seriesAlti = new GraphViewSeries(gvdA);
 		GraphView graphAlti = new LineGraphView(this, "Altitude / Time");
 		graphAlti.addSeries(seriesAlti);
@@ -132,6 +145,8 @@ public class FinishActivity extends MapActivity {
 		graphAlti.setVerticalLabels(vLabelAlti);
 		LinearLayout layoutAlti = (LinearLayout) findViewById(R.id.graphAlti);
 		layoutAlti.addView(graphAlti);
+
+		pd.setProgress(70);
 
 		MapView routeMap = (MapView) findViewById(R.id.route);
 		MapController mMapController = routeMap.getController();
@@ -153,6 +168,9 @@ public class FinishActivity extends MapActivity {
 			routeMap.getOverlays().add(startOverlay);
 			routeMap.getOverlays().add(endOverlay);
 		}
+
+		pd.setProgress(80);
+
 		Drawable pausePin = getResources().getDrawable(R.drawable.pausepin);
 		MyItemOverlay pauseOverlay = new MyItemOverlay(pausePin, this);
 		for (int i = 0; i < MainActivity.pauseTimes.length; i++) {
@@ -175,6 +193,9 @@ public class FinishActivity extends MapActivity {
 			pauseOverlay.addOverlay(pauseItem);
 			routeMap.getOverlays().add(pauseOverlay);
 		}
+		
+		pd.dismiss();
+
 	}
 
 	@Override
