@@ -180,6 +180,15 @@ public class MainActivity extends MapActivity implements LocationListener {
 			endOverlay.addOverlay(endItem);
 			mapOverlays.add(endOverlay);
 		}
+		if (myPausePoints.size() > 0) {
+			Drawable pausePin = getResources().getDrawable(R.drawable.pausepin);
+			MyItemOverlay pauseOverlay = new MyItemOverlay(pausePin, this);
+			for (int i = 0; i < myPausePoints.size(); i++) {
+				OverlayItem pauseItem = new OverlayItem(myPausePoints.get(i), "Paused", "");
+				pauseOverlay.addOverlay(pauseItem);
+				map.getOverlays().add(pauseOverlay);
+			}
+		}
 
 	}
 
