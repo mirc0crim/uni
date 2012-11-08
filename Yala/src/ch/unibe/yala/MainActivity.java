@@ -10,6 +10,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
 import android.location.Location;
@@ -72,6 +73,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
 		locationText = (TextView) findViewById(R.id.myText);
 		map = (MapView) findViewById(R.id.map);
