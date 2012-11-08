@@ -141,8 +141,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 		GeoPoint point = new GeoPoint(latitude, longitude);
 		mapController.animateTo(point);
 
-		if (!started)
+		if (!started) {
+			mapController.setZoom(18);
 			return;
+		}
 
 		myPoints.add(new GeoPoint(latitude, longitude));
 		myTimes.add(new Date().getTime() - pauseTime);
@@ -158,7 +160,6 @@ public class MainActivity extends MapActivity implements LocationListener {
 			startOverlay.addOverlay(startItem);
 			mapOverlays.add(startOverlay);
 			first = false;
-			mapController.setZoom(18);
 		}
 
 		if (myPoints.size() > 2)
