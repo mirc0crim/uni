@@ -7,10 +7,13 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -178,16 +181,18 @@ public class FinishActivity extends MapActivity {
 			String locTitle = "Paused: " + secToTimeString(sec) + "\n";
 			String locSnippet = "";
 			GeoPoint point = MainActivity.pausePoints[i];
-			try {
-				List<Address> addresses = new Geocoder(this).getFromLocation(
-						point.getLatitudeE6() / 1E6, point.getLongitudeE6() / 1E6, 10);
-				for (Address address : addresses) {
-					locSnippet += address.getAddressLine(0);
-					if (addresses.get(addresses.size() - 1) != address)
-						locSnippet += "\n";
+			if (isConnected()) {
+				try {
+					List<Address> addresses = new Geocoder(this).getFromLocation(
+							point.getLatitudeE6() / 1E6, point.getLongitudeE6() / 1E6, 10);
+					for (Address address : addresses) {
+						locSnippet += address.getAddressLine(0);
+						if (addresses.get(addresses.size() - 1) != address)
+							locSnippet += "\n";
+					}
+					locSnippet.substring(20);
+				} catch (IOException e) {
 				}
-				locSnippet.substring(20);
-			} catch (IOException e) {
 			}
 			OverlayItem pauseItem = new OverlayItem(point, locTitle, locSnippet);
 			pauseOverlay.addOverlay(pauseItem);
@@ -234,6 +239,16 @@ public class FinishActivity extends MapActivity {
 	@Override
 	public void onBackPressed() {
 		finish();
+	}
+
+	public boolean isConnected() {
+		ConnectivityManager cm = (ConnectivityManager) this
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isAvailable() && netInfo.isConnected())
+			return true;
+		else
+			return false;
 	}
 
 }
