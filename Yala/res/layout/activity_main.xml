@@ -28,16 +28,6 @@
             android:layout_weight="1"
             android:textSize="20dp" />
         <Button
-            android:id="@+id/buttonReset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="reset"
-            android:text="@string/reset"
-            android:textColor="#177BBD"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:textSize="20dp" />
-        <Button
             android:id="@+id/buttonFinish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,7 +44,7 @@
 		android:layout_width="fill_parent"
       	android:layout_height="fill_parent"
       	android:clickable="true"
-		android:apiKey="0WMU7EdDjvw5j3nsWNPiXKXjYgheA9UsbHxoL6w"/>
+		android:apiKey="0WMU7EdDjvw5j3nsWNPiXKXjYgheA9UsbHxoL6w"/> <!-- for envy14 apiKey -->
 		<!-- android:apiKey="0WMU7EdDjvw5h2qlFhhBNEXagUsEz5vJJoyipww"/> for dv7 apiKey-->
       	<!-- android:apiKey="0WMU7EdDjvw4nq6eV8u_iaApruL8LcxqrZN7_1Q"/> for final apiKey-->
 </LinearLayout>

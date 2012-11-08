@@ -16,6 +16,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -49,7 +52,6 @@ public class MainActivity extends MapActivity implements LocationListener {
 	GeoPoint lastPoint;
 	Double lastAlti;
 	Button startButton;
-	Button resetButton;
 	Button finishButton;
 	NotificationManager mNotificationManager;
 	Boolean calledFinish;
@@ -76,9 +78,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		map.setSatellite(false);
 
 		startButton = (Button) findViewById(R.id.buttonStart);
-		resetButton = (Button) findViewById(R.id.buttonReset);
 		finishButton = (Button) findViewById(R.id.buttonFinish);
-		resetButton.setEnabled(false);
 		finishButton.setEnabled(false);
 
 		lastPoint = new GeoPoint(46700000, 7500000);
@@ -189,7 +189,6 @@ public class MainActivity extends MapActivity implements LocationListener {
 		started = false;
 		paused = false;
 		first = true;
-		resetButton.setEnabled(false);
 		finishButton.setEnabled(false);
 		startButton.setText("Start");
 		startState = 0;
@@ -228,13 +227,6 @@ public class MainActivity extends MapActivity implements LocationListener {
 		}
 		calledFinish = false;
 		started = true;
-		resetButton.setEnabled(true);
-	}
-
-	public void reset(View view) {
-		if (!started || startOverlay == null)
-			return;
-		builder.show();
 	}
 
 	public void finish(View view) {
@@ -329,5 +321,26 @@ public class MainActivity extends MapActivity implements LocationListener {
 	private void removeNotification() {
 		if (mNotificationManager != null)
 			mNotificationManager.cancel(1);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.mainmenu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.reset:
+			if (!started || startOverlay == null)
+				break;
+			builder.show();
+			break;
+		default:
+			break;
+		}
+		return true;
 	}
 }

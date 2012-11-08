@@ -26,6 +26,7 @@ import com.jjoe64.graphview.LineGraphView;
 
 public class FinishActivity extends MapActivity {
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
