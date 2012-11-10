@@ -83,14 +83,14 @@ public class MainActivity extends MapActivity implements LocationListener {
 		finishButton = (Button) findViewById(R.id.buttonFinish);
 		finishButton.setEnabled(false);
 
-		lastPoint = new GeoPoint(46700000, 7500000);
-		startPoint = new GeoPoint(46700000, 7500000);
+		lastPoint = new GeoPoint(46953700, 7439700);
+		startPoint = new GeoPoint(46953700, 7439700);
 		lastAlti = 0d;
 		startState = 0;
 		pauseTime = 0l;
 
 		mapController = map.getController();
-		mapController.setZoom(10);
+		mapController.setZoom(19);
 		mapController.animateTo(lastPoint);
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
@@ -144,7 +144,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		mapController.animateTo(point);
 
 		if (!started) {
-			mapController.setZoom(18);
+			mapController.setZoom(19);
 			return;
 		}
 

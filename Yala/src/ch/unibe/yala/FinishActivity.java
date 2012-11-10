@@ -153,7 +153,7 @@ public class FinishActivity extends MapActivity {
 
 		MapView routeMap = (MapView) findViewById(R.id.route);
 		MapController mMapController = routeMap.getController();
-		mMapController.setZoom(16);
+		mMapController.setZoom(19);
 		if (ptsLen > 0) {
 			mMapController.setCenter(MainActivity.points[0]);
 			MyMapOverlay mapOvlay = new MyMapOverlay(MainActivity.points);
@@ -222,13 +222,14 @@ public class FinishActivity extends MapActivity {
 		return (maxValue(myArray) + minValue(myArray)) / 2;
 	}
 
-	private String secToTimeString(long sec) {
+	private String secToTimeString(long s) {
+		long sec = s;
 		long min = 0;
 		long hour = 0;
-		if (sec / 60 > 1) {
+		if (sec / 60 >= 1) {
 			min = (long) Math.floor(sec / 60);
 			sec = sec - min * 60;
-			if (min / 60 > 1) {
+			if (min / 60 >= 1) {
 				hour = (long) Math.floor(min / 60);
 				min = min - hour * 60;
 			}
