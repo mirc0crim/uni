@@ -23,10 +23,6 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
 
 public class FinishActivity extends MapActivity {
 
@@ -55,8 +51,11 @@ public class FinishActivity extends MapActivity {
 		GraphViewData[] gvd;
 		GraphViewData[] gvdA;
 
-		String[] vLabelSpeed = new String[3];
-		String[] vLabelAlti = new String[3];
+		String[] vLabelSpeed = new String[5];
+		String[] vLabelAlti = new String[5];
+
+		float maxSpeed;
+		float maxAlti;
 
 		TextView stats = (TextView) findViewById(R.id.stats);
 		int ptsLen = MainActivity.points.length;
@@ -87,9 +86,9 @@ public class FinishActivity extends MapActivity {
 			speeds = new Double[distances.length];
 			double thatTime = 0;
 			for (int i = 0; i < distances.length; i++) {
-				thatTime += times[i];
 				speeds[i] = distances[i] / times[i];
 				gvd[i] = new GraphViewData(thatTime, speeds[i]);
+				thatTime += times[i];
 			}
 			thatTime = 0;
 			for (int i = 0; i < height.length; i++) {
@@ -97,12 +96,18 @@ public class FinishActivity extends MapActivity {
 					thatTime += times[i - 1];
 				gvdA[i] = new GraphViewData(thatTime, height[i]);
 			}
-			vLabelSpeed[0] = Math.round(maxValue(speeds) * 3.6) + " km/h";
-			vLabelSpeed[1] = Math.round(avgValue(speeds) * 3.6) + " km/h";
-			vLabelSpeed[2] = Math.round(minValue(speeds) * 3.6) + " km/h";
-			vLabelAlti[0] = Math.round(maxValue(height)) + " m";
-			vLabelAlti[1] = Math.round(avgValue(height)) + " m";
-			vLabelAlti[2] = Math.round(minValue(height)) + " m";
+			vLabelSpeed[0] = Math.round(minValue(speeds) * 3.6) + " km/h";
+			vLabelSpeed[1] = Math.round((minValue(speeds) + avgValue(speeds)) / 2 * 3.6) + " km/h";
+			vLabelSpeed[2] = Math.round(avgValue(speeds) * 3.6) + " km/h";
+			vLabelSpeed[3] = Math.round((avgValue(speeds) + maxValue(speeds)) / 2 * 3.6) + " km/h";
+			vLabelSpeed[4] = Math.round(maxValue(speeds) * 3.6) + " km/h";
+			maxSpeed = Math.round(maxValue(speeds));
+			vLabelAlti[0] = Math.round(minValue(height)) + " m";
+			vLabelAlti[1] = Math.round((minValue(height) + avgValue(height)) / 2) + " m";
+			vLabelAlti[2] = Math.round(avgValue(height)) + " m";
+			vLabelAlti[3] = Math.round((avgValue(height) + maxValue(height)) / 2) + " m";
+			vLabelAlti[4] = Math.round(maxValue(height)) + " m";
+			maxAlti = Math.round(maxValue(height));
 
 			long sec = 0;
 			sec = (MainActivity.times[MainActivity.times.length - 1] - MainActivity.times[0]) / 1000;
@@ -121,8 +126,10 @@ public class FinishActivity extends MapActivity {
 		} else {
 			gvd = new GraphViewData[] { new GraphViewData(1, 2.0d), new GraphViewData(2, 3.0d) };
 			gvdA = new GraphViewData[] { new GraphViewData(1, 3.0d), new GraphViewData(2, 2.0d) };
-			vLabelSpeed = new String[] { "fast", "average", "slow" };
-			vLabelAlti = new String[] { "high", "average", "low" };
+			vLabelSpeed = new String[] { "slow", "", "average", "", "fast" };
+			maxSpeed = 5;
+			vLabelAlti = new String[] { "low", "", "average", "", "high" };
+			maxAlti = 5;
 			stats.setText("Duration: 0:0:0 (h:m:s)\n");
 			stats.append("Elevation: 0 m\n");
 			stats.append("Average Speed: 0 km/h (0 m/s)\n");
@@ -131,21 +138,16 @@ public class FinishActivity extends MapActivity {
 
 		pd.setProgress(50);
 
-		GraphViewSeries seriesSpeed = new GraphViewSeries(gvd);
-		GraphView graphSpeed = new LineGraphView(this, "Speed / Time");
-		graphSpeed.addSeries(seriesSpeed);
-		graphSpeed.setHorizontalLabels(new String[] { "Start", "Middle", "End" });
-		graphSpeed.setVerticalLabels(vLabelSpeed);
+		String[] hLabel = new String[] { "Start", "Middle", "End" };
+
+		GraphView graphSpeed = new GraphView(this, gvd, "Speed/Time", hLabel, vLabelSpeed, maxSpeed);
 		LinearLayout layoutSpeed = (LinearLayout) findViewById(R.id.graphSpeed);
 		layoutSpeed.addView(graphSpeed);
 
 		pd.setProgress(60);
 
-		GraphViewSeries seriesAlti = new GraphViewSeries(gvdA);
-		GraphView graphAlti = new LineGraphView(this, "Altitude / Time");
-		graphAlti.addSeries(seriesAlti);
-		graphAlti.setHorizontalLabels(new String[] { "Start", "Middle", "End" });
-		graphAlti.setVerticalLabels(vLabelAlti);
+		GraphView graphAlti = new GraphView(this, gvdA, "Altitude/Time", hLabel, vLabelAlti,
+				maxAlti);
 		LinearLayout layoutAlti = (LinearLayout) findViewById(R.id.graphAlti);
 		layoutAlti.addView(graphAlti);
 
@@ -181,7 +183,7 @@ public class FinishActivity extends MapActivity {
 			String locTitle = "Paused: " + secToTimeString(sec) + "\n";
 			String locSnippet = "";
 			GeoPoint point = MainActivity.pausePoints[i];
-			if (isConnected()) {
+			if (isConnected())
 				try {
 					List<Address> addresses = new Geocoder(this).getFromLocation(
 							point.getLatitudeE6() / 1E6, point.getLongitudeE6() / 1E6, 10);
@@ -193,12 +195,11 @@ public class FinishActivity extends MapActivity {
 					locSnippet.substring(20);
 				} catch (IOException e) {
 				}
-			}
 			OverlayItem pauseItem = new OverlayItem(point, locTitle, locSnippet);
 			pauseOverlay.addOverlay(pauseItem);
 			routeMap.getOverlays().add(pauseOverlay);
 		}
-		
+
 		pd.dismiss();
 
 	}
@@ -243,8 +244,7 @@ public class FinishActivity extends MapActivity {
 	}
 
 	public boolean isConnected() {
-		ConnectivityManager cm = (ConnectivityManager) this
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 		if (netInfo != null && netInfo.isAvailable() && netInfo.isConnected())
 			return true;
