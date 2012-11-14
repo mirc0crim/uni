@@ -96,16 +96,16 @@ public class FinishActivity extends MapActivity {
 					thatTime += times[i - 1];
 				gvdA[i] = new GraphViewData(thatTime, height[i]);
 			}
-			vLabelSpeed[0] = Math.round(minValue(speeds) * 3.6) + " km/h";
-			vLabelSpeed[1] = Math.round((minValue(speeds) + avgValue(speeds)) / 2 * 3.6) + " km/h";
-			vLabelSpeed[2] = Math.round(avgValue(speeds) * 3.6) + " km/h";
-			vLabelSpeed[3] = Math.round((avgValue(speeds) + maxValue(speeds)) / 2 * 3.6) + " km/h";
+			vLabelSpeed[0] = "0 km/h";
+			vLabelSpeed[1] = Math.round(maxValue(speeds) / 4 * 3.6) + " km/h";
+			vLabelSpeed[2] = Math.round(maxValue(speeds) / 2 * 3.6) + " km/h";
+			vLabelSpeed[3] = Math.round(maxValue(speeds) * 3 / 4 * 3.6) + " km/h";
 			vLabelSpeed[4] = Math.round(maxValue(speeds) * 3.6) + " km/h";
 			maxSpeed = Math.round(maxValue(speeds));
-			vLabelAlti[0] = Math.round(minValue(height)) + " m";
-			vLabelAlti[1] = Math.round((minValue(height) + avgValue(height)) / 2) + " m";
-			vLabelAlti[2] = Math.round(avgValue(height)) + " m";
-			vLabelAlti[3] = Math.round((avgValue(height) + maxValue(height)) / 2) + " m";
+			vLabelAlti[0] = "0 m";
+			vLabelAlti[1] = Math.round(maxValue(height) / 4) + " m";
+			vLabelAlti[2] = Math.round(maxValue(height) / 2) + " m";
+			vLabelAlti[3] = Math.round(maxValue(height) * 3 / 4) + " m";
 			vLabelAlti[4] = Math.round(maxValue(height)) + " m";
 			maxAlti = Math.round(maxValue(height));
 

@@ -7,11 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.view.View;
 
-/**
- * GraphView creates a scaled line or bar graph with x and y axis labels.
- * @author originally: Arno den Hond
- *
- */
 public class GraphView extends View {
 
 	private final Paint paint = new Paint();
@@ -22,15 +17,6 @@ public class GraphView extends View {
 	private String title;
 	private float speed;
 
-
-	/**
-	 *
-	 * @param context
-	 * @param values must be sorted by valueX ASC
-	 * @param title [optional]
-	 * @param horlabels
-	 * @param verlabels
-	 */
 	public GraphView(Context context, GraphViewData[] values, String title, String[] horlabels, String[] verlabels, float speed) {
 		super(context);
 		if (values == null)
@@ -51,8 +37,6 @@ public class GraphView extends View {
 			this.verlabels = verlabels;
 
 		this.speed = speed;
-		//		paint = new Paint();
-		//		paintBackground = new Paint();
 		paintBackground.setARGB(255, 10, 20, 30);
 		paintBackground.setStrokeCap(Paint.Cap.ROUND);
 		paintBackground.setStrokeWidth(4);
@@ -65,7 +49,6 @@ public class GraphView extends View {
 		float border = 25;
 		float horstart = border * 3;
 		float height = getHeight();
-		System.out.println("Height:" + height);
 		float width = getWidth() - 1;
 		float graphheight = height - 2 * border ;
 		float graphwidth = width - (horstart + border);
@@ -102,7 +85,6 @@ public class GraphView extends View {
 		paint.setTextAlign(Align.CENTER);
 		paint.setTextSize(22);
 		canvas.drawText(title, graphwidth / 2 + horstart, border - 4, paint);
-
 		paint.setARGB(255, 0, 119, 204);
 		paint.setStrokeCap(Paint.Cap.ROUND);
 		paint.setStrokeWidth(3);
@@ -118,10 +100,8 @@ public class GraphView extends View {
 		for (int i = 0; i < values.length-1; i++){
 			startX = (float) (horstart + values[i].valueX * unitX);
 			endX = (float) (horstart + values[i+1].valueX * unitX);
-
-			startY = (float) (graphheight + border - values[i].valueY*unitY);
-			endY = (float) (graphheight + border - values[i+1].valueY*unitY);
-
+			startY = (float) (graphheight + border - values[i].valueY * unitY);
+			endY = (float) (graphheight + border - values[i + 1].valueY * unitY);
 			canvas.drawLine(startX, startY, endX, endY, paint);
 		}
 	}
