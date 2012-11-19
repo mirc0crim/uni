@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -27,23 +26,17 @@ import com.google.android.maps.OverlayItem;
 
 public class FinishActivity extends MapActivity {
 
-	ProgressDialog pd;
-	static GeoPoint[] pts;
-	static Long[] tm;
-	static Double[] alt;
-	static GeoPoint[] paPts;
-	static Long[] paTm;
+	static GeoPoint[] movingPoints;
+	static Long[] movingTimes;
+	static Double[] altitudes;
+	static GeoPoint[] pausePoints;
+	static Long[] pauseTime;
+	static boolean save;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_finish);
-
-		pd = new ProgressDialog(this);
-		pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		pd.show();
-		pd.setProgress(0);
-		pd.setMessage("Loading...");
 
 		List<Double> myDistances = new ArrayList<Double>();
 		List<Double> myTimes = new ArrayList<Double>();
@@ -54,30 +47,29 @@ public class FinishActivity extends MapActivity {
 		Double[] speeds;
 		Double[] height;
 
-		GraphViewData[] gvd;
+		GraphViewData[] gvdS;
 		GraphViewData[] gvdA;
 
-		String[] vLabelSpeed = new String[5];
-		String[] vLabelAlti = new String[5];
+		String[] vLabSpeed = new String[5];
+		String[] vLabAlt = new String[5];
 
 		float maxSpeed;
-		float maxAlti;
+		float maxAlt;
 
 		TextView stats = (TextView) findViewById(R.id.stats);
-		int ptsLen = pts.length;
+		int ptsLen = movingPoints.length;
 		if (ptsLen > 1) {
-			pd.setProgress(5);
 			for (int i = 0; i < ptsLen - 1; i++) {
 				float[] result = new float[3];
-				Location.distanceBetween(pts[i].getLatitudeE6() / 1E6,
-						pts[i].getLongitudeE6() / 1E6, pts[i + 1].getLatitudeE6() / 1E6,
-						pts[i + 1].getLongitudeE6() / 1E6, result);
+				Location.distanceBetween(movingPoints[i].getLatitudeE6() / 1E6,
+						movingPoints[i].getLongitudeE6() / 1E6, movingPoints[i + 1].getLatitudeE6() / 1E6,
+						movingPoints[i + 1].getLongitudeE6() / 1E6, result);
 				myDistances.add(Double.valueOf(result[0]));
-				double timeDiff = tm[i + 1] - tm[i];
+				double timeDiff = movingTimes[i + 1] - movingTimes[i];
 				myTimes.add(timeDiff / 1000);
-				myHeight.add(alt[i]);
+				myHeight.add(altitudes[i]);
 			}
-			myHeight.add(alt[ptsLen - 1]);
+			myHeight.add(altitudes[ptsLen - 1]);
 
 			times = new Double[myTimes.size()];
 			times = myTimes.toArray(times);
@@ -86,13 +78,13 @@ public class FinishActivity extends MapActivity {
 			height = new Double[myHeight.size()];
 			height = myHeight.toArray(height);
 
-			gvd = new GraphViewData[distances.length];
+			gvdS = new GraphViewData[distances.length];
 			gvdA = new GraphViewData[height.length];
 			speeds = new Double[distances.length];
 			double thatTime = 0;
 			for (int i = 0; i < distances.length; i++) {
 				speeds[i] = distances[i] / times[i];
-				gvd[i] = new GraphViewData(thatTime, speeds[i]);
+				gvdS[i] = new GraphViewData(thatTime, speeds[i]);
 				thatTime += times[i];
 			}
 			thatTime = 0;
@@ -101,21 +93,21 @@ public class FinishActivity extends MapActivity {
 					thatTime += times[i - 1];
 				gvdA[i] = new GraphViewData(thatTime, height[i]);
 			}
-			vLabelSpeed[0] = "0 km/h";
-			vLabelSpeed[1] = Math.round(maxValue(speeds) / 4 * 3.6) + " km/h";
-			vLabelSpeed[2] = Math.round(maxValue(speeds) / 2 * 3.6) + " km/h";
-			vLabelSpeed[3] = Math.round(maxValue(speeds) * 3 / 4 * 3.6) + " km/h";
-			vLabelSpeed[4] = Math.round(maxValue(speeds) * 3.6) + " km/h";
+			vLabSpeed[0] = "0 km/h";
+			vLabSpeed[1] = Math.round(maxValue(speeds) / 4 * 3.6) + " km/h";
+			vLabSpeed[2] = Math.round(maxValue(speeds) / 2 * 3.6) + " km/h";
+			vLabSpeed[3] = Math.round(maxValue(speeds) * 3 / 4 * 3.6) + " km/h";
+			vLabSpeed[4] = Math.round(maxValue(speeds) * 3.6) + " km/h";
 			maxSpeed = Math.round(maxValue(speeds));
-			vLabelAlti[0] = "0 m";
-			vLabelAlti[1] = Math.round(maxValue(height) / 4) + " m";
-			vLabelAlti[2] = Math.round(maxValue(height) / 2) + " m";
-			vLabelAlti[3] = Math.round(maxValue(height) * 3 / 4) + " m";
-			vLabelAlti[4] = Math.round(maxValue(height)) + " m";
-			maxAlti = Math.round(maxValue(height));
+			vLabAlt[0] = "0 m";
+			vLabAlt[1] = Math.round(maxValue(height) / 4) + " m";
+			vLabAlt[2] = Math.round(maxValue(height) / 2) + " m";
+			vLabAlt[3] = Math.round(maxValue(height) * 3 / 4) + " m";
+			vLabAlt[4] = Math.round(maxValue(height)) + " m";
+			maxAlt = Math.round(maxValue(height));
 
 			long sec = 0;
-			sec = (tm[tm.length - 1] - tm[0]) / 1000;
+			sec = (movingTimes[movingTimes.length - 1] - movingTimes[0]) / 1000;
 			double elev = Math.round(maxValue(height)) - Math.round(minValue(height));
 			double dist = 0;
 			for (Double distance : distances)
@@ -129,41 +121,32 @@ public class FinishActivity extends MapActivity {
 			else
 				stats.append("Distance: " + (int) dist + " m");
 		} else {
-			gvd = new GraphViewData[] { new GraphViewData(1, 2.0d), new GraphViewData(2, 3.0d) };
+			gvdS = new GraphViewData[] { new GraphViewData(1, 2.0d), new GraphViewData(2, 3.0d) };
 			gvdA = new GraphViewData[] { new GraphViewData(1, 3.0d), new GraphViewData(2, 2.0d) };
-			vLabelSpeed = new String[] { "slow", "", "average", "", "fast" };
+			vLabSpeed = new String[] { "slow", "", "average", "", "fast" };
 			maxSpeed = 5;
-			vLabelAlti = new String[] { "low", "", "average", "", "high" };
-			maxAlti = 5;
+			vLabAlt = new String[] { "low", "", "average", "", "high" };
+			maxAlt = 5;
 			stats.setText("Duration: 0:0:0 (h:m:s)\n");
 			stats.append("Elevation: 0 m\n");
 			stats.append("Average Speed: 0 km/h (0 m/s)\n");
 			stats.append("Distance: 0 m");
 		}
 
-		pd.setProgress(50);
-
-		String[] hLabel = new String[] { "Start", "Middle", "End" };
-
-		GraphView graphSpeed = new GraphView(this, gvd, "Speed/Time", hLabel, vLabelSpeed, maxSpeed);
+		String[] hLab = new String[] { "Start", "Middle", "End" };
+		GraphView graphSpeed = new GraphView(this, gvdS, "Speed/Time", hLab, vLabSpeed, maxSpeed);
 		LinearLayout layoutSpeed = (LinearLayout) findViewById(R.id.graphSpeed);
 		layoutSpeed.addView(graphSpeed);
-
-		pd.setProgress(60);
-
-		GraphView graphAlti = new GraphView(this, gvdA, "Altitude/Time", hLabel, vLabelAlti,
-				maxAlti);
+		GraphView graphAlti = new GraphView(this, gvdA, "Altitude/Time", hLab, vLabAlt, maxAlt);
 		LinearLayout layoutAlti = (LinearLayout) findViewById(R.id.graphAlti);
 		layoutAlti.addView(graphAlti);
-
-		pd.setProgress(70);
 
 		MapView routeMap = (MapView) findViewById(R.id.route);
 		MapController mMapController = routeMap.getController();
 		mMapController.setZoom(19);
 		if (ptsLen > 0) {
-			mMapController.setCenter(pts[0]);
-			MyMapOverlay mapOvlay = new MyMapOverlay(pts);
+			mMapController.setCenter(movingPoints[0]);
+			MyMapOverlay mapOvlay = new MyMapOverlay(movingPoints);
 			routeMap.getOverlays().add(mapOvlay);
 		}
 		if (ptsLen > 1) {
@@ -171,23 +154,21 @@ public class FinishActivity extends MapActivity {
 			Drawable endPin = getResources().getDrawable(R.drawable.endpin);
 			MyItemOverlay startOverlay = new MyItemOverlay(startPin, this);
 			MyItemOverlay endOverlay = new MyItemOverlay(endPin, this);
-			OverlayItem startItem = new OverlayItem(pts[0], "Start", "");
-			OverlayItem endItem = new OverlayItem(pts[ptsLen - 1], "End", "");
+			OverlayItem startItem = new OverlayItem(movingPoints[0], "Start", "");
+			OverlayItem endItem = new OverlayItem(movingPoints[ptsLen - 1], "End", "");
 			startOverlay.addOverlay(startItem);
 			endOverlay.addOverlay(endItem);
 			routeMap.getOverlays().add(startOverlay);
 			routeMap.getOverlays().add(endOverlay);
 		}
 
-		pd.setProgress(80);
-
 		Drawable pausePin = getResources().getDrawable(R.drawable.pausepin);
 		MyItemOverlay pauseOverlay = new MyItemOverlay(pausePin, this);
-		for (int i = 0; i < paTm.length; i++) {
-			long sec = paTm[i] / 1000;
+		for (int i = 0; i < pauseTime.length; i++) {
+			long sec = pauseTime[i] / 1000;
 			String locTitle = "Paused: " + secToTimeString(sec) + "\n";
 			String locSnippet = "";
-			GeoPoint point = paPts[i];
+			GeoPoint point = pausePoints[i];
 			if (isConnected())
 				try {
 					List<Address> addresses = new Geocoder(this).getFromLocation(
@@ -197,7 +178,6 @@ public class FinishActivity extends MapActivity {
 						if (addresses.get(addresses.size() - 1) != address)
 							locSnippet += "\n";
 					}
-					locSnippet.substring(20);
 				} catch (IOException e) {
 				}
 			OverlayItem pauseItem = new OverlayItem(point, locTitle, locSnippet);
@@ -205,12 +185,13 @@ public class FinishActivity extends MapActivity {
 			routeMap.getOverlays().add(pauseOverlay);
 		}
 
-		DataLayer d = new DataLayer(getBaseContext());
-		d.addRun(new Date().getTime() + "", convertGeoPointToString(pts), convertLongToString(tm),
-				convertDoubleToString(alt), convertLongToString(paTm),
-				convertGeoPointToString(paPts));
-
-		pd.dismiss();
+		if (save) {
+			DataLayer d = new DataLayer(getBaseContext());
+			d.resetDB();
+			d.addRun(new Date().getTime() + "", convertGeoPointToString(movingPoints), convertLongToString(movingTimes),
+					convertDoubleToString(altitudes), convertLongToString(pauseTime),
+					convertGeoPointToString(pausePoints));
+		}
 
 	}
 
@@ -258,55 +239,56 @@ public class FinishActivity extends MapActivity {
 			return false;
 	}
 
-	public static void setPoints(GeoPoint[] p) {
-		pts = p;
-	}
-	public static void setTimes(Long[] t) {
-		tm = t;
+	public static void setPoints(GeoPoint[] geoPoints) {
+		movingPoints = geoPoints;
 	}
 
-	public static void setAltitude(Double[] a) {
-		alt = a;
+	public static void setTimes(Long[] times) {
+		movingTimes = times;
 	}
 
-	public static void setPausePoints(GeoPoint[] pp) {
-		paPts = pp;
+	public static void setAltitude(Double[] alti) {
+		altitudes = alti;
 	}
 
-	public static void setPauseTimes(Long[] pt) {
-		paTm = pt;
+	public static void setPausePoints(GeoPoint[] pauseGeoPoints) {
+		pausePoints = pauseGeoPoints;
+	}
+
+	public static void setPauseTimes(Long[] pauseTimes) {
+		pauseTime = pauseTimes;
 	}
 
 	public static String convertLongToString(Long[] array) {
-		String str = "";
+		String s = "";
 		for (int i = 0; i < array.length; i++) {
-			str = str + array[i];
+			s = s + array[i];
 			if (i < array.length - 1)
-				str = str + ",";
+				s = s + ",";
 		}
-		return str;
+		return s;
 	}
 
 	public static String convertDoubleToString(Double[] array) {
-		String str = "";
+		String s = "";
 		for (int i = 0; i < array.length; i++) {
-			str = str + array[i];
+			s = s + array[i];
 			if (i < array.length - 1)
-				str = str + ",";
+				s = s + ",";
 		}
-		return str;
+		return s;
 	}
 
 	public static String convertGeoPointToString(GeoPoint[] array) {
-		String str = "";
+		String s = "";
 		for (int i = 0; i < array.length; i++) {
-			str = str + array[i].getLatitudeE6();
-			str = str + ";";
-			str = str + array[i].getLongitudeE6();
+			s = s + array[i].getLatitudeE6();
+			s = s + ";";
+			s = s + array[i].getLongitudeE6();
 			if (i < array.length - 1)
-				str = str + ",";
+				s = s + ",";
 		}
-		return str;
+		return s;
 	}
 
 }

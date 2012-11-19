@@ -22,22 +22,22 @@ public class TracksActivity extends ListActivity {
 
 		ListView listView = getListView();
 		listView.setTextFilterEnabled(true);
-
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-				DataLayer d = new DataLayer(getBaseContext());
-				String points = d.getStats("point", values[position]);
-				String times = d.getStats("time", values[position]);
-				String alti = d.getStats("alti", values[position]);
-				String pausePoints = d.getStats("pausePoint", values[position]);
-				String pauseTimes = d.getStats("pauseTime", values[position]);
+				DataLayer datLay = new DataLayer(getBaseContext());
+				String points = datLay.getStats("point", values[position]);
+				String times = datLay.getStats("time", values[position]);
+				String alti = datLay.getStats("alti", values[position]);
+				String pausePoints = datLay.getStats("pausePoint", values[position]);
+				String pauseTimes = datLay.getStats("pauseTime", values[position]);
 				FinishActivity.setPoints(convertGeoPointStringToArray(points));
 				FinishActivity.setTimes(convertLongStringToArray(times));
 				FinishActivity.setAltitude(convertDoubleStringToArray(alti));
 				FinishActivity.setPausePoints(convertGeoPointStringToArray(pausePoints));
 				FinishActivity.setPauseTimes(convertLongStringToArray(pauseTimes));
+				FinishActivity.save = false;
 				Intent intent = new Intent(getApplicationContext(), FinishActivity.class);
 				startActivity(intent);
 			}
@@ -49,37 +49,37 @@ public class TracksActivity extends ListActivity {
 		values = v;
 	}
 
-	public static Long[] convertLongStringToArray(String str) {
-		if (str.length() < 1)
+	public static Long[] convertLongStringToArray(String s) {
+		if (s.length() < 1)
 			return new Long[0];
-		String[] arr = str.split(",");
-		Long[] r = new Long[arr.length];
+		String[] arr = s.split(",");
+		Long[] longs = new Long[arr.length];
 		for (int i = 0; i < arr.length; i++)
-			r[i] = Long.parseLong(arr[i]);
-		return r;
+			longs[i] = Long.parseLong(arr[i]);
+		return longs;
 	}
 
-	public static Double[] convertDoubleStringToArray(String str) {
-		if (str.length() < 1)
+	public static Double[] convertDoubleStringToArray(String s) {
+		if (s.length() < 1)
 			return new Double[0];
-		String[] arr = str.split(",");
-		Double[] r = new Double[arr.length];
+		String[] arr = s.split(",");
+		Double[] doubles = new Double[arr.length];
 		for (int i = 0; i < arr.length; i++)
-			r[i] = Double.parseDouble(arr[i]);
-		return r;
+			doubles[i] = Double.parseDouble(arr[i]);
+		return doubles;
 	}
 
-	public static GeoPoint[] convertGeoPointStringToArray(String str) {
-		if (str.length() < 1)
+	public static GeoPoint[] convertGeoPointStringToArray(String s) {
+		if (s.length() < 1)
 			return new GeoPoint[0];
-		String[] arr = str.split(",");
-		GeoPoint[] r = new GeoPoint[arr.length];
-		String[] pt = new String[2];
+		String[] arr = s.split(",");
+		GeoPoint[] geoPoints = new GeoPoint[arr.length];
+		String[] point = new String[2];
 		for (int i = 0; i < arr.length; i++) {
-			pt = arr[i].split(";");
-			r[i] = new GeoPoint(Integer.parseInt(pt[0]), Integer.parseInt(pt[1]));
+			point = arr[i].split(";");
+			geoPoints[i] = new GeoPoint(Integer.parseInt(point[0]), Integer.parseInt(point[1]));
 		}
-		return r;
+		return geoPoints;
 	}
 
 }

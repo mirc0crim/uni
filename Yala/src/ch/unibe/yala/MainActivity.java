@@ -34,6 +34,7 @@ import com.google.android.maps.OverlayItem;
 public class MainActivity extends MapActivity implements LocationListener {
 
 	LocationManager locationManager;
+	LocationListener locListener;
 	Geocoder geocoder;
 	TextView locationText;
 	MapView map;
@@ -89,11 +90,13 @@ public class MainActivity extends MapActivity implements LocationListener {
 		startState = 0;
 		pauseTime = 0l;
 
+		locListener = this;
+
 		mapController = map.getController();
 		mapController.setZoom(19);
 		mapController.animateTo(lastPoint);
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locListener);
 		geocoder = new Geocoder(this);
 		startPin = getResources().getDrawable(R.drawable.startpin);
 		endPin = getResources().getDrawable(R.drawable.endpin);
@@ -124,7 +127,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 			}
 		};
 		builder = new AlertDialog.Builder(this);
-		builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+		builder.setMessage("Reset and Delete Track?").setPositiveButton("Yes", dialogClickListener)
 		.setNegativeButton("No", dialogClickListener);
 	}
 
@@ -137,8 +140,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 		int latitude = (int) (location.getLatitude() * 1000000);
 		int longitude = (int) (location.getLongitude() * 1000000);
 
-		String text = String.format("%f / %f / %d", location.getLatitude(),
-				location.getLongitude(), (int) location.getAltitude());
+		String text = (float) location.getLatitude() + " / " + (float) location.getLongitude()
+				+ " / " + (int) location.getAltitude();
 		locationText.setText(text);
 
 		lastPoint = new GeoPoint(latitude, longitude);
@@ -262,10 +265,11 @@ public class MainActivity extends MapActivity implements LocationListener {
 		pauseTimes = new Long[myPauseTimes.size()];
 		pauseTimes = myPauseTimes.toArray(pauseTimes);
 		FinishActivity.setPauseTimes(pauseTimes);
+		FinishActivity.save = true;
 		if (points.length > 0)
 			lastPoint = points[points.length - 1];
 		doReset();
-		locationManager.removeUpdates(this);
+		locationManager.removeUpdates(locListener);
 		removeNotification();
 		Intent intent = new Intent(this, FinishActivity.class);
 		startActivity(intent);
@@ -276,7 +280,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		super.onResume();
 		calledFinish = false;
 		mapController.animateTo(lastPoint);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locListener);
 		removeNotification();
 	}
 
@@ -284,7 +288,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	protected void onPause() {
 		super.onPause();
 		if (isFinishing()) {
-			locationManager.removeUpdates(this);
+			locationManager.removeUpdates(locListener);
 			removeNotification();
 		} else
 			showRunningNotification();
@@ -311,7 +315,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	protected void onStop() {
 		super.onStop();
 		if (isFinishing()) {
-			locationManager.removeUpdates(this);
+			locationManager.removeUpdates(locListener);
 			removeNotification();
 		} else
 			showRunningNotification();
@@ -320,7 +324,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		locationManager.removeUpdates(this);
+		locationManager.removeUpdates(locListener);
 		removeNotification();
 		finish();
 	}
@@ -328,19 +332,19 @@ public class MainActivity extends MapActivity implements LocationListener {
 	private void showRunningNotification() {
 		if (calledFinish)
 			return;
-		Notification noti = new Notification(R.drawable.ic_launcher, "Yala is still running",
+		Notification noti = new Notification(R.drawable.ic_launcher, "Use back key to end Yala",
 				System.currentTimeMillis());
 		Intent notifyIntent = new Intent(this, MainActivity.class);
 		notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notifyIntent,
 				Notification.FLAG_ONGOING_EVENT);
 		noti.flags = Notification.FLAG_ONGOING_EVENT + Notification.FLAG_AUTO_CANCEL;
-		noti.setLatestEventInfo(this, "Yala", "Use back key to end Yala", contentIntent);
+		noti.setLatestEventInfo(this, "Yala", "Yala is still running", contentIntent);
 		mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mNotificationManager.notify(1, noti);
 	}
 
-	private void removeNotification() {
+	public void removeNotification() {
 		if (mNotificationManager != null)
 			mNotificationManager.cancel(1);
 	}
@@ -361,16 +365,16 @@ public class MainActivity extends MapActivity implements LocationListener {
 			builder.show();
 			break;
 		case R.id.load:
-			DataLayer d = new DataLayer(getBaseContext());
-			String dates = d.getAllDates();
-			String[] da = convertStringToArray(dates);
-			for (int i = 0; i < da.length; i++){
-				Date m = new Date();
-				m.setTime(Long.parseLong(da[i]));
-				da[i] = m.toString();
+			DataLayer datLay = new DataLayer(getBaseContext());
+			String[] dates = convertStringToArray(datLay.getAllDates());
+			for (int i = 0; i < dates.length; i++){
+				Date fullDate = new Date();
+				fullDate.setTime(Long.parseLong(dates[i]));
+				dates[i] = fullDate.toString();
 			}
-			TracksActivity.setValues(da);
-			locationManager.removeUpdates(this);
+			TracksActivity.setValues(dates);
+			calledFinish = true;
+			locationManager.removeUpdates(locListener);
 			removeNotification();
 			Intent intent = new Intent(this, TracksActivity.class);
 			startActivity(intent);
@@ -381,8 +385,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 		return true;
 	}
 
-	public static String[] convertStringToArray(String str) {
-		String[] arr = str.split(",");
+	public static String[] convertStringToArray(String s) {
+		String[] arr = s.split(",");
 		return arr;
 	}
 }
