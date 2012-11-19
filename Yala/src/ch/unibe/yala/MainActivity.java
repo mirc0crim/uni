@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -360,13 +361,19 @@ public class MainActivity extends MapActivity implements LocationListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.reset:
-			if (!started || startOverlay == null)
+			if (!started || startOverlay == null) {
+				Toast.makeText(this, "No recorded Data", Toast.LENGTH_LONG).show();
 				break;
+			}
 			builder.show();
 			break;
 		case R.id.load:
 			DataLayer datLay = new DataLayer(getBaseContext());
 			String[] dates = convertStringToArray(datLay.getAllDates());
+			if (dates[0] == "1") {
+				Toast.makeText(this, "No recent Tracks", Toast.LENGTH_LONG).show();
+				break;
+			}
 			for (int i = 0; i < dates.length; i++){
 				Date fullDate = new Date();
 				fullDate.setTime(Long.parseLong(dates[i]));

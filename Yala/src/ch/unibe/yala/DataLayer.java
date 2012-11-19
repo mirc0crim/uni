@@ -1,5 +1,7 @@
 package ch.unibe.yala;
 
+import java.util.Date;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -34,16 +36,39 @@ public class DataLayer {
 		dbHelper.reset(dbHelper.getWritableDatabase());
 	}
 
-	public String getStats(String s, String d) {
+	public String getStats(String s, int d) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		try {
 			String results = "1";
 			Cursor c = db.rawQuery("select * from yala", null);
 			if (c.getCount() > 0) {
 				c.moveToFirst();
+				for (int i = 0; i < d; i++)
+					c.moveToNext();
 				results = c.getString(c.getColumnIndex(s));
 			}
 			return results;
+		} finally {
+			if (db != null)
+				db.close();
+		}
+	}
+
+	public void deleteRun(int d) {
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		try {
+			String s = "";
+			Cursor c = db.rawQuery("select * from yala", null);
+			if (c.getCount() > 0) {
+				c.moveToFirst();
+				for (int i = 0; i < d; i++)
+					c.moveToNext();
+				s = c.getString(c.getColumnIndex("date"));
+				Date fullDate = new Date();
+				fullDate.setTime(Long.parseLong(s));
+				db.delete("yala", "date" + " = " + s, null);
+			}
+
 		} finally {
 			if (db != null)
 				db.close();

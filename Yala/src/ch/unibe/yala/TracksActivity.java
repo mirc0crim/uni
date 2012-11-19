@@ -1,19 +1,25 @@
 package ch.unibe.yala;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 
 public class TracksActivity extends ListActivity {
 
 	static String[] values;
+	AlertDialog.Builder builder;
+	int pos;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,11 +33,11 @@ public class TracksActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 				DataLayer datLay = new DataLayer(getBaseContext());
-				String points = datLay.getStats("point", values[position]);
-				String times = datLay.getStats("time", values[position]);
-				String alti = datLay.getStats("alti", values[position]);
-				String pausePoints = datLay.getStats("pausePoint", values[position]);
-				String pauseTimes = datLay.getStats("pauseTime", values[position]);
+				String points = datLay.getStats("point", position);
+				String times = datLay.getStats("time", position);
+				String alti = datLay.getStats("alti", position);
+				String pausePoints = datLay.getStats("pausePoint", position);
+				String pauseTimes = datLay.getStats("pauseTime", position);
 				FinishActivity.setPoints(convertGeoPointStringToArray(points));
 				FinishActivity.setTimes(convertLongStringToArray(times));
 				FinishActivity.setAltitude(convertDoubleStringToArray(alti));
@@ -43,6 +49,37 @@ public class TracksActivity extends ListActivity {
 			}
 		});
 
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				pos = position;
+				builder.show();
+				return true;
+			}
+		});
+
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					doDelete();
+					break;
+				case DialogInterface.BUTTON_NEGATIVE:
+					break;
+				}
+			}
+		};
+		builder = new AlertDialog.Builder(this);
+		builder.setMessage("Delete Track?").setPositiveButton("Yes", dialogClickListener)
+				.setNegativeButton("No", dialogClickListener);
+
+	}
+
+	private void doDelete() {
+		DataLayer datLay = new DataLayer(getBaseContext());
+		datLay.deleteRun(pos);
+		Toast.makeText(getApplicationContext(), "Track will be deleted", Toast.LENGTH_LONG).show();
 	}
 
 	public static void setValues(String[] v) {
