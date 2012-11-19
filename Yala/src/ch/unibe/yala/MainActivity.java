@@ -361,7 +361,15 @@ public class MainActivity extends MapActivity implements LocationListener {
 			builder.show();
 			break;
 		case R.id.load:
-			TracksActivity.setValues(new String[] { "1", "2" });
+			DataLayer d = new DataLayer(getBaseContext());
+			String dates = d.getAllDates();
+			String[] da = convertStringToArray(dates);
+			for (int i = 0; i < da.length; i++){
+				Date m = new Date();
+				m.setTime(Long.parseLong(da[i]));
+				da[i] = m.toString();
+			}
+			TracksActivity.setValues(da);
 			locationManager.removeUpdates(this);
 			removeNotification();
 			Intent intent = new Intent(this, TracksActivity.class);
@@ -371,5 +379,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 			break;
 		}
 		return true;
+	}
+
+	public static String[] convertStringToArray(String str) {
+		String[] arr = str.split(",");
+		return arr;
 	}
 }

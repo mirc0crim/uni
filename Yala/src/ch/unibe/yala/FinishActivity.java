@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -204,6 +205,11 @@ public class FinishActivity extends MapActivity {
 			routeMap.getOverlays().add(pauseOverlay);
 		}
 
+		DataLayer d = new DataLayer(getBaseContext());
+		d.addRun(new Date().getTime() + "", convertGeoPointToString(pts), convertLongToString(tm),
+				convertDoubleToString(alt), convertLongToString(paTm),
+				convertGeoPointToString(paPts));
+
 		pd.dismiss();
 
 	}
@@ -221,10 +227,6 @@ public class FinishActivity extends MapActivity {
 	private double maxValue(Double[] myArray) {
 		List<Double> b = Arrays.asList(myArray);
 		return Collections.max(b);
-	}
-
-	private double avgValue(Double[] myArray) {
-		return (maxValue(myArray) + minValue(myArray)) / 2;
 	}
 
 	private String secToTimeString(long s) {
@@ -273,6 +275,38 @@ public class FinishActivity extends MapActivity {
 
 	public static void setPauseTimes(Long[] pt) {
 		paTm = pt;
+	}
+
+	public static String convertLongToString(Long[] array) {
+		String str = "";
+		for (int i = 0; i < array.length; i++) {
+			str = str + array[i];
+			if (i < array.length - 1)
+				str = str + ",";
+		}
+		return str;
+	}
+
+	public static String convertDoubleToString(Double[] array) {
+		String str = "";
+		for (int i = 0; i < array.length; i++) {
+			str = str + array[i];
+			if (i < array.length - 1)
+				str = str + ",";
+		}
+		return str;
+	}
+
+	public static String convertGeoPointToString(GeoPoint[] array) {
+		String str = "";
+		for (int i = 0; i < array.length; i++) {
+			str = str + array[i].getLatitudeE6();
+			str = str + ";";
+			str = str + array[i].getLongitudeE6();
+			if (i < array.length - 1)
+				str = str + ",";
+		}
+		return str;
 	}
 
 }
