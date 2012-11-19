@@ -27,6 +27,11 @@ import com.google.android.maps.OverlayItem;
 public class FinishActivity extends MapActivity {
 
 	ProgressDialog pd;
+	static GeoPoint[] pts;
+	static Long[] tm;
+	static Double[] alt;
+	static GeoPoint[] paPts;
+	static Long[] paTm;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,21 +63,20 @@ public class FinishActivity extends MapActivity {
 		float maxAlti;
 
 		TextView stats = (TextView) findViewById(R.id.stats);
-		int ptsLen = MainActivity.points.length;
+		int ptsLen = pts.length;
 		if (ptsLen > 1) {
 			pd.setProgress(5);
 			for (int i = 0; i < ptsLen - 1; i++) {
 				float[] result = new float[3];
-				Location.distanceBetween(MainActivity.points[i].getLatitudeE6() / 1E6,
-						MainActivity.points[i].getLongitudeE6() / 1E6,
-						MainActivity.points[i + 1].getLatitudeE6() / 1E6,
-						MainActivity.points[i + 1].getLongitudeE6() / 1E6, result);
+				Location.distanceBetween(pts[i].getLatitudeE6() / 1E6,
+						pts[i].getLongitudeE6() / 1E6, pts[i + 1].getLatitudeE6() / 1E6,
+						pts[i + 1].getLongitudeE6() / 1E6, result);
 				myDistances.add(Double.valueOf(result[0]));
-				double timeDiff = MainActivity.times[i + 1] - MainActivity.times[i];
+				double timeDiff = tm[i + 1] - tm[i];
 				myTimes.add(timeDiff / 1000);
-				myHeight.add(MainActivity.alti[i]);
+				myHeight.add(alt[i]);
 			}
-			myHeight.add(MainActivity.alti[ptsLen - 1]);
+			myHeight.add(alt[ptsLen - 1]);
 
 			times = new Double[myTimes.size()];
 			times = myTimes.toArray(times);
@@ -110,7 +114,7 @@ public class FinishActivity extends MapActivity {
 			maxAlti = Math.round(maxValue(height));
 
 			long sec = 0;
-			sec = (MainActivity.times[MainActivity.times.length - 1] - MainActivity.times[0]) / 1000;
+			sec = (tm[tm.length - 1] - tm[0]) / 1000;
 			double elev = Math.round(maxValue(height)) - Math.round(minValue(height));
 			double dist = 0;
 			for (Double distance : distances)
@@ -157,8 +161,8 @@ public class FinishActivity extends MapActivity {
 		MapController mMapController = routeMap.getController();
 		mMapController.setZoom(19);
 		if (ptsLen > 0) {
-			mMapController.setCenter(MainActivity.points[0]);
-			MyMapOverlay mapOvlay = new MyMapOverlay(MainActivity.points);
+			mMapController.setCenter(pts[0]);
+			MyMapOverlay mapOvlay = new MyMapOverlay(pts);
 			routeMap.getOverlays().add(mapOvlay);
 		}
 		if (ptsLen > 1) {
@@ -166,8 +170,8 @@ public class FinishActivity extends MapActivity {
 			Drawable endPin = getResources().getDrawable(R.drawable.endpin);
 			MyItemOverlay startOverlay = new MyItemOverlay(startPin, this);
 			MyItemOverlay endOverlay = new MyItemOverlay(endPin, this);
-			OverlayItem startItem = new OverlayItem(MainActivity.points[0], "Start", "");
-			OverlayItem endItem = new OverlayItem(MainActivity.points[ptsLen - 1], "End", "");
+			OverlayItem startItem = new OverlayItem(pts[0], "Start", "");
+			OverlayItem endItem = new OverlayItem(pts[ptsLen - 1], "End", "");
 			startOverlay.addOverlay(startItem);
 			endOverlay.addOverlay(endItem);
 			routeMap.getOverlays().add(startOverlay);
@@ -178,11 +182,11 @@ public class FinishActivity extends MapActivity {
 
 		Drawable pausePin = getResources().getDrawable(R.drawable.pausepin);
 		MyItemOverlay pauseOverlay = new MyItemOverlay(pausePin, this);
-		for (int i = 0; i < MainActivity.pauseTimes.length; i++) {
-			long sec = MainActivity.pauseTimes[i] / 1000;
+		for (int i = 0; i < paTm.length; i++) {
+			long sec = paTm[i] / 1000;
 			String locTitle = "Paused: " + secToTimeString(sec) + "\n";
 			String locSnippet = "";
-			GeoPoint point = MainActivity.pausePoints[i];
+			GeoPoint point = paPts[i];
 			if (isConnected())
 				try {
 					List<Address> addresses = new Geocoder(this).getFromLocation(
@@ -250,6 +254,25 @@ public class FinishActivity extends MapActivity {
 			return true;
 		else
 			return false;
+	}
+
+	public static void setPoints(GeoPoint[] p) {
+		pts = p;
+	}
+	public static void setTimes(Long[] t) {
+		tm = t;
+	}
+
+	public static void setAltitude(Double[] a) {
+		alt = a;
+	}
+
+	public static void setPausePoints(GeoPoint[] pp) {
+		paPts = pp;
+	}
+
+	public static void setPauseTimes(Long[] pt) {
+		paTm = pt;
 	}
 
 }

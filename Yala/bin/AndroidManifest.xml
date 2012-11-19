@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".FinishActivity" />
+        <activity android:name=".TracksActivity" />
         <uses-library android:name="com.google.android.maps" />
     </application>
 

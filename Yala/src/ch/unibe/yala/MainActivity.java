@@ -112,6 +112,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		myPauseTimes = new ArrayList<Long>();
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case DialogInterface.BUTTON_POSITIVE:
@@ -127,6 +128,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		.setNegativeButton("No", dialogClickListener);
 	}
 
+	@Override
 	public void onLocationChanged(Location location) {
 
 		if (paused)
@@ -247,14 +249,19 @@ public class MainActivity extends MapActivity implements LocationListener {
 		paused = false;
 		points = new GeoPoint[myPoints.size()];
 		points = myPoints.toArray(points);
+		FinishActivity.setPoints(points);
 		times = new Long[myTimes.size()];
 		times = myTimes.toArray(times);
+		FinishActivity.setTimes(times);
 		alti = new Double[myAlti.size()];
 		alti = myAlti.toArray(alti);
+		FinishActivity.setAltitude(alti);
 		pausePoints = new GeoPoint[myPausePoints.size()];
 		pausePoints = myPausePoints.toArray(pausePoints);
+		FinishActivity.setPausePoints(pausePoints);
 		pauseTimes = new Long[myPauseTimes.size()];
 		pauseTimes = myPauseTimes.toArray(pauseTimes);
+		FinishActivity.setPauseTimes(pauseTimes);
 		if (points.length > 0)
 			lastPoint = points[points.length - 1];
 		doReset();
@@ -283,12 +290,15 @@ public class MainActivity extends MapActivity implements LocationListener {
 			showRunningNotification();
 	}
 
+	@Override
 	public void onProviderDisabled(String provider) {
 	}
 
+	@Override
 	public void onProviderEnabled(String provider) {
 	}
 
+	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
@@ -349,6 +359,13 @@ public class MainActivity extends MapActivity implements LocationListener {
 			if (!started || startOverlay == null)
 				break;
 			builder.show();
+			break;
+		case R.id.load:
+			TracksActivity.setValues(new String[] { "1", "2" });
+			locationManager.removeUpdates(this);
+			removeNotification();
+			Intent intent = new Intent(this, TracksActivity.class);
+			startActivity(intent);
 			break;
 		default:
 			break;

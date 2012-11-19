@@ -7,5 +7,6 @@
     <string name="reset">Reset</string>
     <string name="finish">Finish</string>
     <string name="stats">Statistics\n\nare\n\nevaluated\n</string>
+    <string name="load">Load</string>
 
 </resources>
