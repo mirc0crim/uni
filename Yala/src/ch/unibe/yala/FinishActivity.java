@@ -143,7 +143,7 @@ public class FinishActivity extends MapActivity {
 
 		MapView routeMap = (MapView) findViewById(R.id.route);
 		MapController mMapController = routeMap.getController();
-		mMapController.setZoom(19);
+		mMapController.setZoom(17);
 		if (ptsLen > 0) {
 			mMapController.setCenter(movingPoints[0]);
 			MyMapOverlay mapOvlay = new MyMapOverlay(movingPoints);

@@ -5,6 +5,7 @@ import java.util.Date;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 
 public class DataLayer {
@@ -68,6 +69,7 @@ public class DataLayer {
 				fullDate.setTime(Long.parseLong(s));
 				db.delete("yala", "date" + " = " + s, null);
 			}
+		} catch (CursorIndexOutOfBoundsException e) {
 
 		} finally {
 			if (db != null)

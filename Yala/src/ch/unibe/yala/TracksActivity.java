@@ -1,7 +1,9 @@
 package ch.unibe.yala;
 
+import java.util.List;
+
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,22 +13,24 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 
-public class TracksActivity extends ListActivity {
+public class TracksActivity extends Activity {
 
-	static String[] values;
+	static List<String> values;
 	AlertDialog.Builder builder;
 	int pos;
+	ArrayAdapter<String> aAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setListAdapter(new ArrayAdapter<String>(this, R.layout.activity_tracks, values));
+		setContentView(R.layout.activity_tracks);
 
-		ListView listView = getListView();
+		ListView listView = (ListView) findViewById(R.id.list);
+		aAdapter = new ArrayAdapter<String>(this, R.layout.activity_tracks, R.id.info, values);
+		listView.setAdapter(aAdapter);
 		listView.setTextFilterEnabled(true);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -73,16 +77,16 @@ public class TracksActivity extends ListActivity {
 		builder = new AlertDialog.Builder(this);
 		builder.setMessage("Delete Track?").setPositiveButton("Yes", dialogClickListener)
 				.setNegativeButton("No", dialogClickListener);
-
 	}
 
 	private void doDelete() {
 		DataLayer datLay = new DataLayer(getBaseContext());
 		datLay.deleteRun(pos);
-		Toast.makeText(getApplicationContext(), "Track will be deleted", Toast.LENGTH_LONG).show();
+		aAdapter.remove(values.get(pos));
+		aAdapter.notifyDataSetChanged();
 	}
 
-	public static void setValues(String[] v) {
+	public static void setValues(List<String> v) {
 		values = v;
 	}
 

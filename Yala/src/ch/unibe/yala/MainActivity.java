@@ -1,7 +1,9 @@
 package ch.unibe.yala;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -70,6 +72,9 @@ public class MainActivity extends MapActivity implements LocationListener {
 	static GeoPoint[] pausePoints;
 	List<Long> myPauseTimes;
 	static Long[] pauseTimes;
+	Long lastTime;
+	final long minTime = 0;
+	final float minDistance = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -90,14 +95,16 @@ public class MainActivity extends MapActivity implements LocationListener {
 		lastAlti = 0d;
 		startState = 0;
 		pauseTime = 0l;
+		lastTime = new Date().getTime();
 
 		locListener = this;
 
 		mapController = map.getController();
-		mapController.setZoom(19);
+		mapController.setZoom(10);
 		mapController.animateTo(lastPoint);
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance,
+				locListener);
 		geocoder = new Geocoder(this);
 		startPin = getResources().getDrawable(R.drawable.startpin);
 		endPin = getResources().getDrawable(R.drawable.endpin);
@@ -138,6 +145,11 @@ public class MainActivity extends MapActivity implements LocationListener {
 		if (paused)
 			return;
 
+		if (new Date().getTime() - lastTime < 1000)
+			return;
+
+		lastTime = new Date().getTime();
+
 		int latitude = (int) (location.getLatitude() * 1000000);
 		int longitude = (int) (location.getLongitude() * 1000000);
 
@@ -150,7 +162,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		mapController.animateTo(point);
 
 		if (!started) {
-			mapController.setZoom(19);
+			mapController.setZoom(18);
 			return;
 		}
 
@@ -281,7 +293,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 		super.onResume();
 		calledFinish = false;
 		mapController.animateTo(lastPoint);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance,
+				locListener);
 		removeNotification();
 	}
 
@@ -379,7 +392,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 				fullDate.setTime(Long.parseLong(dates[i]));
 				dates[i] = fullDate.toString();
 			}
-			TracksActivity.setValues(dates);
+			List<String> lSt = new LinkedList<String>(Arrays.asList(dates));
+			TracksActivity.setValues(lSt);
 			calledFinish = true;
 			locationManager.removeUpdates(locListener);
 			removeNotification();
