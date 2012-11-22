@@ -95,7 +95,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		lastAlti = 0d;
 		startState = 0;
 		pauseTime = 0l;
-		lastTime = new Date().getTime();
+		lastTime = new Date().getTime() + 2500;
 
 		locListener = this;
 
@@ -145,17 +145,16 @@ public class MainActivity extends MapActivity implements LocationListener {
 		if (paused)
 			return;
 
-		if (new Date().getTime() - lastTime < 1000)
-			return;
-
-		lastTime = new Date().getTime();
-
 		int latitude = (int) (location.getLatitude() * 1000000);
 		int longitude = (int) (location.getLongitude() * 1000000);
 
 		String text = (float) location.getLatitude() + " / " + (float) location.getLongitude()
 				+ " / " + (int) location.getAltitude();
 		locationText.setText(text);
+
+		if (new Date().getTime() - lastTime < 2500)
+			return;
+		lastTime = new Date().getTime();
 
 		lastPoint = new GeoPoint(latitude, longitude);
 		GeoPoint point = new GeoPoint(latitude, longitude);

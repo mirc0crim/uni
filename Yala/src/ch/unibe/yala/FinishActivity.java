@@ -84,6 +84,8 @@ public class FinishActivity extends MapActivity {
 			double thatTime = 0;
 			for (int i = 0; i < distances.length; i++) {
 				speeds[i] = distances[i] / times[i];
+				if (i > 0)
+					speeds[i] = (speeds[i] + speeds[i - 1]) / 2;
 				gvdS[i] = new GraphViewData(thatTime, speeds[i]);
 				thatTime += times[i];
 			}
