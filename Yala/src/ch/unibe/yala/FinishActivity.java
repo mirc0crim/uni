@@ -93,8 +93,10 @@ public class FinishActivity extends MapActivity {
 			}
 			thatTime = 0;
 			for (int i = 0; i < height.length; i++) {
-				if (i > 0)
+				if (i > 0) {
 					thatTime += times[i - 1];
+					height[i] = (height[i] + height[i - 1]) / 2;
+				}
 				gvdA[i] = new GraphViewData(thatTime, height[i]);
 			}
 			maxS = maxValue(speeds);
@@ -108,8 +110,8 @@ public class FinishActivity extends MapActivity {
 			vLabSpeed[2] = Math.round((maxS - (maxS - minS) / 2) * 3.6) + " km/h";
 			vLabSpeed[3] = Math.round((maxS - (maxS - minS) / 4) * 3.6) + " km/h";
 			vLabSpeed[4] = Math.round(maxS * 3.6) + " km/h";
-			maxA = maxValue(height);
-			minA = minValue(height);
+			maxA = maxValue(height) + 2;
+			minA = minValue(height) - 2;
 			if (maxA - minA == 0) {
 				minA--;
 				maxA++;
