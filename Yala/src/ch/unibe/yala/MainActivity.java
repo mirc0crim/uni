@@ -95,7 +95,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		lastAlti = 0d;
 		startState = 0;
 		pauseTime = 0l;
-		lastTime = new Date().getTime() + 2500;
+		lastTime = new Date().getTime();
 
 		locListener = this;
 
@@ -152,10 +152,6 @@ public class MainActivity extends MapActivity implements LocationListener {
 				+ " / " + (int) location.getAltitude();
 		locationText.setText(text);
 
-		if (new Date().getTime() - lastTime < 2500)
-			return;
-		lastTime = new Date().getTime();
-
 		lastPoint = new GeoPoint(latitude, longitude);
 		GeoPoint point = new GeoPoint(latitude, longitude);
 		mapController.animateTo(point);
@@ -164,6 +160,10 @@ public class MainActivity extends MapActivity implements LocationListener {
 			mapController.setZoom(18);
 			return;
 		}
+
+		if (new Date().getTime() - lastTime < 2500)
+			return;
+		lastTime = new Date().getTime();
 
 		myPoints.add(new GeoPoint(latitude, longitude));
 		myTimes.add(new Date().getTime() - pauseTime);
@@ -234,6 +234,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 			startButton.setText("Pause");
 			startState = 1;
 			locationText.setText("Waiting for GPS signal");
+			lastTime = new Date().getTime();
 			break;
 		case 1:
 			startButton.setText("Resume");
