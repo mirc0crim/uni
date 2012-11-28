@@ -15,9 +15,11 @@ public class GraphView extends View {
 	private String[] horlabels;
 	private String[] verlabels;
 	private String title;
-	private float speed;
+	private double min;
+	private double max;
 
-	public GraphView(Context context, GraphViewData[] values, String title, String[] horlabels, String[] verlabels, float speed) {
+	public GraphView(Context context, GraphViewData[] values, String title, String[] horlabels,
+			String[] verlabels, double minValue, double maxValue) {
 		super(context);
 		if (values == null)
 			values = new GraphViewData[0];
@@ -36,7 +38,8 @@ public class GraphView extends View {
 		else
 			this.verlabels = verlabels;
 
-		this.speed = speed;
+		min = minValue;
+		max = maxValue;
 		paintBackground.setARGB(255, 10, 20, 30);
 		paintBackground.setStrokeCap(Paint.Cap.ROUND);
 		paintBackground.setStrokeWidth(4);
@@ -95,13 +98,13 @@ public class GraphView extends View {
 		float endX = 0;
 		float endY = 0;
 
-		double unitX = graphwidth / values[values.length-1].valueX;
-		double unitY = graphheight / speed;
+		double unitX = graphwidth / values[values.length - 1].valueX;
+		double unitY = graphheight / (max - min);
 		for (int i = 0; i < values.length-1; i++){
 			startX = (float) (horstart + values[i].valueX * unitX);
 			endX = (float) (horstart + values[i+1].valueX * unitX);
-			startY = (float) (graphheight + border - values[i].valueY * unitY);
-			endY = (float) (graphheight + border - values[i + 1].valueY * unitY);
+			startY = (float) (graphheight + border - (values[i].valueY - min) * unitY);
+			endY = (float) (graphheight + border - (values[i + 1].valueY - min) * unitY);
 			canvas.drawLine(startX, startY, endX, endY, paint);
 		}
 	}

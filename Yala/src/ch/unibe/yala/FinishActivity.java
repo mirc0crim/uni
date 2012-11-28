@@ -53,8 +53,10 @@ public class FinishActivity extends MapActivity {
 		String[] vLabSpeed = new String[5];
 		String[] vLabAlt = new String[5];
 
-		float maxSpeed;
-		float maxAlt;
+		double maxS;
+		double maxA;
+		double minS;
+		double minA;
 
 		TextView stats = (TextView) findViewById(R.id.stats);
 		int ptsLen = movingPoints.length;
@@ -95,18 +97,28 @@ public class FinishActivity extends MapActivity {
 					thatTime += times[i - 1];
 				gvdA[i] = new GraphViewData(thatTime, height[i]);
 			}
-			vLabSpeed[0] = "0 km/h";
-			vLabSpeed[1] = Math.round(maxValue(speeds) / 4 * 3.6) + " km/h";
-			vLabSpeed[2] = Math.round(maxValue(speeds) / 2 * 3.6) + " km/h";
-			vLabSpeed[3] = Math.round(maxValue(speeds) * 3 / 4 * 3.6) + " km/h";
-			vLabSpeed[4] = Math.round(maxValue(speeds) * 3.6) + " km/h";
-			maxSpeed = Math.round(maxValue(speeds));
-			vLabAlt[0] = "0 m";
-			vLabAlt[1] = Math.round(maxValue(height) / 4) + " m";
-			vLabAlt[2] = Math.round(maxValue(height) / 2) + " m";
-			vLabAlt[3] = Math.round(maxValue(height) * 3 / 4) + " m";
-			vLabAlt[4] = Math.round(maxValue(height)) + " m";
-			maxAlt = Math.round(maxValue(height));
+			maxS = maxValue(speeds);
+			minS = minValue(speeds);
+			if (maxS - minS == 0) {
+				minS--;
+				maxS++;
+			}
+			vLabSpeed[0] = Math.round(minS) + " km/h";
+			vLabSpeed[1] = Math.round((maxS - (maxS - minS) * 3 / 4) * 3.6) + " km/h";
+			vLabSpeed[2] = Math.round((maxS - (maxS - minS) / 2) * 3.6) + " km/h";
+			vLabSpeed[3] = Math.round((maxS - (maxS - minS) / 4) * 3.6) + " km/h";
+			vLabSpeed[4] = Math.round(maxS * 3.6) + " km/h";
+			maxA = maxValue(height);
+			minA = minValue(height);
+			if (maxA - minA == 0) {
+				minA--;
+				maxA++;
+			}
+			vLabAlt[0] = Math.round(minA) + " m";
+			vLabAlt[1] = Math.round(maxA - (maxA - minA) * 3 / 4) + " m";
+			vLabAlt[2] = Math.round(maxA - (maxA - minA) / 2) + " m";
+			vLabAlt[3] = Math.round(maxA - (maxA - minA) / 4) + " m";
+			vLabAlt[4] = Math.round(maxA) + " m";
 
 			long sec = 0;
 			sec = (movingTimes[movingTimes.length - 1] - movingTimes[0]) / 1000;
@@ -126,9 +138,11 @@ public class FinishActivity extends MapActivity {
 			gvdS = new GraphViewData[] { new GraphViewData(1, 2.0d), new GraphViewData(2, 3.0d) };
 			gvdA = new GraphViewData[] { new GraphViewData(1, 3.0d), new GraphViewData(2, 2.0d) };
 			vLabSpeed = new String[] { "slow", "", "average", "", "fast" };
-			maxSpeed = 5;
+			maxS = 5;
+			minS = 0;
 			vLabAlt = new String[] { "low", "", "average", "", "high" };
-			maxAlt = 5;
+			maxA = 5;
+			minA = 0;
 			stats.setText("Duration: 0:0:0 (h:m:s)\n");
 			stats.append("Elevation: 0 m\n");
 			stats.append("Average Speed: 0 km/h (0 m/s)\n");
@@ -136,10 +150,10 @@ public class FinishActivity extends MapActivity {
 		}
 
 		String[] hLab = new String[] { "Start", "Middle", "End" };
-		GraphView graphSpeed = new GraphView(this, gvdS, "Speed/Time", hLab, vLabSpeed, maxSpeed);
+		GraphView graphSpeed = new GraphView(this, gvdS, "Speed/Time", hLab, vLabSpeed, minS, maxS);
 		LinearLayout layoutSpeed = (LinearLayout) findViewById(R.id.graphSpeed);
 		layoutSpeed.addView(graphSpeed);
-		GraphView graphAlti = new GraphView(this, gvdA, "Altitude/Time", hLab, vLabAlt, maxAlt);
+		GraphView graphAlti = new GraphView(this, gvdA, "Altitude/Time", hLab, vLabAlt, minA, maxA);
 		LinearLayout layoutAlti = (LinearLayout) findViewById(R.id.graphAlti);
 		layoutAlti.addView(graphAlti);
 
