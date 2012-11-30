@@ -47,6 +47,11 @@ public class FinishActivity extends MapActivity {
 		List<Double> myTimes = new ArrayList<Double>();
 		List<Double> myHeight = new ArrayList<Double>();
 
+		List<Long> sectionTime = new ArrayList<Long>();
+		List<Long> sectionDistance = new ArrayList<Long>();
+		List<Double> sectionHeight = new ArrayList<Double>();
+		int lastSectionEnd = 0;
+
 		Double[] distances;
 		Double[] times;
 		Double[] speeds;
@@ -69,6 +74,7 @@ public class FinishActivity extends MapActivity {
 		TextView stats = (TextView) findViewById(R.id.stats);
 		int ptsLen = movingPoints.length;
 		if (ptsLen > 1) {
+			int j = 0;
 			for (int i = 0; i < ptsLen - 1; i++) {
 				float[] result = new float[3];
 				Location.distanceBetween(movingPoints[i].getLatitudeE6() / 1E6,
@@ -78,6 +84,33 @@ public class FinishActivity extends MapActivity {
 				double timeDiff = movingTimes[i + 1] - movingTimes[i];
 				myTimes.add(timeDiff / 1000);
 				myHeight.add(altitudes[i]);
+				if (j <= pauseTime.length) {
+					if (j< pauseTime.length)
+						Location.distanceBetween(movingPoints[i].getLatitudeE6() / 1E6,
+								movingPoints[i].getLongitudeE6() / 1E6,
+								pausePoints[j].getLatitudeE6() / 1E6,
+								pausePoints[j].getLongitudeE6() / 1E6, result);
+					else if (i == movingPoints.length - 2)
+						result[0] = 1;
+					else
+						result[0] = 5;
+					if (result[0] < 2) {
+						long secTimeDiff = 0;
+						for (int k = lastSectionEnd; k <= i; k++)
+							secTimeDiff += myTimes.get(k);
+						long distDiff = 0;
+						for (int k = lastSectionEnd; k <= i; k++)
+							distDiff += myDistances.get(k);
+						Double[] secHeight = new Double[myHeight.size() - lastSectionEnd];
+						for (int k = lastSectionEnd; k <= i; k++)
+							secHeight[k - lastSectionEnd] = myHeight.get(k);
+						sectionDistance.add(distDiff);
+						sectionTime.add(secTimeDiff);
+						sectionHeight.add(maxValue(secHeight) - minValue(secHeight));
+						lastSectionEnd = i;
+						j++;
+					}
+				}
 			}
 			myHeight.add(altitudes[ptsLen - 1]);
 
@@ -130,20 +163,14 @@ public class FinishActivity extends MapActivity {
 			vLabAlt[3] = Math.round(maxA - (maxA - minA) / 4) + " m";
 			vLabAlt[4] = Math.round(maxA) + " m";
 
-			long sec = 0;
-			sec = (movingTimes[movingTimes.length - 1] - movingTimes[0]) / 1000;
-			double elev = Math.round(maxValue(height)) - Math.round(minValue(height));
-			double dist = 0;
-			for (Double distance : distances)
-				dist += distance;
-			stats.setText("Duration: " + secToTimeString(sec) + "\n");
-			stats.append("Elevation: " + elev + " m\n");
-			stats.append("Avg Speed: " + Math.round(dist / sec * 3.6) + " km/h ("
-					+ Math.round(dist / sec) + " m/s)\n");
-			if (dist > 1000)
-				stats.append("Distance: " + Math.round(dist / 10) / 100f + " km");
-			else
-				stats.append("Distance: " + (int) dist + " m");
+			stats.setText("----Overall Statistics----\n");
+			stats.append(makeStatsFromArray(height, distances, movingTimes));
+			for (int k = 0; k < sectionHeight.size(); k++) {
+				stats.append("----Section " + k + "----\n");
+				stats.append(makeStats(sectionHeight.get(k), sectionDistance.get(k),
+						sectionTime.get(k)));
+			}
+
 		} else {
 			gvdS = new GraphViewData[] { new GraphViewData(1, 2.0d), new GraphViewData(2, 3.0d) };
 			gvdA = new GraphViewData[] { new GraphViewData(1, 3.0d), new GraphViewData(2, 2.0d) };
@@ -191,7 +218,11 @@ public class FinishActivity extends MapActivity {
 		Drawable pausePin = getResources().getDrawable(R.drawable.pausepin);
 		MyItemOverlay pauseOverlay = new MyItemOverlay(pausePin, this);
 		for (int i = 0; i < pauseTime.length; i++) {
-			long sec = pauseTime[i] / 1000;
+			long sec;
+			if (i==0)
+				sec = pauseTime[i] / 1000;
+			else
+				sec = (pauseTime[i] - pauseTime[i - 1]) / 1000;
 			String locTitle = "Paused: " + secToTimeString(sec) + "\n";
 			String locSnippet = "";
 			GeoPoint point = pausePoints[i];
@@ -218,6 +249,39 @@ public class FinishActivity extends MapActivity {
 					convertLongToString(pauseTime), convertGeoPointToString(pausePoints));
 		}
 
+	}
+
+	private String makeStatsFromArray(Double[] h, Double[] d, Long[] t) {
+		String s = "";
+		long sec = 0;
+		double dist = 0;
+		sec = (t[t.length - 1] - t[0]) / 1000;
+		double elev = Math.round(maxValue(h)) - Math.round(minValue(h));
+		for (Double distance : d)
+			dist += distance;
+		s += "Duration: " + secToTimeString(sec) + "\n";
+		s += "Elevation: " + elev + " m\n";
+		s += "Avg Speed: " + Math.round(dist / sec * 3.6) + " km/h (" + Math.round(dist / sec)
+				+ " m/s)\n";
+		if (dist > 1000)
+			s += "Distance: " + Math.round(dist / 10) / 100f + " km\n";
+		else
+			s += "Distance: " + (int) dist + " m\n";
+		return s;
+	}
+
+	private String makeStats(Double h, Long dist, Long sec) {
+		String s = "";
+		double elev = Math.round(h);
+		s += "Duration: " + secToTimeString(sec) + "\n";
+		s += "Elevation: " + elev + " m\n";
+		s += "Avg Speed: " + Math.round(dist / sec * 3.6) + " km/h (" + Math.round(dist / sec)
+				+ " m/s)\n";
+		if (dist > 1000)
+			s += "Distance: " + Math.round(dist / 10) / 100f + " km\n";
+		else
+			s += "Distance: " + dist.intValue() + " m\n";
+		return s;
 	}
 
 	public void viewClick(View view) {

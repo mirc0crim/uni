@@ -245,7 +245,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 			break;
 		case 2:
 			startButton.setText("Pause");
-			pauseTime = new Date().getTime() - pauseBegin;
+			pauseTime += new Date().getTime() - pauseBegin;
 			paused = false;
 			myPauseTimes.add(pauseTime);
 			myPausePoints.add(lastPoint);
