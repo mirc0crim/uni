@@ -4,7 +4,9 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,16 +14,24 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 
 public class TracksActivity extends Activity {
 
 	static List<String> values;
-	AlertDialog.Builder builder;
+	AlertDialog.Builder deleteBuilder;
+	AlertDialog.Builder chooseBuilder;
 	int pos;
 	ArrayAdapter<String> aAdapter;
+	EditText et;
+	TextView tv;
+	Dialog di;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,38 +62,75 @@ public class TracksActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				pos = position;
-				builder.show();
+				chooseBuilder.show();
 				return true;
 			}
 		});
 
-		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+		DialogInterface.OnClickListener deleteDialog = new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case DialogInterface.BUTTON_POSITIVE:
-					doDelete();
+					DataLayer datLay = new DataLayer(getBaseContext());
+					datLay.deleteRun(pos);
+					aAdapter.remove(values.get(pos));
+					aAdapter.notifyDataSetChanged();
 					break;
 				case DialogInterface.BUTTON_NEGATIVE:
 					break;
 				}
 			}
 		};
-		builder = new AlertDialog.Builder(this);
-		builder.setMessage("Delete Track?").setPositiveButton("Yes", dialogClickListener)
-				.setNegativeButton("No", dialogClickListener);
-	}
+		deleteBuilder = new AlertDialog.Builder(this);
+		deleteBuilder.setMessage("Delete Track?");
+		deleteBuilder.setPositiveButton("Yes", deleteDialog);
+		deleteBuilder.setNegativeButton("No", deleteDialog);
 
-	private void doDelete() {
-		DataLayer datLay = new DataLayer(getBaseContext());
-		datLay.deleteRun(pos);
-		aAdapter.remove(values.get(pos));
-		aAdapter.notifyDataSetChanged();
+		chooseBuilder = new AlertDialog.Builder(this);
+		chooseBuilder.setTitle("Choose action");
+		chooseBuilder.setItems(new String[] { "Delete", "Rename" }, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (which == 0)
+					deleteBuilder.show();
+				else{
+					tv.setText(values.get(pos));
+					di.show();
+				}
+			}
+		});
+
+		di = new Dialog(this);
+		di.setContentView(R.layout.dialog_rename);
+		di.setTitle("Rename");
+		et = (EditText) di.findViewById(R.id.newName);
+		tv = (TextView) di.findViewById(R.id.renameDialog);
+		Button noRenBut = (Button) di.findViewById(R.id.noRename);
+		noRenBut.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				di.dismiss();
+			}
+		});
+		Button renBut = (Button) di.findViewById(R.id.doRename);
+		renBut.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				DataLayer datLay = new DataLayer(getBaseContext());
+				String s = et.getText().toString();
+				if (s.length() > 0) {
+					datLay.setName(s, pos);
+					Toast.makeText(getBaseContext(), values.get(pos) + " will be renamed to " + s,
+							Toast.LENGTH_LONG).show();
+				}
+				di.dismiss();
+			}
+		});
 	}
 
 	public static void setValues(List<String> v) {

@@ -213,9 +213,9 @@ public class FinishActivity extends MapActivity {
 
 		if (save) {
 			DataLayer d = new DataLayer(getBaseContext());
-			d.addRun(new Date().getTime() + "", convertGeoPointToString(movingPoints), convertLongToString(movingTimes),
-					convertDoubleToString(altitudes), convertLongToString(pauseTime),
-					convertGeoPointToString(pausePoints));
+			d.addRun(new Date().toString(), convertGeoPointToString(movingPoints),
+					convertLongToString(movingTimes), convertDoubleToString(altitudes),
+					convertLongToString(pauseTime), convertGeoPointToString(pausePoints));
 		}
 
 	}

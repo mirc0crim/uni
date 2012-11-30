@@ -1,7 +1,5 @@
 package ch.unibe.yala;
 
-import java.util.Date;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -65,12 +63,30 @@ public class DataLayer {
 				for (int i = 0; i < d; i++)
 					c.moveToNext();
 				s = c.getString(c.getColumnIndex("date"));
-				Date fullDate = new Date();
-				fullDate.setTime(Long.parseLong(s));
 				db.delete("yala", "date" + " = " + s, null);
 			}
 		} catch (CursorIndexOutOfBoundsException e) {
 
+		} finally {
+			if (db != null)
+				db.close();
+		}
+	}
+
+	public void setName(String s, int d) {
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put("date", s);
+			String old = "";
+			Cursor c = db.rawQuery("select * from yala", null);
+			if (c.getCount() > 0) {
+				c.moveToFirst();
+				for (int i = 0; i < d; i++)
+					c.moveToNext();
+				old = c.getString(c.getColumnIndex("date"));
+				db.update("yala", cv, "date='" + old + "'", null);
+			}
 		} finally {
 			if (db != null)
 				db.close();

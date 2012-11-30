@@ -387,11 +387,6 @@ public class MainActivity extends MapActivity implements LocationListener {
 				Toast.makeText(this, "No recent Tracks", Toast.LENGTH_LONG).show();
 				break;
 			}
-			for (int i = 0; i < dates.length; i++){
-				Date fullDate = new Date();
-				fullDate.setTime(Long.parseLong(dates[i]));
-				dates[i] = fullDate.toString();
-			}
 			List<String> lSt = new LinkedList<String>(Arrays.asList(dates));
 			TracksActivity.setValues(lSt);
 			calledFinish = true;

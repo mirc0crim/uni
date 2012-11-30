@@ -9,5 +9,6 @@
     <string name="stats">Statistics\n\nare\n\nevaluated\n</string>
     <string name="load">Load</string>
     <string name="loadInfo">Tap to Load Track\nLong Click to Delete</string>
+    <string name="renameDialog">Set new Text</string>
 
 </resources>
