@@ -15,7 +15,10 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
@@ -32,6 +35,8 @@ public class FinishActivity extends MapActivity {
 	static GeoPoint[] pausePoints;
 	static Long[] pauseTime;
 	static boolean save;
+	boolean bigScroll;
+	int viewSize;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,9 @@ public class FinishActivity extends MapActivity {
 		double maxA;
 		double minS;
 		double minA;
+
+		bigScroll = false;
+		viewSize = 0;
 
 		TextView stats = (TextView) findViewById(R.id.stats);
 		int ptsLen = movingPoints.length;
@@ -210,6 +218,30 @@ public class FinishActivity extends MapActivity {
 					convertGeoPointToString(pausePoints));
 		}
 
+	}
+
+	public void viewClick(View view) {
+		ScrollView scrollV = (ScrollView) findViewById(R.id.scroll);
+		LinearLayout routeV = (LinearLayout) findViewById(R.id.routeView);
+		LinearLayout.LayoutParams lpSmall = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
+				0, 1);
+		LinearLayout.LayoutParams lpBig = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
+				0, 9);
+		LinearLayout.LayoutParams lpHalf = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
+				0, 5);
+		if (viewSize == 0) {
+			scrollV.setLayoutParams(lpBig);
+			routeV.setLayoutParams(lpSmall);
+			viewSize = 1;
+		} else if (viewSize == 1) {
+			scrollV.setLayoutParams(lpSmall);
+			routeV.setLayoutParams(lpBig);
+			viewSize = 2;
+		} else {
+			scrollV.setLayoutParams(lpHalf);
+			routeV.setLayoutParams(lpHalf);
+			viewSize = 0;
+		}
 	}
 
 	@Override
