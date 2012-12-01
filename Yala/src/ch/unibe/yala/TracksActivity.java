@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 
@@ -125,8 +124,8 @@ public class TracksActivity extends Activity {
 				String s = et.getText().toString();
 				if (s.length() > 0) {
 					datLay.setName(s, pos);
-					Toast.makeText(getBaseContext(), values.get(pos) + " will be renamed to " + s,
-							Toast.LENGTH_LONG).show();
+					values.set(pos, s);
+					aAdapter.notifyDataSetChanged();
 				}
 				di.dismiss();
 			}
