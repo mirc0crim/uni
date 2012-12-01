@@ -13,6 +13,8 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
 import android.location.Location;
@@ -395,10 +397,38 @@ public class MainActivity extends MapActivity implements LocationListener {
 			Intent intent = new Intent(this, TracksActivity.class);
 			startActivity(intent);
 			break;
+		case R.id.share:
+			Intent intentShare = new Intent(Intent.ACTION_SEND);
+			intentShare.setType("text/plain");
+			intentShare.putExtra(Intent.EXTRA_TEXT, "Track, measure, and improve your fitness.");
+			startActivity(Intent.createChooser(intentShare, "Share using"));
+			break;
+		case R.id.support:
+			Intent intSupp = new Intent(Intent.ACTION_SEND);
+			intSupp.setType("message/rfc822");
+			intSupp.putExtra(Intent.EXTRA_EMAIL, new String[] { "mircokocher@gmail.com" });
+			intSupp.putExtra(Intent.EXTRA_SUBJECT, "Request for support for Yala");
+			String sText = collectInfos();
+			intSupp.putExtra(Intent.EXTRA_TEXT, sText);
+			startActivity(Intent.createChooser(intSupp, "Send mail..."));
+			break;
 		default:
 			break;
 		}
 		return true;
+	}
+
+	private String collectInfos() {
+		String text = "I have a question about...\n\n\n\n\n\n\nYala\n";
+		try {
+			PackageInfo pI = getPackageManager().getPackageInfo(getPackageName(), 0);
+			text += "v: " + pI.versionName + " (" + pI.versionCode + ")\n";
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		text += "Device: " + android.os.Build.MODEL + " (" + android.os.Build.DEVICE + ") SDK"
+				+ android.os.Build.VERSION.SDK_INT;
+		return text;
 	}
 
 	public static String[] convertStringToArray(String s) {

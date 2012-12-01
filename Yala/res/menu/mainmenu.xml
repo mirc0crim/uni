@@ -2,4 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/reset" android:title="@string/reset" android:icon="@drawable/reset" android:showAsAction="ifRoom"></item>
     <item android:id="@+id/load" android:title="@string/load" android:icon="@drawable/load" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/support" android:title="Get Support" android:icon="@drawable/support" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/share" android:title="Share this App" android:icon="@android:drawable/ic_menu_share" android:showAsAction="ifRoom"></item>
 </menu>
