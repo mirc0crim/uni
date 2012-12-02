@@ -162,11 +162,11 @@ public class FinishActivity extends MapActivity {
 			vLabAlt[4] = Math.round(maxA) + " m";
 
 			if (sectionHeight.size() > 1) {
-				stats.setText("----Overall Statistics----\n");
+				stats.setText(getString(R.string.overallStat));
 				stats.append(makeStatsFromArray(height, distances, movingTimes));
 				for (int k = 0; k < sectionHeight.size(); k++) {
 					stats.append("\n\n");
-					stats.append("-----Section " + (k + 1) + "-----\n");
+					stats.append(getString(R.string.sectionStat, k + 1));
 					stats.append(makeStats(sectionHeight.get(k), sectionDistance.get(k),
 							sectionTime.get(k)));
 				}

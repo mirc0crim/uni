@@ -86,12 +86,12 @@ public class TracksActivity extends Activity {
 			}
 		};
 		deleteBuilder = new AlertDialog.Builder(this);
-		deleteBuilder.setMessage("Delete Track?");
+		deleteBuilder.setMessage(getString(R.string.delete));
 		deleteBuilder.setPositiveButton("Yes", deleteDialog);
 		deleteBuilder.setNegativeButton("No", deleteDialog);
 
 		chooseBuilder = new AlertDialog.Builder(this);
-		chooseBuilder.setTitle("Choose action");
+		chooseBuilder.setTitle(getString(R.string.choose));
 		chooseBuilder.setItems(new String[] { "Delete", "Rename" }, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

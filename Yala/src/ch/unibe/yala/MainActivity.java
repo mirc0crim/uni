@@ -137,7 +137,8 @@ public class MainActivity extends MapActivity implements LocationListener {
 			}
 		};
 		builder = new AlertDialog.Builder(this);
-		builder.setMessage("Reset and Delete Track?").setPositiveButton("Yes", dialogClickListener)
+		builder.setMessage(getString(R.string.resetDelete))
+				.setPositiveButton("Yes", dialogClickListener)
 		.setNegativeButton("No", dialogClickListener);
 	}
 
@@ -235,7 +236,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		case 0:
 			startButton.setText("Pause");
 			startState = 1;
-			locationText.setText("Waiting for GPS signal");
+			locationText.setText(getString(R.string.waiting));
 			lastTime = new Date().getTime();
 			break;
 		case 1:
@@ -348,14 +349,14 @@ public class MainActivity extends MapActivity implements LocationListener {
 	private void showRunningNotification() {
 		if (calledFinish)
 			return;
-		Notification noti = new Notification(R.drawable.ic_launcher, "Use back key to end Yala",
+		Notification noti = new Notification(R.drawable.ic_launcher, getString(R.string.useBack),
 				System.currentTimeMillis());
 		Intent notifyIntent = new Intent(this, MainActivity.class);
 		notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notifyIntent,
 				Notification.FLAG_ONGOING_EVENT);
 		noti.flags = Notification.FLAG_ONGOING_EVENT + Notification.FLAG_AUTO_CANCEL;
-		noti.setLatestEventInfo(this, "Yala", "Yala is still running", contentIntent);
+		noti.setLatestEventInfo(this, "Yala", getString(R.string.stillRunning), contentIntent);
 		mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mNotificationManager.notify(1, noti);
 	}
@@ -377,7 +378,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		switch (item.getItemId()) {
 		case R.id.reset:
 			if (!started || startOverlay == null) {
-				Toast.makeText(this, "No recorded Data", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.noData), Toast.LENGTH_LONG).show();
 				break;
 			}
 			builder.show();
@@ -386,7 +387,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 			DataLayer datLay = new DataLayer(getBaseContext());
 			String[] dates = convertStringToArray(datLay.getAllDates());
 			if (dates[0] == "1") {
-				Toast.makeText(this, "No recent Tracks", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.noTracks), Toast.LENGTH_LONG).show();
 				break;
 			}
 			List<String> lSt = new LinkedList<String>(Arrays.asList(dates));
@@ -400,14 +401,14 @@ public class MainActivity extends MapActivity implements LocationListener {
 		case R.id.share:
 			Intent intentShare = new Intent(Intent.ACTION_SEND);
 			intentShare.setType("text/plain");
-			intentShare.putExtra(Intent.EXTRA_TEXT, "Track, measure, and improve your fitness.");
+			intentShare.putExtra(Intent.EXTRA_TEXT, getString(R.string.share));
 			startActivity(Intent.createChooser(intentShare, "Share using"));
 			break;
 		case R.id.support:
 			Intent intSupp = new Intent(Intent.ACTION_SEND);
 			intSupp.setType("message/rfc822");
-			intSupp.putExtra(Intent.EXTRA_EMAIL, new String[] { "mircokocher@gmail.com" });
-			intSupp.putExtra(Intent.EXTRA_SUBJECT, "Request for support for Yala");
+			intSupp.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.suppMail) });
+			intSupp.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.suppSubject));
 			String sText = collectInfos();
 			intSupp.putExtra(Intent.EXTRA_TEXT, sText);
 			startActivity(Intent.createChooser(intSupp, "Send mail..."));

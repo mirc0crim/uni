@@ -10,5 +10,18 @@
     <string name="load">Load</string>
     <string name="loadInfo">Tap to Load Track\nLong Click to Delete or Rename</string>
     <string name="renameDialog">Set new Text</string>
+    <string name="suppMail">mircokocher@gmail.com</string>
+	<string name="suppSubject">Request for support for Yala</string>
+	<string name="share">Track, measure, and improve your fitness. https://play.google.com/store/apps/details?id=ch.unibe.yala</string>
+	<string name="noData">No recorded Data</string>
+	<string name="noTracks">No recent Tracks</string>
+	<string name="stillRunning">Yala is still running</string>
+	<string name="useBack">Use back key to end Yala</string>
+	<string name="waiting">Waiting for GPS signal</string>
+	<string name="resetDelete">Reset and Delete Track?</string>
+	<string name="overallStat">----Overall Statistics----\n</string>
+	<string name="sectionStat">-----Section %d-----\n</string>
+	<string name="delete">Delete Track?</string>
+	<string name="choose">Choose action</string>
 
 </resources>
