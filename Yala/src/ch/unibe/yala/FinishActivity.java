@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -28,6 +29,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -44,6 +46,7 @@ public class FinishActivity extends MapActivity {
 	static Long[] pauseTime;
 	static boolean save;
 	int viewSize;
+	String overallDist;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -281,6 +284,7 @@ public class FinishActivity extends MapActivity {
 			s += "Distance:    " + Math.round(dist / 10) / 100f + " km";
 		else
 			s += "Distance:    " + (int) dist + " m";
+		overallDist = Math.round(dist / 10) / 100f + "";
 		return s;
 	}
 
@@ -443,12 +447,21 @@ public class FinishActivity extends MapActivity {
 						FileChannel src = new FileInputStream(currentDB).getChannel();
 						FileChannel dst = new FileOutputStream(backupDB).getChannel();
 						dst.transferFrom(src, 0, src.size());
+						Toast.makeText(this, "db backed up to " + sd, Toast.LENGTH_LONG).show();
 						src.close();
 						dst.close();
 					}
 				}
 			} catch (Exception e) {
 			}
+			break;
+		case R.id.share:
+			Intent intentShare = new Intent(Intent.ACTION_SEND);
+			intentShare.setType("text/plain");
+			if (overallDist.length() > 4)
+				overallDist.substring(0, 4);
+			intentShare.putExtra(Intent.EXTRA_TEXT, getString(R.string.shareTrack, overallDist));
+			startActivity(Intent.createChooser(intentShare, "Share using"));
 			break;
 		default:
 			break;

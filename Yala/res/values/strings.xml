@@ -12,7 +12,8 @@
     <string name="renameDialog">Set new Text</string>
     <string name="suppMail">mircokocher@gmail.com</string>
 	<string name="suppSubject">Request for support for Yala</string>
-	<string name="share">Track, measure, and improve your fitness. https://play.google.com/store/apps/details?id=ch.unibe.yala</string>
+	<string name="share">Track, measure, and analyze your sports activity. https://tinyurl.com/unibe-yala</string>
+	<string name="shareTrack">I just completed a %s km workout with Yala. https://tinyurl.com/unibe-yala</string>
 	<string name="noData">No recorded Data</string>
 	<string name="noTracks">No recent Tracks</string>
 	<string name="stillRunning">Yala is still running</string>
