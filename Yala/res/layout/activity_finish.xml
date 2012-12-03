@@ -48,7 +48,8 @@
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:clickable="true"
-			android:apiKey="0WMU7EdDjvw5o3YBk8--hyWwd9xovIqcJ3oCtAA"/>  <!-- for final dv7 apiKey-->
+			android:apiKey="0WMU7EdDjvw5j3nsWNPiXKXjYgheA9UsbHxoL6w"/>
+			<!-- android:apiKey="0WMU7EdDjvw5o3YBk8-REMOVEME-hyWwd9xovIqcJ3oCtAA"/> for final dv7 apiKey-->
 			<!-- android:apiKey="0WMU7EdDjvw5h2qlFhhBNEXagUsEz5vJJoyipww"/> for dv7 apiKey-->
 			<!-- android:apiKey="0WMU7EdDjvw5j3nsWNPiXKXjYgheA9UsbHxoL6w"/> for envy14 apiKey -->
 	</LinearLayout>

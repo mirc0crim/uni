@@ -23,5 +23,6 @@
 	<string name="sectionStat">-----Section %d-----\n</string>
 	<string name="delete">Delete Track?</string>
 	<string name="choose">Choose action</string>
+	<string name="backup">Backup DB</string>
 
 </resources>
