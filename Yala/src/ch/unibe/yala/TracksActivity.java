@@ -37,6 +37,11 @@ public class TracksActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tracks);
 
+		if (values == null) {
+			finish();
+			return;
+		}
+
 		ListView listView = (ListView) findViewById(R.id.list);
 		aAdapter = new ArrayAdapter<String>(this, R.layout.activity_tracks, R.id.info, values);
 		listView.setAdapter(aAdapter);

@@ -78,6 +78,10 @@ public class FinishActivity extends MapActivity {
 		viewSize = 0;
 
 		TextView stats = (TextView) findViewById(R.id.stats);
+		if (movingPoints == null) {
+			finish();
+			return;
+		}
 		int ptsLen = movingPoints.length;
 		if (ptsLen > 1) {
 			int j = 0;
