@@ -83,6 +83,7 @@ public class FinishActivity extends MapActivity {
 		TextView stats = (TextView) findViewById(R.id.stats);
 		if (movingPoints == null) {
 			finish();
+			overridePendingTransition(R.anim.anim_finish_main_in, R.anim.anim_finish_main_out);
 			return;
 		}
 		int ptsLen = movingPoints.length;
@@ -359,6 +360,7 @@ public class FinishActivity extends MapActivity {
 	@Override
 	public void onBackPressed() {
 		finish();
+		overridePendingTransition(R.anim.anim_finish_main_in, R.anim.anim_finish_main_out);
 	}
 
 	public boolean isConnected() {
@@ -436,20 +438,20 @@ public class FinishActivity extends MapActivity {
 			try {
 				File sd = Environment.getExternalStorageDirectory();
 				File data = Environment.getDataDirectory();
-
 				if (sd.canWrite()) {
 					String currentDBPath = "//data//ch.unibe.yala//databases//yala.db";
 					String backupDBPath = "yala.db";
 					File currentDB = new File(data, currentDBPath);
 					File backupDB = new File(sd, backupDBPath);
-
 					if (currentDB.exists()) {
-						FileChannel src = new FileInputStream(currentDB).getChannel();
-						FileChannel dst = new FileOutputStream(backupDB).getChannel();
-						dst.transferFrom(src, 0, src.size());
+						FileInputStream srcInputStream = new FileInputStream(currentDB);
+						FileChannel srcChannel = srcInputStream.getChannel();
+						FileOutputStream dstInputStream = new FileOutputStream(backupDB);
+						FileChannel dstChannel = dstInputStream.getChannel();
+						dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
 						Toast.makeText(this, "db backed up to " + sd, Toast.LENGTH_LONG).show();
-						src.close();
-						dst.close();
+						srcInputStream.close();
+						dstInputStream.close();
 					}
 				}
 			} catch (Exception e) {

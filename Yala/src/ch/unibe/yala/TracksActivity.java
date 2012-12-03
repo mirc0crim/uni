@@ -39,6 +39,7 @@ public class TracksActivity extends Activity {
 
 		if (values == null) {
 			finish();
+			overridePendingTransition(R.anim.anim_load_main_in, R.anim.anim_load_main_out);
 			return;
 		}
 
@@ -49,7 +50,6 @@ public class TracksActivity extends Activity {
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
 				DataLayer datLay = new DataLayer(getBaseContext());
 				String points = datLay.getStats("point", position);
 				String times = datLay.getStats("time", position);
@@ -64,6 +64,7 @@ public class TracksActivity extends Activity {
 				FinishActivity.save = false;
 				Intent intent = new Intent(getApplicationContext(), FinishActivity.class);
 				startActivity(intent);
+				overridePendingTransition(R.anim.anim_main_finish_in, R.anim.anim_main_finish_out);
 			}
 		});
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -172,6 +173,12 @@ public class TracksActivity extends Activity {
 			geoPoints[i] = new GeoPoint(Integer.parseInt(point[0]), Integer.parseInt(point[1]));
 		}
 		return geoPoints;
+	}
+
+	@Override
+	public void onBackPressed() {
+		finish();
+		overridePendingTransition(R.anim.anim_load_main_in, R.anim.anim_load_main_out);
 	}
 
 }

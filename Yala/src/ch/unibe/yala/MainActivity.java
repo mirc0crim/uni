@@ -138,7 +138,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		};
 		builder = new AlertDialog.Builder(this);
 		builder.setMessage(getString(R.string.resetDelete))
-				.setPositiveButton("Yes", dialogClickListener)
+		.setPositiveButton("Yes", dialogClickListener)
 		.setNegativeButton("No", dialogClickListener);
 	}
 
@@ -289,6 +289,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 		removeNotification();
 		Intent intent = new Intent(this, FinishActivity.class);
 		startActivity(intent);
+		overridePendingTransition(R.anim.anim_main_finish_in, R.anim.anim_main_finish_out);
 	}
 
 	@Override
@@ -397,6 +398,7 @@ public class MainActivity extends MapActivity implements LocationListener {
 			removeNotification();
 			Intent intent = new Intent(this, TracksActivity.class);
 			startActivity(intent);
+			overridePendingTransition(R.anim.anim_main_load_in, R.anim.anim_main_load_out);
 			break;
 		case R.id.share:
 			Intent intentShare = new Intent(Intent.ACTION_SEND);

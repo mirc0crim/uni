@@ -10,7 +10,7 @@
         android:gravity="center_horizontal"
         android:text="@string/press"
         android:textColor="#177BBD"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:id="@+id/myText"/>
     <LinearLayout
         android:layout_width="fill_parent"
@@ -26,7 +26,7 @@
             android:textColor="#177BBD"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
         <Button
             android:id="@+id/buttonFinish"
             android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
             android:textColor="#177BBD"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
     </LinearLayout>
 	<com.google.android.maps.MapView
 		xmlns:android="http://schemas.android.com/apk/res/android"
@@ -44,7 +44,7 @@
 		android:layout_width="fill_parent"
       	android:layout_height="fill_parent"
       	android:clickable="true"
-		android:apiKey="0WMU7EdDjvw5j3nsWNPiXKXjYgheA9UsbHxoL6w"/>
+		android:apiKey="0WMU7EdDjvw5h2qlFhhBNEXagUsEz5vJJoyipww"/>
 		<!-- android:apiKey="0WMU7EdDjvw5o3YBk8-REMOVEME-hyWwd9xovIqcJ3oCtAA"/> for final dv7 apiKey-->
 		<!-- android:apiKey="0WMU7EdDjvw5h2qlFhhBNEXagUsEz5vJJoyipww"/> for dv7 apiKey-->
 		<!-- android:apiKey="0WMU7EdDjvw5j3nsWNPiXKXjYgheA9UsbHxoL6w"/> for envy14 apiKey -->
