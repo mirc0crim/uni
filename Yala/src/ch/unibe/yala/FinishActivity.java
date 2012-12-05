@@ -1,10 +1,6 @@
 package ch.unibe.yala;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,7 +16,6 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +24,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -434,29 +428,6 @@ public class FinishActivity extends MapActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.backup:
-			try {
-				File sd = Environment.getExternalStorageDirectory();
-				File data = Environment.getDataDirectory();
-				if (sd.canWrite()) {
-					String currentDBPath = "//data//ch.unibe.yala//databases//yala.db";
-					String backupDBPath = "yala.db";
-					File currentDB = new File(data, currentDBPath);
-					File backupDB = new File(sd, backupDBPath);
-					if (currentDB.exists()) {
-						FileInputStream srcInputStream = new FileInputStream(currentDB);
-						FileChannel srcChannel = srcInputStream.getChannel();
-						FileOutputStream dstInputStream = new FileOutputStream(backupDB);
-						FileChannel dstChannel = dstInputStream.getChannel();
-						dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
-						Toast.makeText(this, "db backed up to " + sd, Toast.LENGTH_LONG).show();
-						srcInputStream.close();
-						dstInputStream.close();
-					}
-				}
-			} catch (Exception e) {
-			}
-			break;
 		case R.id.share:
 			Intent intentShare = new Intent(Intent.ACTION_SEND);
 			intentShare.setType("text/plain");
