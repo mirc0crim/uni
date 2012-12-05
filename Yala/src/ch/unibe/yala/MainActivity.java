@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
 import android.location.Location;
@@ -88,8 +89,13 @@ public class MainActivity extends MapActivity implements LocationListener {
 		map = (MapView) findViewById(R.id.map);
 		map.setSatellite(false);
 
+
 		startButton = (Button) findViewById(R.id.buttonStart);
 		finishButton = (Button) findViewById(R.id.buttonFinish);
+		if (android.os.Build.VERSION.SDK_INT < 11) {
+			startButton.getBackground().setColorFilter(0xFF001155, PorterDuff.Mode.MULTIPLY);
+			finishButton.getBackground().setColorFilter(0xFF001155, PorterDuff.Mode.MULTIPLY);
+		}
 		finishButton.setEnabled(false);
 
 		lastPoint = new GeoPoint(46953700, 7439700);
