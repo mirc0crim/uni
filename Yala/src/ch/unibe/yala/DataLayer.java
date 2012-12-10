@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class DataLayer {
 	private final DBHelper dbHelper;
@@ -56,15 +57,11 @@ public class DataLayer {
 	public void deleteRun(int d) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		try {
-			String s = "";
 			Cursor c = db.rawQuery("select * from yala", null);
-			if (c.getCount() > 0) {
-				c.moveToFirst();
-				for (int i = 0; i < d; i++)
-					c.moveToNext();
-				s = c.getString(c.getColumnIndex("date"));
-				db.delete("yala", "date" + " = " + s, null);
-			}
+			int s = d + 1;
+			db.execSQL("VACUUM;");
+			db.delete("yala", "rowid" + "=" + s, null);
+			Log.d("", "asdf" + s);
 		} catch (CursorIndexOutOfBoundsException e) {
 
 		} finally {
