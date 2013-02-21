@@ -4,11 +4,24 @@ import java.io.IOException;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.vecmath.Vector3f;
 
 
 public class Main {
 
+	public static Camera camera;
+
 	public static void main(String[] args) {
+
+		Vector3f eye = new Vector3f(0.f, 0.f, 2.f);
+		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
+		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
+		float fov = 60.f;
+		int width = 512;
+		int height = 512;
+		float aspect = (float) width / (float) height;
+		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
+
 		createImage(200, 200);
 	}
 
