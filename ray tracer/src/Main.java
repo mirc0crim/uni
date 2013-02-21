@@ -13,14 +13,14 @@ public class Main {
 	}
 
 	public static void createImage(int width, int height) {
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		for (int r = 0; r < height; r++)
-			for (int c = 0; c < width; c++) {
-				int red = 255 * new Random().nextInt();
-				int green = 255 * new Random().nextInt();
-				int blue = 255 * new Random().nextInt();
-				int rgb = red << 16 | green << 8 | blue;
-				image.setRGB(c, r, rgb);
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		for (int h = 0; h < height; h++)
+			for (int w = 0; w < width; w++) {
+				int red = new Random().nextInt(255);
+				int green = new Random().nextInt(255);
+				int blue = new Random().nextInt(255);
+				int rgb = (red << 16) + (green << 8) + blue;
+				image.setRGB(w, h, rgb);
 			}
 		try {
 			ImageIO.write(image, "jpg", new File("abc.jpg"));
