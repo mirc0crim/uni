@@ -25,26 +25,30 @@ public class Main {
 		Plane plane = new Plane(normal, d);
 		objects = plane;
 
+		Vector3f v1 = new Vector3f(2, 2, 0);
+		Vector3f v2 = new Vector3f(0, -7, 0);
+		Vector3f v3 = new Vector3f(-7, 0, 0);
+		Triangle triangle = new Triangle(v1, v2, v3);
+
 		film = new Film(width, height);
 
 		for (int w = 0; w < width; w++)
 			for (int h = 0; h < height; h++) {
 				Vector4f primaryRay = Ray.transform(new Matrix4f(camera.getCameraMatrix()),
 						new Vector4f(camera.getPixelRay(w, h)));
-				Vector3f l = new Vector3f(primaryRay.x, primaryRay.y, primaryRay.z);
-				Vector3f p0 = new Vector3f(normal);
-				p0.scale(-d);
-				Vector3f l0 = new Vector3f(eye);
-				Vector3f n = new Vector3f(normal);
-				p0.sub(l0);
-				float intersection = p0.dot(n) / l.dot(n);
+				boolean intersectionPlane = plane.testIntersection(new Vector3f(primaryRay.x,
+						primaryRay.y, primaryRay.z), eye);
+				boolean intersectionTriangle = triangle.testIntersection(new Vector3f(primaryRay.x,
+						primaryRay.y, primaryRay.z), eye);
 				int rgb = 0;
-				if (intersection > 0) {
-					int red = 255;
-					int green = 255;
-					int blue = 255;
-					rgb = (red << 16) + (green << 8) + blue;
-				}
+				int red = 0;
+				int green = 0;
+				int blue = 0;
+				if (intersectionTriangle)
+					red = 255;
+				else if (intersectionPlane)
+					blue = 255;
+				rgb = (red << 16) + (green << 8) + blue;
 				film.setPixel(w, h, rgb);
 			}
 

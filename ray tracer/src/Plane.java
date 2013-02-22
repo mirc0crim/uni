@@ -27,4 +27,15 @@ public class Plane implements Intersectable {
 		distance = d;
 	}
 
+	@Override
+	public boolean testIntersection(Vector3f ray, Vector3f eye) {
+		Vector3f l = new Vector3f(ray.x, ray.y, ray.z);
+		Vector3f p0 = new Vector3f(normal);
+		p0.scale(-distance);
+		Vector3f l0 = new Vector3f();
+		Vector3f n = new Vector3f(normal);
+		p0.sub(l0);
+		return p0.dot(n) / l.dot(n) > 0;
+	}
+
 }
