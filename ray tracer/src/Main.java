@@ -1,15 +1,14 @@
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
 
-import javax.imageio.ImageIO;
 import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
 
 
 public class Main {
 
 	public static Camera camera;
+	public static Intersectable objects;
+	public static Film film;
 
 	public static void main(String[] args) {
 
@@ -22,24 +21,25 @@ public class Main {
 		float aspect = (float) width / (float) height;
 		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
 
-		createImage(200, 200);
-	}
+		Vector3f normal = new Vector3f(0.f, 1.f, 0.f);
+		float d = 1.f;
+		Plane plane = new Plane(normal, d);
+		objects = plane;
 
-	public static void createImage(int width, int height) {
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		for (int h = 0; h < height; h++)
-			for (int w = 0; w < width; w++) {
+		film = new Film(width, height);
+
+		for (int w = 0; w < width; w++)
+			for (int h = 0; h < height; h++) {
+				Vector4f pixelRay = Camera.getPixelRay(w, h);
+				pixelRay = Ray.transform(pixelRay, Camera.getCameraMatrix());
 				int red = new Random().nextInt(255);
 				int green = new Random().nextInt(255);
 				int blue = new Random().nextInt(255);
 				int rgb = (red << 16) + (green << 8) + blue;
-				image.setRGB(w, h, rgb);
+				film.setPixel(w, h, rgb);
 			}
-		try {
-			ImageIO.write(image, "jpg", new File("abc.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		film.createImage("abc.jpg");
 	}
 
 }

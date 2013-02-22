@@ -15,6 +15,7 @@ public class Camera {
 	private static float height;
 
 	public Camera(Vector3f from, Vector3f to, Vector3f up, float fov, float aspect, int w, int h) {
+		cameraMatrix = new Matrix4f();
 		centerOfProjection = from;
 		lookAtPoint = to;
 		upVector = up;
