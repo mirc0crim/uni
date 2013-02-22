@@ -1,5 +1,4 @@
-import java.util.Random;
-
+import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
@@ -30,16 +29,28 @@ public class Main {
 
 		for (int w = 0; w < width; w++)
 			for (int h = 0; h < height; h++) {
-				Vector4f pixelRay = Camera.getPixelRay(w, h);
-				pixelRay = Ray.transform(pixelRay, Camera.getCameraMatrix());
-				int red = new Random().nextInt(255);
-				int green = new Random().nextInt(255);
-				int blue = new Random().nextInt(255);
-				int rgb = (red << 16) + (green << 8) + blue;
+				Vector4f primaryRay = Ray.transform(new Matrix4f(camera.getCameraMatrix()),
+						new Vector4f(camera.getPixelRay(w, h)));
+				Vector3f l = new Vector3f(primaryRay.x, primaryRay.y, primaryRay.z);
+				Vector3f p0 = new Vector3f(normal);
+				p0.scale(-d);
+				Vector3f l0 = new Vector3f(eye);
+				Vector3f n = new Vector3f(normal);
+				p0.sub(l0);
+				float intersection = p0.dot(n) / l.dot(n);
+				int rgb = 0;
+				if (intersection > 0) {
+					int red = 255;
+					int green = 255;
+					int blue = 255;
+					rgb = (red << 16) + (green << 8) + blue;
+				}
 				film.setPixel(w, h, rgb);
 			}
 
 		film.createImage("abc.jpg");
 	}
+
+
 
 }

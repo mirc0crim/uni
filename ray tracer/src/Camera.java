@@ -5,14 +5,14 @@ import javax.vecmath.Vector4f;
 
 public class Camera {
 
-	private static Matrix4f cameraMatrix;
-	private static Vector3f centerOfProjection;
-	private static Vector3f lookAtPoint;
-	private static Vector3f upVector;
-	private static float theta;
-	private static float aspectRatio;
-	private static float width;
-	private static float height;
+	private Matrix4f cameraMatrix;
+	private Vector3f centerOfProjection;
+	private Vector3f lookAtPoint;
+	private Vector3f upVector;
+	private float theta;
+	private float aspectRatio;
+	private float width;
+	private float height;
 
 	public Camera(Vector3f from, Vector3f to, Vector3f up, float fov, float aspect, int w, int h) {
 		cameraMatrix = new Matrix4f();
@@ -26,115 +26,109 @@ public class Camera {
 		updateCameraMatrix();
 	}
 
-	public static Matrix4f getCameraMatrix() {
+	public Matrix4f getCameraMatrix() {
 		return cameraMatrix;
 	}
 
-	public static void setCameraMatrix(Matrix4f cameraToWorld) {
+	public void setCameraMatrix(Matrix4f cameraToWorld) {
 		cameraMatrix.set(cameraToWorld);
 	}
 
-	public static Vector3f getCenterOfProjection() {
+	public Vector3f getCenterOfProjection() {
 		return centerOfProjection;
 	}
 
-	public static void setCenterOfProjection(Vector3f from) {
+	public void setCenterOfProjection(Vector3f from) {
 		centerOfProjection = from;
 	}
 
-	public static Vector3f getLookAtPoint() {
+	public Vector3f getLookAtPoint() {
 		return lookAtPoint;
 	}
 
-	public static void setLookAtPoint(Vector3f to) {
+	public void setLookAtPoint(Vector3f to) {
 		lookAtPoint = to;
 	}
 
-	public static Vector3f getUpVector() {
+	public Vector3f getUpVector() {
 		return upVector;
 	}
 
-	public static void setUpVector(Vector3f up) {
+	public void setUpVector(Vector3f up) {
 		upVector = up;
 	}
 
-	public static float getTheta() {
+	public float getTheta() {
 		return theta;
 	}
 
-	public static void setTheta(float fov) {
+	public void setTheta(float fov) {
 		theta = fov;
 	}
 
-	public static float getAspectRatio() {
+	public float getAspectRatio() {
 		return aspectRatio;
 	}
 
-	public static void setAspectRatio(float aspect) {
+	public void setAspectRatio(float aspect) {
 		aspectRatio = aspect;
 	}
 
-	public static float getWidth() {
+	public float getWidth() {
 		return width;
 	}
 
-	public static void setWidth(float w) {
+	public void setWidth(float w) {
 		width = w;
 	}
 
-	public static float getHeight() {
+	public float getHeight() {
 		return height;
 	}
 
-	public static void setHeight(float h) {
+	public void setHeight(float h) {
 		height = h;
 	}
 
-	private static void updateCameraMatrix() {
-		Matrix4f newMatrix = new Matrix4f();
-		Vector3f u = new Vector3f();
-		Vector3f v = new Vector3f();
-		Vector3f w = new Vector3f();
-		Vector3f t = new Vector3f(); // temporary matrix used to calc u,v,w
+	private void updateCameraMatrix() {
+		Matrix4f myMat = new Matrix4f();
+		Vector3f uVec = new Vector3f();
+		Vector3f vVec = new Vector3f();
+		Vector3f wVec = new Vector3f();
+		Vector3f tVec = new Vector3f(); // temp matrix used to calc Vec u,v,w
 
-		t.set(centerOfProjection);
-		t.sub(lookAtPoint);
-		t.normalize();
-		w.set(t);
+		tVec.set(centerOfProjection);
+		tVec.sub(lookAtPoint);
+		tVec.normalize();
+		wVec.set(tVec);
 
-		t.set(upVector);
-		t.cross(t, w);
-		t.normalize();
-		u.set(t);
+		tVec.set(upVector);
+		tVec.cross(tVec, wVec);
+		tVec.normalize();
+		uVec.set(tVec);
 
-		t.cross(w, u);
-		v.set(t);
+		tVec.cross(wVec, uVec);
+		vVec.set(tVec);
 
-		newMatrix.setColumn(0, u.getX(), u.getY(), u.getZ(), 0);
-		newMatrix.setColumn(1, v.getX(), v.getY(), v.getZ(), 0);
-		newMatrix.setColumn(2, w.getX(), w.getY(), w.getZ(), 0);
-		newMatrix.setColumn(3, centerOfProjection.getX(), centerOfProjection.getY(),
-				centerOfProjection.getZ(), 1);
-		cameraMatrix.set(newMatrix);
+		myMat.setColumn(0, uVec.x, uVec.y, uVec.z, 0);
+		myMat.setColumn(1, vVec.x, vVec.y, vVec.z, 0);
+		myMat.setColumn(2, wVec.x, wVec.y, wVec.z, 0);
+		myMat.setColumn(3, centerOfProjection.x, centerOfProjection.y, centerOfProjection.z, 1);
+		cameraMatrix.set(myMat);
 	}
 
-	public static Vector4f getPixelRay(int i, int j) {
-		Vector4f suvw = new Vector4f();
-		suvw.setX(u(i, j));
-		suvw.setY(v(i, j));
-		suvw.setZ(-1);
-		suvw.setW(1);
-		return suvw;
+	public Vector4f getPixelRay(int i, int j) {
+		return new Vector4f(u(i, j), v(i, j), -1, 1);
 	}
 
-	private static float u(int i, int j) {
+	private float u(int i, int j) {
 		float t = (float) Math.tan(theta / 2);
 		float r = aspectRatio * t;
 		float l = -r;
 		return l + (r - l) * ((i + 0.5f) / width);
 	}
 
-	private static float v(int i, int j) {
+	private float v(int i, int j) {
 		float t = (float) Math.tan(theta / 2);
 		float b = -t;
 		return b + (t - b) * ((j + 0.5f) / height);
