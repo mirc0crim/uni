@@ -2,7 +2,6 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-
 public class Camera {
 
 	private Matrix4f cameraMatrix;
@@ -14,7 +13,8 @@ public class Camera {
 	private float width;
 	private float height;
 
-	public Camera(Vector3f from, Vector3f to, Vector3f up, float fov, float aspect, int w, int h) {
+	public Camera(Vector3f from, Vector3f to, Vector3f up, float fov, float aspect, int w,
+			int h) {
 		cameraMatrix = new Matrix4f();
 		centerOfProjection = from;
 		lookAtPoint = to;
@@ -103,10 +103,11 @@ public class Camera {
 		wVec.set(tVec);
 
 		tVec.set(upVector);
-		tVec.cross(tVec, wVec);
+		tVec.cross(upVector, wVec);
 		tVec.normalize();
 		uVec.set(tVec);
 
+		tVec.set(wVec);
 		tVec.cross(wVec, uVec);
 		vVec.set(tVec);
 
@@ -118,18 +119,19 @@ public class Camera {
 	}
 
 	public Vector4f getPixelRay(int i, int j) {
-		return new Vector4f(u(i, j), v(i, j), -1, 1);
+		Vector4f suvw = new Vector4f(u(i, j), v(i, j), -1, 0);
+		return suvw;
 	}
 
 	private float u(int i, int j) {
-		float t = (float) Math.tan(theta / 2);
+		float t = (float) Math.tan(theta * Math.PI / 180);
 		float r = aspectRatio * t;
 		float l = -r;
 		return l + (r - l) * ((i + 0.5f) / width);
 	}
 
 	private float v(int i, int j) {
-		float t = (float) Math.tan(theta / 2);
+		float t = (float) Math.tan(theta * Math.PI / 180);
 		float b = -t;
 		return b + (t - b) * ((j + 0.5f) / height);
 	}

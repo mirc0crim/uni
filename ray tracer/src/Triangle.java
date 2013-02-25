@@ -1,6 +1,5 @@
 import javax.vecmath.Vector3f;
 
-
 public class Triangle implements Intersectable {
 
 	Vector3f verticle1;

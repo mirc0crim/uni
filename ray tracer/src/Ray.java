@@ -1,7 +1,6 @@
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector4f;
 
-
 public class Ray {
 
 	Vector4f origin;
