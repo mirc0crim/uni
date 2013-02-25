@@ -127,13 +127,13 @@ public class Camera {
 		float t = (float) Math.tan(theta * Math.PI / 180);
 		float r = aspectRatio * t;
 		float l = -r;
-		return l + (r - l) * ((i + 0.5f) / width);
+		return (l + (r - l) * ((i + 0.5f) / width));
 	}
 
 	private float v(int i, int j) {
 		float t = (float) Math.tan(theta * Math.PI / 180);
 		float b = -t;
-		return b + (t - b) * ((j + 0.5f) / height);
+		return (b + (t - b) * ((j + 0.5f) / height));
 	}
 
 }

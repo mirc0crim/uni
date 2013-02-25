@@ -1,3 +1,5 @@
+import java.util.Random;
+
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
@@ -9,17 +11,17 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		Vector3f eye = new Vector3f(0.f, 0.f, 2.f);
-		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
-		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
-		float fov = 60.f;
+		Vector3f eye = new Vector3f(0, 0, 2);
+		Vector3f lookAt = new Vector3f(0, 0, 0);
+		Vector3f up = new Vector3f(0, 1, 0);
+		float fov = 60;
 		int width = 512;
 		int height = 512;
 		float aspect = (float) width / (float) height;
 		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
 
-		Vector3f normal = new Vector3f(0.f, 1.f, 0.f);
-		float d = 1.f;
+		Vector3f normal = new Vector3f(0, 1, 0);
+		float d = 1;
 		Plane plane = new Plane(normal, d);
 
 		Vector3f v1 = new Vector3f(0, 0, 0);
@@ -49,7 +51,12 @@ public class Main {
 				int red = 0;
 				int green = 0;
 				int blue = 0;
-				if (intersectionSphere) {
+				if (Math.abs(primaryRay.x) > 0.5 && Math.abs(primaryRay.x) < 0.51
+						|| Math.abs(primaryRay.y) > 0.5 && Math.abs(primaryRay.y) < 0.51) {
+					red = new Random().nextInt(255);
+					green = new Random().nextInt(255);
+					blue = new Random().nextInt(255);
+				} else if (true) {
 					red = (int) (Math.abs(primaryRay.x) * 255);
 					green = (int) (Math.abs(primaryRay.y) * 255);
 				} else if (intersectionTriangle) {
