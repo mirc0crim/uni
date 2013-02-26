@@ -13,7 +13,7 @@ public class Triangle implements Intersectable {
 	}
 
 	@Override
-	public boolean testIntersection(Vector3f ray, Vector3f eye) {
+	public float testIntersection(Vector3f ray, Vector3f eye) {
 
 		Vector3f e1 = new Vector3f();
 		e1.sub(verticle2, verticle1);
@@ -25,7 +25,7 @@ public class Triangle implements Intersectable {
 		float a = e1.dot(h);
 
 		if (a > -0.00001 && a < 0.00001)
-			return false;
+			return 0;
 
 		float f = 1 / a;
 		Vector3f s = new Vector3f();
@@ -33,26 +33,26 @@ public class Triangle implements Intersectable {
 		float u = f * s.dot(h);
 
 		if (u < 0.0 || u > 1.0)
-			return false;
+			return 0;
 
 		Vector3f q = new Vector3f();
 		q.cross(s, verticle2);
 		float v = f * ray.dot(q);
 
 		if (v < 0.0 || u + v > 1.0)
-			return false;
+			return 0;
 
 		// at this stage we can compute t to find out where
 		// the intersection point is on the line
 		float t = f * verticle3.dot(q);
 
 		if (t < 0.00001) // ray intersection
-			return true;
+			return t;
 
 		else
 			// this means that there is a line intersection
 			// but not a ray intersection
-			return false;
+			return 0;
 
 	}
 

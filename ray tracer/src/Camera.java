@@ -119,7 +119,7 @@ public class Camera {
 	}
 
 	public Vector4f getPixelRay(int i, int j) {
-		Vector4f suvw = new Vector4f(u(i, j), v(i, j), -1, 0);
+		Vector4f suvw = new Vector4f(u(i, j), v(i, j), -1, 1);
 		return suvw;
 	}
 

@@ -12,11 +12,11 @@ public class Ray {
 	}
 
 	public static Vector4f transform(Matrix4f mat, Vector4f r) {
-		Matrix4f rAsMatrix = new Matrix4f();
-		rAsMatrix.setZero();
-		rAsMatrix.setColumn(0, r);
-		mat.mul(rAsMatrix);
-		return new Vector4f(mat.m00, mat.m10, mat.m20, mat.m30);
+		float x = mat.m00 * r.x + mat.m01 * r.y + mat.m02 * r.z + mat.m03 * r.w;
+		float y = mat.m10 * r.x + mat.m11 * r.y + mat.m12 * r.z + mat.m13 * r.w;
+		float z = mat.m20 * r.x + mat.m21 * r.y + mat.m22 * r.z + mat.m23 * r.w;
+		float w = mat.m30 * r.x + mat.m31 * r.y + mat.m32 * r.z + mat.m33 * r.w;
+		return new Vector4f(x, y, z, w);
 	}
 
 }

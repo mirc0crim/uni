@@ -11,7 +11,7 @@ public class Sphere implements Intersectable {
 	}
 
 	@Override
-	public boolean testIntersection(Vector3f ray, Vector3f eye) {
+	public float testIntersection(Vector3f ray, Vector3f eye) {
 		Vector3f ec = new Vector3f(eye);
 		ec.sub(center);
 		float a = ray.dot(ray);
@@ -24,12 +24,15 @@ public class Sphere implements Intersectable {
 		// if discriminant is negative there are no real roots, so return
 		// false as ray misses sphere
 		if (disc < 0)
-			return false;
+			return 0;
 
 		float x1 = (float) ((-b + Math.sqrt(disc)) / 2 * a);
 		float x2 = (float) ((-b - Math.sqrt(disc)) / 2 * a);
 
-		return true;
+		if (x1 < x2)
+			return x2;
+		else
+			return x1;
 	}
 
 }
