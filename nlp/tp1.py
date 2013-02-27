@@ -2,46 +2,65 @@
 import sys
 import re
 
-print "3. Numbers from 1 to 100."
-print ""
+def choose():
+        print ""
+        print " --------------------------------------------------------------------"
+        print " 1 = Numbers from 1 to 100."
+        print " 2 = Regex for a string containing both \"blue\" & \"green\" somewhere."
+        print " 3 = Regex for a sentence starting with \"A\" and ending with \"end.\"."
+        print " 4 = Regex for a string containing a number that is a multiple of 5."
+        print " Else Exit"
+        print " --------------------------------------------------------------------"
+        ex = raw_input()
+        if (ex == "1"):
+                ex1()
+        if (ex == "2"):
+                ex2()
+        if (ex == "3"):
+                ex3()
+        if (ex == "4"):
+                ex4()
 
-for i in range(1,101):
-	if (i<10):
-		sys.stdout.write(" " + str(i) + " ")
-	else:
-		sys.stdout.write(str(i) + " ")
-	if (i%10 == 0):
-		sys.stdout.write("\n")
+def ex1():
+        print ""
+        sys.stdout.write(" ")
+        for i in range(1,101):
+                if (i<10):
+                        sys.stdout.write(" " + str(i) + " ")
+                else:
+                        sys.stdout.write(str(i) + " ")
+                if (i%10 == 0):
+                        sys.stdout.write("\n ")
+        choose()
 
-raw_input("\nPress Enter to continue...")
-print "4. Regex for a string containing both \"blue\" & \"green\" somewhere."
-print ""
+def ex2():
+        print ""
+        line = raw_input(" Enter String\n")
+        m = re.search("(blue|green)(\W*\w*)*?(blue|green)" , line)
+        if m:
+                print " String found: " + m.group()
+        else:
+                print " No match found"
+        choose()
 
-line = raw_input("Enter String\n")
-m = re.search("(blue|green)(\W*\w*)*(blue|green)" , line)
-if m:
-        print "String found: " + m.group()
-else:
-        print "No match found"
+def ex3():
+        print ""
+        line = raw_input(" Enter Sentence\n")
+        m = re.search("^A(\W*\w*)*end\.$" , line)
+        if m:
+                print " Sentence found: " + m.group()
+        else:
+                print " No match found"
+        choose()
 
-raw_input("\nPress Enter to continue...")
-print "5. Regex for a sentence starting with \"A\" and ending with \"end.\"."
-print ""
+def ex4():
+        print ""
+        line = raw_input(" Enter String\n")
+        m = re.search("[0-9]*[0,5]" , line)
+        if m:
+                print " String found: " + m.group()
+        else:
+                print " No match found"
+        choose()
 
-line = raw_input("Enter Sentence\n")
-m = re.search("^A(\W*\w*)*end\.$" , line)
-if m:
-        print "Sentence found: " + m.group()
-else:
-        print "No match found"
-
-raw_input("\nPress Enter to continue...")
-print "6. Regex for a string containing a number that is a multiple of 5."
-print ""
-
-line = raw_input("Enter String\n")
-m = re.search("[0-9]*[0,5]" , line)
-if m:
-        print "String found: " + m.group()
-else:
-        print "No match found"
+choose()
