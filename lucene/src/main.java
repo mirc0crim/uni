@@ -11,6 +11,6 @@ public class main {
 	 */
 	public static void main(String[] args) throws IOException, ParseException {
 		IndexFiles.buildIndex();
-		SearchFiles.searchIndex(new String[] { "hello", "bye", "asdf" });
+		SearchFiles.searchIndex("business improvement program city city income");
 	}
 }

@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -16,20 +18,27 @@ public class SearchFiles {
 	public SearchFiles() {
 	}
 
-	public static void searchIndex(String[] queryStrings) throws IOException, ParseException {
+	public static void searchIndex(String queryStrings) throws IOException, ParseException {
 		Searcher searcher = new IndexSearcher(FSDirectory.getDirectory("D:\\lucene"));
 		QueryParser parser = new QueryParser("text", new StandardAnalyzer());
-		for (String queryString : queryStrings) {
+		String[] queryArray = queryStrings.split(" ");
+		ArrayList<String[]> resultsList = new ArrayList<String[]>();
+		for (String queryString : queryArray) {
 			System.out.println("\nsearching for: " + queryString);
 			Query query = parser.parse(queryString);
 			TopDocs results = searcher.search(query, 10);
 			System.out.println("total hits: " + results.totalHits);
 			ScoreDoc[] hits = results.scoreDocs;
-			for (ScoreDoc hit : hits) {
-				Document doc = searcher.doc(hit.doc);
-				System.out.printf("%5.3f %s \n", hit.score, doc.get("text"));
+			String[] foundNames = new String[hits.length];
+			for (int i = 0; i < hits.length; i++) {
+				Document doc = searcher.doc(hits[i].doc);
+				System.out.printf("%5.3f %s \n", hits[i].score, doc.get("name"));
+				foundNames[i] = doc.get("name");
 			}
+			resultsList.add(foundNames);
 		}
+		System.out.println(Arrays.toString(resultsList.get(1)));
+		System.out.println(Arrays.toString(resultsList.get(2)));
 		searcher.close();
 	}
 }
