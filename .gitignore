@@ -20,3 +20,4 @@ hs_err_pid*.log
 *Thumbs.db
 bin/
 gen/
+lucene/src/org/apache
