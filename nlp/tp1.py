@@ -36,7 +36,7 @@ def ex1():
 def ex2():
         print ""
         line = raw_input(" Enter String\n")
-        m = re.search("(blue|green)(\W*\w*)*?(blue|green)" , line)
+        m = re.search("(blue|green)(\W*\w*)*(blue|green)" , line)
         if m:
                 print " String found: " + m.group()
         else:
