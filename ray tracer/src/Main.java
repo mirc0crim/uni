@@ -19,15 +19,18 @@ public class Main {
 		Vector3f lookAt = new Vector3f(0, 0, 0);
 		Vector3f up = new Vector3f(0, 1, 0);
 		float fov = 60;
-		int width = 512;
-		int height = 512;
+		int width = 1024;
+		int height = 1024;
 		float aspect = (float) width / (float) height;
 		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
 
-		Vector3f normal = new Vector3f(0, 1, 0);
+		Vector3f normal1 = new Vector3f(0, 1, 0);
 		float d = 1;
-		Plane plane = new Plane(normal, d);
-		IntersectableList.add(plane);
+		Plane bottom = new Plane(normal1, d);
+		IntersectableList.add(bottom);
+		Vector3f normal2 = new Vector3f(0, -1, 0);
+		Plane top = new Plane(normal2, d);
+		IntersectableList.add(top);
 
 		Vector3f v1 = new Vector3f(1, 0, 0);
 		Vector3f v2 = new Vector3f(1, 1, 0);
@@ -36,7 +39,7 @@ public class Main {
 		IntersectableList.add(triangle);
 
 		Vector3f c = new Vector3f(0, 0, 0);
-		float r = 1.5f;
+		float r = 1;
 		Sphere sphere = new Sphere(c, r);
 		IntersectableList.add(sphere);
 
@@ -44,37 +47,28 @@ public class Main {
 
 		for (int w = 0; w < width; w++)
 			for (int h = 0; h < height; h++) {
-				Vector4f primaryRay = new Vector4f(camera.getPixelRay(w, h));
-				primaryRay = Ray.transform(new Matrix4f(camera.getCameraMatrix()),
+				Vector4f primaryRay = Ray.transform(new Matrix4f(camera.getCameraMatrix()),
 						new Vector4f(camera.getPixelRay(w, h)));
 				float[] distList = new float[IntersectableList.size()];
-				int i = 0;
+				int o = 0;
 				for (Intersectable object : IntersectableList) {
-					distList[i] = object.testIntersection(new Vector3f(primaryRay.x,
+					distList[o] = object.testIntersection(new Vector3f(primaryRay.x,
 							primaryRay.y, primaryRay.z), new Vector3f(eye));
-					i++;
+					o++;
 				}
-				int rgb = 0;
 				int red = 0;
 				int green = 0;
 				int blue = 0;
-				if (distList[2] < 0) {
-					if (distList[2] < -5) {
-						blue = 0;
-					} else
-						blue = 255 - (int) (distList[2] * -51);
-				} else if (distList[1] < 0) {
-					if (distList[1] < -5)
-						green = 0;
-					else
-						green = 255 - (int) (distList[1] * -51);
-				} else if (distList[0] < 0) {
-					if (distList[0] < -5)
-						red = 0;
-					else
-						red = 255 - (int) (distList[0] * -51);
+				if (distList[3] < 0 && distList[3] > -5) {
+					blue = 255 - (int) (distList[3] * -51);
+				} else if (distList[1] < 0 && distList[1] > -5) {
+					green = 255 - (int) (distList[1] * -51);
+				} else if (distList[0] < 0 && distList[0] > -5) {
+					red = 255 - (int) (distList[0] * -51);
+				} else if (distList[2] < 0 && distList[2] > -5) {
+					red = 255 - (int) (distList[2] * -51);
 				}
-				rgb = (red << 16) + (green << 8) + blue;
+				int rgb = (red << 16) + (green << 8) + blue;
 				film.setPixel(w, h, rgb);
 			}
 
