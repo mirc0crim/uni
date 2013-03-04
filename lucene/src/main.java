@@ -2,7 +2,7 @@ import java.io.IOException;
 
 import org.apache.lucene.queryParser.ParseException;
 
-public class main {
+public class Main {
 
 	/**
 	 * @param args
@@ -10,7 +10,16 @@ public class main {
 	 * @throws ParseException
 	 */
 	public static void main(String[] args) throws IOException, ParseException {
+
+		String query1 = "city business program improvement income";
+		String query2 = "business improvement program city city income";
+		String[] optional = new String[] { "draw", "drawing", "home euro", "di?e?*", "diego*",
+				"diego?", "are~", "\"the improvement\"", "home AND euro", "home and euro",
+				"home +euro", "home euro^4", "+home euro^4" };
 		IndexFiles.buildIndex();
-		SearchFiles.searchIndex("business improvement program city city income");
+		SearchFiles.searchIndex(query1);
+		SearchFiles.searchIndex(query2);
+		for (String s : optional)
+			SearchFiles.searchIndex(s);
 	}
 }
