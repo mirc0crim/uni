@@ -1,0 +1,75 @@
+﻿Deleted old index.
+document1.txt added to index.
+document2.txt added to index.
+document3.txt added to index.
+document4.txt added to index.
+document5.txt added to index.
+
+searching for: city business program improvement income
+total hits: 5
+0.253 document2.txt
+0.155 document1.txt
+0.139 document5.txt
+0.007 document3.txt
+0.006 document4.txt
+
+searching for: business improvement program city city income
+total hits: 5
+0.332 document2.txt
+0.214 document5.txt
+0.118 document1.txt
+0.006 document3.txt
+0.005 document4.txt
+
+searching for: draw
+total hits: 0
+
+searching for: drawing
+total hits: 1
+0.299 document4.txt
+
+searching for: home euro
+total hits: 2
+0.150 document4.txt
+0.120 document2.txt
+
+searching for: di?e?*
+total hits: 1
+1.000 document1.txt
+
+searching for: diego*
+total hits: 1
+1.000 document3.txt
+
+searching for: diego?
+total hits: 0
+
+searching for: are~
+total hits: 1
+0.240 document1.txt
+
+searching for: "the improvement"
+total hits: 2
+0.189 document1.txt
+0.189 document2.txt
+
+searching for: home AND euro
+total hits: 0
+
+searching for: home and euro
+total hits: 2
+0.150 document4.txt
+0.120 document2.txt
+
+searching for: home +euro
+total hits: 1
+0.150 document4.txt
+
+searching for: home euro^4
+total hits: 2
+0.205 document4.txt
+0.041 document2.txt
+
+searching for: +home euro^4
+total hits: 1
+0.041 document2.txt
