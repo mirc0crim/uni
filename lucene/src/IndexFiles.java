@@ -12,11 +12,13 @@ import org.apache.lucene.store.FSDirectory;
 
 public class IndexFiles {
 
-	public IndexFiles() {
-	}
+	private static String indexPath = "D:\\lucene\\index";
 
 	public static void buildIndex() throws IOException {
-		IndexWriter indexWriter = new IndexWriter(FSDirectory.getDirectory("D:\\lucene"),
+		for (final File f : new File(indexPath).listFiles())
+			f.delete();
+		System.out.println("Deleted old index.");
+		IndexWriter indexWriter = new IndexWriter(FSDirectory.getDirectory(indexPath),
 				new StandardAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
 		final File folder = new File("D:\\lucene\\corpus");
 		ArrayList<String> textList = new ArrayList<String>();
@@ -28,7 +30,6 @@ public class IndexFiles {
 			try {
 				StringBuilder sb = new StringBuilder();
 				String line = br.readLine();
-
 				while (line != null) {
 					sb.append(line);
 					sb.append("\n");
@@ -46,6 +47,7 @@ public class IndexFiles {
 			doc.add(new Field("text", textList.get(i), Field.Store.YES, Field.Index.ANALYZED));
 			doc.add(new Field("name", fileList.get(i), Field.Store.YES, Field.Index.ANALYZED));
 			indexWriter.addDocument(doc);
+			System.out.println(fileList.get(i) + " added to index.");
 		}
 		indexWriter.close();
 	}

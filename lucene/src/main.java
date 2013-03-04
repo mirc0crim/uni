@@ -5,9 +5,8 @@ import org.apache.lucene.queryParser.ParseException;
 public class Main {
 
 	/**
-	 * @param args
-	 * @throws IOException
-	 * @throws ParseException
+	 * Index will be stored in "D:\lucene\index" and files have to be stored
+	 * in "D:\lucene\corpus"
 	 */
 	public static void main(String[] args) throws IOException, ParseException {
 
