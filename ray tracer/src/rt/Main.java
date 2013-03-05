@@ -6,7 +6,7 @@ import scenes.Scene;
 
 public class Main {
 
-	private static int sceneSelector = 2;
+	private static int sceneSelector = 1;
 	private static Scene image;
 
 	public static void main(String[] args) {

@@ -1,4 +1,5 @@
 package rt;
+
 import javax.vecmath.Vector4f;
 
 public class Ray {

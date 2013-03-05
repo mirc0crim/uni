@@ -1,6 +1,5 @@
 package rt;
 
-
 public class BinaryIntegrator extends IntegratorFactory {
 
 	@Override

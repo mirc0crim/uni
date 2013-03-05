@@ -1,10 +1,10 @@
 package rt;
 
+import java.util.Iterator;
+
 import javax.vecmath.Vector4f;
 
 public class IntersectableList extends Aggregate implements Intersectable {
-
-	private float t = Float.MAX_VALUE;
 
 	public IntersectableList() {
 		super();
@@ -17,36 +17,19 @@ public class IntersectableList extends Aggregate implements Intersectable {
 	@Override
 	public HitRecord intersect(Ray ray) {
 		HitRecord hit = null;
-		while (intersectables.iterator().hasNext()) {
-			Intersectable object = intersectables.iterator().next();
-			hit = object.intersect(ray);
-			if (hit != null) {
-				float temp = hit.getT();
-				if (temp < t)
-					t = temp;
+		HitRecord newhit = null;
+		Iterator<Intersectable> iter = intersectables.iterator();
+		while (iter.hasNext()) {
+			Intersectable object = iter.next();
+			newhit = object.intersect(ray);
+			if (newhit != null) {
+				if (hit == null)
+					hit = newhit;
+				else if (newhit.getT() < hit.getT())
+					hit = newhit;
 			}
 		}
 		return hit;
-	}
-
-	public void add(Instance instance) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
-	 * @return the t
-	 */
-	public float getT() {
-		return t;
-	}
-
-	/**
-	 * @param t
-	 *            the t to set
-	 */
-	public void setT(float t) {
-		this.t = t;
 	}
 
 	@Override

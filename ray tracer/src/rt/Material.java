@@ -1,6 +1,5 @@
 package rt;
 
-
 /**
  * Stores the properties of a material. You will implement this class in the
  * "Shading and Texturing" project.
@@ -10,7 +9,7 @@ public class Material {
 	private Spectrum diffuse;
 	private Spectrum specular;
 	private Spectrum ambient;
-	private float phong;
+	private float shininess;
 
 	public Material() {
 		setDiffuse(new Spectrum(1, 1, 1));
@@ -43,11 +42,11 @@ public class Material {
 		this.ambient = ambient;
 	}
 
-	public float getPhong() {
-		return phong;
+	public float getShininess() {
+		return shininess;
 	}
 
 	public void setShininess(float phong) {
-		this.phong = phong;
+		this.shininess = phong;
 	}
 }

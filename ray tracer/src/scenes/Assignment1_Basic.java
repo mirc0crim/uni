@@ -3,6 +3,7 @@ package scenes;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
+import rt.BlinnIntegrator;
 import rt.BlinnMaterial;
 import rt.Camera;
 import rt.Film;
@@ -12,7 +13,6 @@ import rt.IntersectableList;
 import rt.LightList;
 import rt.Plane;
 import rt.PointLight;
-import rt.SaneIntegrator;
 import rt.Spectrum;
 import rt.Sphere;
 import rt.Tonemapper;
@@ -34,7 +34,7 @@ public class Assignment1_Basic implements Scene {
 		outputFileName = new String("Assignment1_Basic.png");
 
 		// Specify integrator to be used
-		integratorFactory = new SaneIntegrator();
+		integratorFactory = new BlinnIntegrator();
 
 		// Specify pixel sampler to be used
 		tonemapper = new Tonemapper();
@@ -43,7 +43,7 @@ public class Assignment1_Basic implements Scene {
 		Vector3f eye = new Vector3f(0.f, 0.f, 2.f);
 		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
 		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
-		float fov = 60.f;
+		float fov = 50;
 		int width = 512;
 		int height = 512;
 		float aspect = (float) width / (float) height;
@@ -56,7 +56,7 @@ public class Assignment1_Basic implements Scene {
 		Vector4f center = new Vector4f(0.f, 0.f, 0.f, 1.f);
 		float radius = 0.2f;
 		Sphere sphere = new Sphere(center, radius);
-		Spectrum kd = new Spectrum(0.8f, 0.8f, 0.8f);
+		Spectrum kd = new Spectrum(0.2f, 0.2f, 0.2f);
 		sphere.setMaterial(new BlinnMaterial(kd));
 		objects.add(sphere);
 

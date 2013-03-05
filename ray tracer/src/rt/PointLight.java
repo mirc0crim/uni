@@ -1,6 +1,5 @@
 package rt;
 
-import javax.vecmath.Point4f;
 import javax.vecmath.Vector4f;
 
 public class PointLight implements Light {
@@ -21,9 +20,10 @@ public class PointLight implements Light {
 		position = pos;
 	}
 
-	public Spectrum getCl(Point4f hitPoint) {
-		Point4f p = new Point4f(position);
-		float length = p.distanceSquared(hitPoint);
+	public Spectrum getCl(Vector4f hitPoint) {
+		Vector4f p = new Vector4f(position);
+		p.sub(hitPoint);
+		float length = p.length() * p.length();
 		return cSrc.divideBy(length);
 	}
 

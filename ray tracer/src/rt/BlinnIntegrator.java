@@ -11,7 +11,8 @@ public class BlinnIntegrator extends IntegratorFactory {
 		Iterator<Light> lightIterator = lights.getLightList().iterator();
 		if (hitRecord != null) {
 			while (lightIterator.hasNext()) {
-
+				spectrum = hitRecord.getMaterial().getDiffuse();
+				lightIterator.next();
 			}
 			return spectrum;
 		} else
