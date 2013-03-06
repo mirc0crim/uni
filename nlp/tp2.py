@@ -1,35 +1,35 @@
 # -*- coding: ascii -*-
 import sys
 import re
+import fileMK
 
-myFile = raw_input("Enter path to file: \nDefault is same path as this program\n")
+path = "D:\\nlp"
 
-if myFile == "":
-    myFile = "1.txt"
-f = open(myFile)
-t = f.read()
+t = []
+t = fileMK.readFilesInArray(path)
 
+# Task 1
+for i in range(len(t)):
+    print "Number of tags in document " + str(i+1)
+    print fileMK.countAllTags(t[i])
 
-f = open("C:/Users/Mirco Kocher/Desktop/1.txt")
-t = f.read()
-t = t.replace("\n","")
-a = 0
-"""
-print t.count("<DOCNO>")
-m = re.search("(<(?P<name>.....)>)(\W*\w*)*?(</(?P=name)>)", t)
-print m.group()
-t = t.replace(m.group(), "")
-print t.count("<DOCNO>")
-m = re.search("(<(?P<name>.....)>)(\W*\w*)*?(</(?P=name)>)", t)
-print m.group()
-m = re.search("(</(\W*\w*)*?>)", t)
-print m.group()
-"""
+print "------------------------"
 
-m = re.search("(</(\W*\w*)*?>)", t)
-while (m):
-    a+=1
-    t = t.replace(m.group(), "", 1)
-    m = re.search("(</(\W*\w*)*?>)", t)
+# Task 2
+for i in range(len(t)):
+    h = fileMK.readAllHeadlines(t[i])
+    print "Headlines in document " + str(i+1)
+    for j in range(len(h)):
+        print h[j]
+    print str(len(h)) + " Headlines extracted"
 
-print a
+print "------------------------"
+
+# Task 3
+search = raw_input("Enter a Docno like \"GH950102-000004\"\n")
+for i in range(len(t)):
+    d = []
+    d = fileMK.splitToDocsArray(t[i])
+    s = fileMK.searchTextWithDocno(d, search)
+    if s != None:
+        print s
