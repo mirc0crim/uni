@@ -31,3 +31,10 @@ def searchTextWithDocno(d, search):
             n = re.findall("<TEXT>(.*?)</TEXT>", d[i])
             if n:
                 return n[0]
+            else:
+                n = re.findall("</SOURCE>(.*)", d[i])
+                if n:
+                    return n[0]
+
+def numOfTokens(text, sep):
+    return len(text.split(sep))

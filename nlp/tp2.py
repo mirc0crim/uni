@@ -33,3 +33,11 @@ for i in range(len(t)):
     s = fileMK.searchTextWithDocno(d, search)
     if s != None:
         print s
+
+print "------------------------"
+
+# Task 4
+n = 0
+for i in range(len(t)):
+    n += fileMK.numOfTokens(t[i], " ")
+print str(n) + " tokens in corpus with " + str(len(t)) + " documents"
