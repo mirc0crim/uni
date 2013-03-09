@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,14 +69,26 @@ public class VectorSpaceModel {
 		for (int term = 0; term < query.length; term++)
 			System.out.println("weight: " + Arrays.toString(weight[term]));
 
-		double[] score = new double[nDocs];
+		String[][] score = new String[nDocs][2];
 		for (int doc = 0; doc < nDocs; doc++) {
 			int total = 0;
 			for (int term = 0; term < query.length; term++)
 				total += weight[term][doc];
-			score[doc] = total;
+			score[doc][0] = total + "";
+			score[doc][1] = new File(docPath).listFiles()[doc].getName();
 		}
-		System.out.println("\nscore: " + Arrays.toString(score));
+		Arrays.sort(score, new Comparator<String[]>() {
+			@Override
+			public int compare(final String[] entry1, final String[] entry2) {
+				final String s1 = entry1[0];
+				final String s2 = entry2[0];
+				return s2.compareTo(s1);
+			}
+		});
+		System.out.println("\nscore:");
+		for (int doc = 0; doc < nDocs; doc++)
+			if (Integer.parseInt(score[doc][0]) > 0)
+				System.out.println(Arrays.toString(score[doc]));
 
 	}
 }
