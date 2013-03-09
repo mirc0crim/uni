@@ -15,10 +15,14 @@ public class Main {
 		String[] optional = new String[] { "draw", "drawing", "home euro", "di?e?*", "diego*",
 				"diego?", "are~", "\"the improvement\"", "home AND euro", "home and euro",
 				"home +euro", "home euro^4", "+home euro^4" };
+		/*
 		IndexFiles.buildIndex();
 		SearchFiles.searchIndex(query1);
 		SearchFiles.searchIndex(query2);
 		for (String s : optional)
 			SearchFiles.searchIndex(s);
+		 */
+
+		VectorSpaceModel.searchVSM(query1);
 	}
 }
