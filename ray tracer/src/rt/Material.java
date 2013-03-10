@@ -8,10 +8,10 @@ import javax.vecmath.Vector3f;
  */
 public class Material {
 
-	private Spectrum diffuse;
-	private Spectrum specular;
-	private Spectrum ambient;
-	private float shininess;
+	protected Spectrum diffuse;
+	protected Spectrum specular;
+	protected Spectrum ambient;
+	protected float shininess;
 
 	public Material() {
 		setDiffuse(new Spectrum(1, 1, 1));

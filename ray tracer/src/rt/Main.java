@@ -31,13 +31,21 @@ public class Main {
 			break;
 		}
 		System.out.println("Rendering image...");
-		for (int w = 0; w < image.getFilm().getFilmWidth(); w++)
+		int p = image.getFilm().getFilmWidth() / 10;
+		int s = 10;
+		for (int w = 0; w < image.getFilm().getFilmWidth(); w++) {
+			if (w == p) {
+				System.out.println(s + "%");
+				s += 10;
+				p += image.getFilm().getFilmWidth() / 10;
+			}
 			for (int h = 0; h < image.getFilm().getFilmHeight(); h++) {
 				Ray ray = image.getCamera().getPrimaryRay(w, h);
 				Spectrum spectrum = image.getIntegratorFactory().integrate(image.getObjects(),
 						image.getLights(), image.getCamera().getCenterOfProjection(), ray, 1);
 				image.getFilm().setPixel(w, h, spectrum);
 			}
+		}
 		image.getTonemapper().createImage(image.getFilm(), image.getOutputFileName());
 		System.out.println("Image successfully written to disk!");
 	}

@@ -44,7 +44,7 @@ public class BlinnMaterial extends Material {
 		// Diffuse reflectance term
 		float nDotL = normal.dot(L);
 		if (nDotL >= 0) {
-			spectrum.append(cl.multipliedBy(getDiffuse()).multipliedBy(nDotL));
+			spectrum.append(cl.multipliedBy(diffuse).multipliedBy(nDotL));
 		}
 
 		// Specular reflectance term
@@ -55,13 +55,13 @@ public class BlinnMaterial extends Material {
 		h.normalize();
 		h.add(e);
 		h.normalize();
-		float hDotN = (float) Math.pow(h.dot(normal), getShininess());
-		spectrum.append(getSpecular().multipliedBy(cl).multipliedBy(hDotN));
+		float hDotN = (float) Math.pow(h.dot(normal), shininess);
+		spectrum.append(specular.multipliedBy(cl).multipliedBy(hDotN));
 
 		// Ambient reflectance term
 		cl = light.getCl(hitPoint);
-		Spectrum ambient = getAmbient().multipliedBy(cl);
-		spectrum.append(ambient);
+		Spectrum amb = ambient.multipliedBy(cl);
+		spectrum.append(amb);
 
 		spectrum.clampMax(1.f);
 		spectrum.clampMin(0.f);

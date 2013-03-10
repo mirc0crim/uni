@@ -48,10 +48,8 @@ public class Mesh extends Aggregate implements Intersectable {
 				normal = normals.get(face[2][2] - 1);
 				Vector3f n2 = new Vector3f(normal[0], normal[1], normal[2]);
 				triangles.add(new Triangle(p1, p2, p3, n0, n1, n2));
-			} else {
+			} else
 				triangles.add(new Triangle(p1, p2, p3));
-				System.out.println("No Normals..");
-			}
 		}
 
 	}

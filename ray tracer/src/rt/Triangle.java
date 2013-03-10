@@ -18,11 +18,11 @@ public class Triangle implements Intersectable {
 
 		Vector3f uTemp = new Vector3f(p2);
 		uTemp.sub(p1);
-		u = new Vector3f(u);
+		u = new Vector3f(uTemp);
 
 		Vector3f vTemp = new Vector3f(p3);
 		vTemp.sub(p1);
-		v = new Vector3f(v);
+		v = new Vector3f(vTemp);
 
 		Vector3f nTemp = new Vector3f(uTemp);
 		nTemp.cross(uTemp, vTemp);

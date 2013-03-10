@@ -21,9 +21,9 @@ public class Film {
 	}
 
 	public int getPixelRGB(int i, int j) {
-		int r = (int) (255.f * film[i][j].red);
-		int g = (int) (255.f * film[i][j].green);
-		int b = (int) (255.f * film[i][j].blue);
+		int r = (int) (Math.min((255.f * film[i][j].red), 255.f));
+		int g = (int) (Math.min((255.f * film[i][j].green), 255.f));
+		int b = (int) (Math.min((255.f * film[i][j].blue), 255.f));
 		int rgb = r << 16 | g << 8 | b;
 		return rgb;
 	}

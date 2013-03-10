@@ -15,8 +15,8 @@ public class PointLight implements Light {
 	public Spectrum getCl(Vector3f hitPoint) {
 		Vector3f p = new Vector3f(position);
 		p.sub(hitPoint);
-		float length = (float) Math.pow(p.length(), 2);
-		return new Spectrum(cSrc.divideBy(length));
+		float len = (float) Math.pow(p.length(), 2);
+		return new Spectrum(cSrc.divideBy(len));
 	}
 
 	public Vector3f getL(Vector3f hitPoint) {

@@ -27,13 +27,13 @@ public class DiffuseMaterial extends Material {
 		// Diffuse reflectance term
 		float nDotL = normal.dot(L);
 		if (nDotL >= 0) {
-			spectrum.append(getDiffuse().multipliedBy(cl).multipliedBy(nDotL));
+			spectrum.append(diffuse.multipliedBy(cl).multipliedBy(nDotL));
 		}
 
 		// Ambient reflectance term
 		cl = light.getCl(hitPoint);
-		Spectrum ambient = getAmbient().multipliedBy(cl);
-		spectrum.append(ambient);
+		Spectrum amb = ambient.multipliedBy(cl);
+		spectrum.append(amb);
 
 		spectrum.clampMax(1.f);
 		spectrum.clampMin(0.f);

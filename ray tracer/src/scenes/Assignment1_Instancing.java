@@ -7,7 +7,6 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
 import rt.BlinnIntegrator;
-import rt.BlinnMaterial;
 import rt.Camera;
 import rt.DiffuseMaterial;
 import rt.Film;
@@ -49,8 +48,8 @@ public class Assignment1_Instancing implements Scene {
 		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
 		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
 		float fov = 60.f;
-		int width = 256;
-		int height = 256;
+		int width = 512;
+		int height = 512;
 		float aspect = (float) width / (float) height;
 		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
 		film = new Film(width, height);
@@ -60,23 +59,23 @@ public class Assignment1_Instancing implements Scene {
 
 		// Box
 		Plane plane = new Plane(new Vector3f(0.f, 1.f, 0.f), 1.f);
-		plane.setMaterial(new BlinnMaterial(new Spectrum(0.f, 0.8f, 0.8f)));
+		plane.setMaterial(new DiffuseMaterial(new Spectrum(0.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		plane = new Plane(new Vector3f(0.f, 0.f, 1.f), 1.f);
-		plane.setMaterial(new BlinnMaterial(new Spectrum(0.3f, 0.8f, 0.8f)));
+		plane.setMaterial(new DiffuseMaterial(new Spectrum(0.3f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		plane = new Plane(new Vector3f(-1.f, 0.f, 0.f), 1.f);
-		plane.setMaterial(new BlinnMaterial(new Spectrum(1.f, 0.8f, 0.8f)));
+		plane.setMaterial(new DiffuseMaterial(new Spectrum(1.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		plane = new Plane(new Vector3f(1.f, 0.f, 0.f), 1.f);
-		plane.setMaterial(new BlinnMaterial(new Spectrum(0.f, 0.8f, 0.0f)));
+		plane.setMaterial(new DiffuseMaterial(new Spectrum(0.f, 0.8f, 0.0f)));
 		objects.add(plane);
 
 		plane = new Plane(new Vector3f(0.f, -1.f, 0.f), 1.f);
-		plane.setMaterial(new BlinnMaterial(new Spectrum(0.8f, 0.8f, 0.8f)));
+		plane.setMaterial(new DiffuseMaterial(new Spectrum(0.8f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		// Add objects

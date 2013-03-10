@@ -26,7 +26,7 @@ public class MirrorMaterial extends Material {
 		// Diffuse reflectance term
 		float nDotL = n.dot(L);
 		if (nDotL >= 0) {
-			spectrum.append(cl.multipliedBy(getDiffuse()).multipliedBy(nDotL));
+			spectrum.append(cl.multipliedBy(diffuse).multipliedBy(nDotL));
 		}
 
 		// Specular reflectance term
@@ -36,13 +36,13 @@ public class MirrorMaterial extends Material {
 		Vector3f h = new Vector3f(L);
 		h.add(e);
 		h.normalize();
-		float hDotN = (float) Math.pow(h.dot(n), getShininess());
-		spectrum.append(getSpecular().multipliedBy(cl).multipliedBy(hDotN));
+		float hDotN = (float) Math.pow(h.dot(n), shininess);
+		spectrum.append(specular.multipliedBy(cl).multipliedBy(hDotN));
 
 		// Ambient reflectance term
-		// cl = light.getCl(hitPoint);
-		// Spectrum ambient = this.ambient.multipliedBy(cl);
-		// spectrum.append(ambient);
+		cl = light.getCl(hitPoint);
+		Spectrum amb = ambient.multipliedBy(cl);
+		spectrum.append(amb);
 
 		spectrum.clampMax(1.f);
 		spectrum.clampMin(0.f);
