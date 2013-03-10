@@ -15,7 +15,7 @@ public class Tonemapper {
 			for (int h = 0; h < film.getFilmHeight(); h++)
 				image.setRGB(w, film.getFilmHeight() - h - 1, film.getPixelRGB(w, h));
 		try {
-			ImageIO.write(image, "jpg", new File(name));
+			ImageIO.write(image, "png", new File(name));
 		} catch (IOException e) {
 			System.out.println("Image " + name + " could not be saved");
 		}

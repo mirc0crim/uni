@@ -16,7 +16,7 @@ public class MyThread implements Runnable {
 		for (int h = 0; h < image.getFilm().getFilmHeight(); h++) {
 			Ray ray = image.getCamera().getPrimaryRay(w, h);
 			Spectrum spectrum = image.getIntegratorFactory().integrate(image.getObjects(),
-					image.getLights(), image.getCamera().getCenterOfProjection(), ray, 1);
+					image.getLights(), image.getCamera().getCenterOfProjection(), ray, 10);
 			image.getFilm().setPixel(w, h, spectrum);
 		}
 	}

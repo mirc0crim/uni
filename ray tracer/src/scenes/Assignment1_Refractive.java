@@ -2,7 +2,6 @@ package scenes;
 
 import javax.vecmath.Vector3f;
 
-import rt.BlinnIntegrator;
 import rt.BlinnMaterial;
 import rt.Camera;
 import rt.Film;
@@ -12,6 +11,7 @@ import rt.IntersectableList;
 import rt.LightList;
 import rt.Plane;
 import rt.PointLight;
+import rt.RefractiveIntegrator;
 import rt.RefractiveMaterial;
 import rt.Spectrum;
 import rt.Sphere;
@@ -34,7 +34,7 @@ public class Assignment1_Refractive implements Scene {
 		outputFileName = new String("Assignment1_Refractive.png");
 
 		// Specify integrator to be used
-		integratorFactory = new BlinnIntegrator();
+		integratorFactory = new RefractiveIntegrator();
 
 		// Specify pixel sampler to be used
 		tonemapper = new Tonemapper();
