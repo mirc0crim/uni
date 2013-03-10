@@ -1,17 +1,17 @@
 package rt;
 
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3f;
 
 public class HitRecord {
 
 	private float t;
-	private Vector4f intersectionPoint;
-	private Vector4f normal;
+	private Vector3f intersectionPoint;
+	private Vector3f normal;
 	private Intersectable object;
 	private Material material;
 
-	public HitRecord(float t, Vector4f intersectionPoint, Vector4f normal, Intersectable object,
-			Material material) {
+	public HitRecord(float t, Vector3f intersectionPoint, Vector3f normal,
+			Intersectable object, Material material) {
 		setT(t);
 		setIntersectionPoint(intersectionPoint);
 		setNormal(normal);
@@ -22,7 +22,7 @@ public class HitRecord {
 	/**
 	 * @return the intersectionPoint
 	 */
-	public Vector4f getIntersectionPoint() {
+	public Vector3f getIntersectionPoint() {
 		return intersectionPoint;
 	}
 
@@ -30,7 +30,7 @@ public class HitRecord {
 	 * @param intersectionPoint
 	 *            the intersectionPoint to set
 	 */
-	public void setIntersectionPoint(Vector4f intersectionPoint) {
+	public void setIntersectionPoint(Vector3f intersectionPoint) {
 		this.intersectionPoint = intersectionPoint;
 	}
 
@@ -52,7 +52,7 @@ public class HitRecord {
 	/**
 	 * @return the normal
 	 */
-	public Vector4f getNormal() {
+	public Vector3f getNormal() {
 		return normal;
 	}
 
@@ -60,7 +60,7 @@ public class HitRecord {
 	 * @param normal
 	 *            the normal to set
 	 */
-	public void setNormal(Vector4f normal) {
+	public void setNormal(Vector3f normal) {
 		this.normal = normal;
 	}
 

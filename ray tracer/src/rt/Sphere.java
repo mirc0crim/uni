@@ -1,25 +1,25 @@
 package rt;
 
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3f;
 
 public class Sphere implements Intersectable {
 
-	Vector4f center;
+	Vector3f center;
 	float radius;
 	private Material material;
-	private Vector4f normal;
+	private Vector3f normal;
 
-	public Sphere(Vector4f c, float r) {
+	public Sphere(Vector3f c, float r) {
 		center = c;
 		radius = r;
-		normal = new Vector4f();
+		normal = new Vector3f();
 	}
 
 	@Override
 	public HitRecord intersect(Ray ray) {
 		// Compute A, B and C coefficients
 		float a = ray.getDirection().dot(ray.getDirection());
-		Vector4f origin = new Vector4f(ray.getOrigin());
+		Vector3f origin = new Vector3f(ray.getOrigin());
 		origin.sub(center);
 		float b = 2 * ray.getDirection().dot(origin);
 		float c = origin.dot(origin) - radius * radius;
@@ -58,17 +58,17 @@ public class Sphere implements Intersectable {
 		if (t1 < 0)
 			return null;
 
-		Vector4f normal;
+		Vector3f normal;
 
 		// if t0 is less than zero, the intersection point is at t1
 		if (t0 < 0) {
-			normal = new Vector4f(ray.getHitPoint(t1));
+			normal = new Vector3f(ray.getHitPoint(t1));
 			normal.sub(center);
 			normal.scale(1 / radius);
 			this.normal = normal;
 			return new HitRecord(t1, ray.getHitPoint(t1), normal, this, material);
 		} else {
-			normal = new Vector4f(ray.getHitPoint(t0));
+			normal = new Vector3f(ray.getHitPoint(t0));
 			normal.sub(center);
 			normal.scale(1 / radius);// else the intersection point is at t0
 			this.normal = normal;
@@ -76,11 +76,11 @@ public class Sphere implements Intersectable {
 		}
 	}
 
-	public Vector4f getCenter() {
+	public Vector3f getCenter() {
 		return center;
 	}
 
-	public void setCenter(Vector4f c) {
+	public void setCenter(Vector3f c) {
 		center = c;
 	}
 
@@ -101,7 +101,7 @@ public class Sphere implements Intersectable {
 	}
 
 	@Override
-	public Vector4f getNormal() {
+	public Vector3f getNormal() {
 		return normal;
 	}
 }

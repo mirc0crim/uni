@@ -6,7 +6,7 @@ import scenes.Scene;
 
 public class Main {
 
-	private static int sceneSelector = 1;
+	private static int sceneSelector = 2;
 	private static Scene image;
 
 	public static void main(String[] args) {
@@ -23,10 +23,10 @@ public class Main {
 			for (int h = 0; h < image.getFilm().getFilmHeight(); h++) {
 				Ray ray = image.getCamera().getPrimaryRay(w, h);
 				Spectrum spectrum = image.getIntegratorFactory().integrate(image.getObjects(),
-						image.getLights(), ray);
+						image.getLights(), image.getCamera().getCenterOfProjection(), ray);
 				image.getFilm().setPixel(w, h, spectrum);
 			}
-		image.getTonemapper().createImage(image.getFilm(), "asdf.jpg");
+		image.getTonemapper().createImage(image.getFilm(), image.getOutputFileName());
 		System.out.println("Image successfully written to disk!");
 	}
 }

@@ -1,5 +1,7 @@
 package rt;
 
+import javax.vecmath.Vector3f;
+
 /**
  * Stores the properties of a material. You will implement this class in the
  * "Shading and Texturing" project.
@@ -16,6 +18,10 @@ public class Material {
 		setSpecular(new Spectrum(1, 1, 1));
 		setAmbient(new Spectrum(.2f, .2f, .2f));
 		setShininess(32);
+	}
+
+	public Spectrum shade(HitRecord hit, Vector3f eye, Light light) {
+		return null;
 	}
 
 	public Spectrum getDiffuse() {

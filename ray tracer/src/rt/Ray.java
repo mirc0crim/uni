@@ -1,40 +1,38 @@
 package rt;
 
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3f;
 
 public class Ray {
 
-	Vector4f origin;
-	Vector4f direction;
+	Vector3f origin;
+	Vector3f direction;
 
-	public Ray(Vector4f dir, Vector4f orig) {
+	public Ray(Vector3f dir, Vector3f orig) {
 		origin = orig;
-		direction = new Vector4f(dir);
-		direction.sub(orig);
-		direction.normalize();
+		direction = new Vector3f(dir);
 	}
 
-	public Vector4f getHitPoint(float t) {
-		Vector4f hitPoint = new Vector4f(origin);
-		Vector4f d = new Vector4f(direction);
+	public Vector3f getHitPoint(float t) {
+		Vector3f hitPoint = new Vector3f(origin);
+		Vector3f d = new Vector3f(direction);
 		d.scale(t);
 		hitPoint.add(d);
 		return hitPoint;
 	}
 
-	public Vector4f getOrigin() {
+	public Vector3f getOrigin() {
 		return origin;
 	}
 
-	public void setOrigin(Vector4f orig) {
+	public void setOrigin(Vector3f orig) {
 		origin = orig;
 	}
 
-	public Vector4f getDirection() {
+	public Vector3f getDirection() {
 		return direction;
 	}
 
-	public void setDirection(Vector4f dir) {
+	public void setDirection(Vector3f dir) {
 		direction = dir;
 	}
 

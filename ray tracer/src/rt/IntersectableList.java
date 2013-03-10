@@ -2,7 +2,7 @@ package rt;
 
 import java.util.Iterator;
 
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3f;
 
 public class IntersectableList extends Aggregate implements Intersectable {
 
@@ -33,7 +33,7 @@ public class IntersectableList extends Aggregate implements Intersectable {
 	}
 
 	@Override
-	public Vector4f getNormal() {
+	public Vector3f getNormal() {
 		// TODO Auto-generated method stub
 		return null;
 	}

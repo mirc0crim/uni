@@ -1,23 +1,24 @@
 package rt;
-import javax.vecmath.Vector4f;
+
+import javax.vecmath.Vector3f;
 
 public class Plane implements Intersectable {
 
-	Vector4f normal;
+	Vector3f normal;
 	float distance;
 	private Material material;
 
-	public Plane(Vector4f n, float d) {
+	public Plane(Vector3f n, float d) {
 		normal = n;
 		distance = d;
 	}
 
 	@Override
-	public Vector4f getNormal() {
+	public Vector3f getNormal() {
 		return normal;
 	}
 
-	public void setNormal(Vector4f n) {
+	public void setNormal(Vector3f n) {
 		normal = n;
 	}
 
@@ -31,11 +32,11 @@ public class Plane implements Intersectable {
 
 	@Override
 	public HitRecord intersect(Ray ray) {
-		Vector4f l = new Vector4f(ray.getDirection());
-		Vector4f p0 = new Vector4f(normal);
+		Vector3f l = new Vector3f(ray.getDirection());
+		Vector3f p0 = new Vector3f(normal);
 		p0.scale(distance);
-		Vector4f l0 = new Vector4f(ray.getOrigin());
-		Vector4f n = new Vector4f(normal);
+		Vector3f l0 = new Vector3f(ray.getOrigin());
+		Vector3f n = new Vector3f(normal);
 		p0.sub(l0);
 		float t = p0.dot(n) / l.dot(n);
 		if (Float.isNaN(t))

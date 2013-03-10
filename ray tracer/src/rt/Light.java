@@ -1,11 +1,11 @@
 package rt;
 
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3f;
 
 public interface Light {
 
-	Spectrum getCl(Vector4f hitPoint);
+	Spectrum getCl(Vector3f hitPoint);
 
-	Vector4f getL(Vector4f hitPoint);
+	Vector3f getL(Vector3f hitPoint);
 
 }

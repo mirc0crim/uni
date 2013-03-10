@@ -1,34 +1,34 @@
 package rt;
 
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3f;
 
 public class PointLight implements Light {
 
-	private Vector4f position;
+	private Vector3f position;
 	private Spectrum cSrc;
 
-	public PointLight(Vector4f position, Spectrum strength) {
+	public PointLight(Vector3f position, Spectrum strength) {
 		this.position = position;
 		cSrc = strength;
 	}
 
-	public Vector4f getPosition() {
+	public Vector3f getPosition() {
 		return position;
 	}
 
-	public void setPosition(Vector4f pos) {
+	public void setPosition(Vector3f pos) {
 		position = pos;
 	}
 
-	public Spectrum getCl(Vector4f hitPoint) {
-		Vector4f p = new Vector4f(position);
+	public Spectrum getCl(Vector3f hitPoint) {
+		Vector3f p = new Vector3f(position);
 		p.sub(hitPoint);
 		float length = p.length() * p.length();
 		return cSrc.divideBy(length);
 	}
 
-	public Vector4f getL(Vector4f hitPoint) {
-		Vector4f L = new Vector4f();
+	public Vector3f getL(Vector3f hitPoint) {
+		Vector3f L = new Vector3f();
 		L.set(position);
 		L.sub(hitPoint);
 		L.normalize();

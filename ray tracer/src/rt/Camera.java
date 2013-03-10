@@ -10,7 +10,6 @@ public class Camera {
 	private Vector3f centerOfProjection;
 	private Vector3f lookAtPoint;
 	private Vector3f upVector;
-	private Vector4f origin;
 	private float theta;
 	private float aspectRatio;
 	private float width;
@@ -26,7 +25,6 @@ public class Camera {
 		aspectRatio = aspect;
 		width = w;
 		height = h;
-		origin = new Vector4f(0, 0, 0, 1);
 		updateCameraMatrix();
 	}
 
@@ -127,10 +125,13 @@ public class Camera {
 
 	public Ray getPrimaryRay(int i, int j) {
 		Vector4f suvw = new Vector4f(u(i, j), v(i, j), -1, 1);
-		Vector4f o = new Vector4f(origin);
+		Vector4f o = new Vector4f(centerOfProjection);
+		o.setW(1);
 		cameraMatrix.transform(suvw);
 		cameraMatrix.transform(o);
-		return new Ray(suvw, o);
+		suvw.sub(o);
+		Vector3f rayDirection = new Vector3f(suvw.getX(), suvw.getY(), suvw.getZ());
+		return new Ray(rayDirection, centerOfProjection);
 	}
 
 	private float u(int i, int j) {

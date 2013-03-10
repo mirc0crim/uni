@@ -1,6 +1,6 @@
 package rt;
 
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3f;
 
 public class BlinnMaterial extends Material {
 
@@ -32,25 +32,27 @@ public class BlinnMaterial extends Material {
 		this.setShininess(shininess);
 	}
 
-	public Spectrum shade(HitRecord hit, Light light) {
+	@Override
+	public Spectrum shade(HitRecord hit, Vector3f eye, Light light) {
 		Spectrum spectrum = new Spectrum(0.f, 0.f, 0.f);
-		Vector4f hitPoint = hit.getIntersectionPoint();
-		Vector4f normal = hit.getNormal();
+		Vector3f hitPoint = hit.getIntersectionPoint();
+		Vector3f normal = hit.getNormal();
 		normal.normalize();
 		Spectrum cl = light.getCl(hitPoint);
+		Vector3f L = light.getL(hitPoint);
 
 		// Diffuse reflectance term
-		float nDotL = normal.dot(light.getL(hitPoint));
+		float nDotL = normal.dot(L);
 		if (nDotL >= 0) {
 			spectrum.append(getDiffuse().multipliedBy(cl).multipliedBy(nDotL));
 		}
 
 		// Specular reflectance term
-		Vector4f eye = new Vector4f(hitPoint);
-		eye.negate();
-		eye.normalize();
-		Vector4f h = light.getL(hitPoint);
-		h.add(eye);
+		Vector3f e = new Vector3f(eye);
+		e.negate();
+		e.normalize();
+		Vector3f h = light.getL(hitPoint);
+		h.add(e);
 		h.normalize();
 		cl = light.getCl(hitPoint);
 		float hDotE = (float) Math.pow((h.dot(normal)), getShininess());

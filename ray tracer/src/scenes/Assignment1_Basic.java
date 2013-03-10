@@ -1,7 +1,6 @@
 package scenes;
 
 import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
 
 import rt.BlinnIntegrator;
 import rt.BlinnMaterial;
@@ -53,49 +52,49 @@ public class Assignment1_Basic implements Scene {
 		// List of objects
 		objects = new IntersectableList();
 
-		Vector4f center = new Vector4f(0.f, 0.f, 0.f, 1.f);
+		Vector3f center = new Vector3f(0.f, 0.f, 0.f);
 		float radius = 0.2f;
 		Sphere sphere = new Sphere(center, radius);
 		Spectrum kd = new Spectrum(0.2f, 0.2f, 0.2f);
 		sphere.setMaterial(new BlinnMaterial(kd));
 		objects.add(sphere);
 
-		Vector4f normal = new Vector4f(0.f, 1.f, 0.f, 0.f);
+		Vector3f normal = new Vector3f(0.f, 1.f, 0.f);
 		float d = 1.f;
 		Plane plane = new Plane(normal, d);
 		kd = new Spectrum(0.f, 0.8f, 0.8f);
 		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
-		normal = new Vector4f(0.f, 0.f, 1.f, 0.f);
+		normal = new Vector3f(0.f, 0.f, 1.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(0.3f, 0.8f, 0.8f);
 		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
-		normal = new Vector4f(-1.f, 0.f, 0.f, 0.f);
+		normal = new Vector3f(-1.f, 0.f, 0.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(1.f, 0.8f, 0.8f);
 		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
-		normal = new Vector4f(1.f, 0.f, 0.f, 0.f);
+		normal = new Vector3f(1.f, 0.f, 0.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(0.f, 0.8f, 0.0f);
 		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
-		normal = new Vector4f(0.f, -1.f, 0.f, 0.f);
+		normal = new Vector3f(0.f, -1.f, 0.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(0.8f, 0.8f, 0.8f);
 		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
-		Vector4f position = new Vector4f(0.f, 0.8f, 0.8f, 1.f);
+		Vector3f position = new Vector3f(0.f, 0.8f, 0.8f);
 		Spectrum strength = new Spectrum(1.f, 1.f, 1.f);
 		PointLight light = new PointLight(position, strength);
 
