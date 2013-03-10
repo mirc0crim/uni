@@ -1,35 +1,68 @@
 # -*- coding: ascii -*-
 import sys
 import re
+import fileMK
 
-myFile = raw_input("Enter path to file: \nDefault is same path as this program\n")
+path = "D:\\nlp"
 
-if myFile == "":
-    myFile = "1.txt"
-f = open(myFile)
-t = f.read()
+t = []
+t = fileMK.readFilesInArray(path)
 
+def choose():
+        print ""
+        print " --------------------------------------------------------------------"
+        print " 1 = Number of Tags in Document."
+        print " 2 = Headlines/Titles in Document."
+        print " 3 = Text of Docno."
+        print " 4 = Number of Tokens in Corpus."
+        print " Else Exit"
+        print " --------------------------------------------------------------------"
+        ex = raw_input()
+        if (ex == "1"):
+                task1()
+        if (ex == "2"):
+                task2()
+        if (ex == "3"):
+                task3()
+        if (ex == "4"):
+                task4()
 
-f = open("C:/Users/Mirco Kocher/Desktop/1.txt")
-t = f.read()
-t = t.replace("\n","")
-a = 0
-"""
-print t.count("<DOCNO>")
-m = re.search("(<(?P<name>.....)>)(\W*\w*)*?(</(?P=name)>)", t)
-print m.group()
-t = t.replace(m.group(), "")
-print t.count("<DOCNO>")
-m = re.search("(<(?P<name>.....)>)(\W*\w*)*?(</(?P=name)>)", t)
-print m.group()
-m = re.search("(</(\W*\w*)*?>)", t)
-print m.group()
-"""
+def task1():
+    # Task 1
+    for i in range(len(t)):
+        print " Number of tags in document " + str(i+1) + ":"
+        print fileMK.countAllTags(t[i])
+    choose()
 
-m = re.search("(</(\W*\w*)*?>)", t)
-while (m):
-    a+=1
-    t = t.replace(m.group(), "", 1)
-    m = re.search("(</(\W*\w*)*?>)", t)
+def task2():
+    # Task 2
+    for i in range(len(t)):
+        h = fileMK.readAllHeadlines(t[i])
+        print " Headlines in document " + str(i+1) + ":"
+        for j in range(len(h)):
+            print h[j]
+        print "\n " + str(len(h)) + " Headlines extracted"
+    choose()
 
-print a
+def task3():
+    # Task 3
+    search = raw_input(" Enter a Docno like \"GH950102-000004\" or \"51\"\n")
+    for i in range(len(t)):
+        d = []
+        d = fileMK.splitToDocsArray(t[i])
+        s = fileMK.searchTextWithDocno(d, search)
+        if s != None:
+            print s
+        else:
+            print " No Document found"
+    choose()
+
+def task4():
+    # Task 4
+    n = 0
+    for i in range(len(t)):
+        n += fileMK.numOfTokens(t[i], " ")
+    print " " + str(n) + " tokens in corpus with " + str(len(t)) + " documents"
+    choose()
+
+choose()
