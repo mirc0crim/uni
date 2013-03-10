@@ -10,10 +10,10 @@ public class Instance implements Intersectable {
 	private Matrix4f t;
 	private Matrix4f t_inverse;
 
-	public Instance(Intersectable object, Matrix4f t) {
+	public Instance(Intersectable object, Matrix4f newt) {
 		objectRef = object;
-		t = new Matrix4f(t);
-		t_inverse = new Matrix4f(t);
+		t = new Matrix4f(newt);
+		t_inverse = new Matrix4f(newt);
 		t_inverse.invert();
 	}
 

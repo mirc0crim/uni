@@ -2,7 +2,6 @@ package rt;
 
 import javax.vecmath.Vector3f;
 
-
 public class DiffuseMaterial extends Material {
 
 	public DiffuseMaterial(Spectrum kd) {

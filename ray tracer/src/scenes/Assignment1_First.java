@@ -3,8 +3,8 @@ package scenes;
 import javax.vecmath.Vector3f;
 
 import rt.BlinnIntegrator;
-import rt.BlinnMaterial;
 import rt.Camera;
+import rt.DiffuseMaterial;
 import rt.Film;
 import rt.IntegratorFactory;
 import rt.Intersectable;
@@ -17,7 +17,6 @@ import rt.Tonemapper;
 
 public class Assignment1_First implements Scene {
 
-	// Variables accessed by the renderer
 	public Camera camera;
 	public Film film;
 	public IntersectableList objects;
@@ -27,11 +26,12 @@ public class Assignment1_First implements Scene {
 	public String outputFileName;
 
 	public Assignment1_First() {
-
 		outputFileName = new String("Assignment1_First.png");
 
 		// Specify integrator to be used
 		integratorFactory = new BlinnIntegrator();
+
+		// Specify pixel sampler to be used
 		tonemapper = new Tonemapper();
 
 		// Make camera and film
@@ -45,6 +45,7 @@ public class Assignment1_First implements Scene {
 		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
 		film = new Film(width, height);
 
+		// List of objects
 		objects = new IntersectableList();
 
 		// A plane
@@ -52,16 +53,15 @@ public class Assignment1_First implements Scene {
 		float d = 1.f;
 		Plane plane = new Plane(normal, d);
 		Spectrum kd = new Spectrum(0.f, 0.8f, 0.8f);
-		plane.setMaterial(new BlinnMaterial(kd));
+		plane.setMaterial(new DiffuseMaterial(kd));
 		objects.add(plane);
-
-		// List of lights
-		lights = new LightList();
 
 		Vector3f position = new Vector3f(0.f, 0.8f, 0.8f);
 		Spectrum strength = new Spectrum(10.f, 10.f, 10.f);
 		PointLight light = new PointLight(position, strength);
 
+		// List of lights
+		lights = new LightList();
 		lights.add(light);
 	}
 

@@ -31,21 +31,21 @@ public class Spectrum {
 	}
 
 	public void append(Spectrum spec) {
-		this.setRed(red + spec.red);
-		this.setGreen(green + spec.green);
-		this.setBlue(blue + spec.blue);
+		setRed(red + spec.red);
+		setGreen(green + spec.green);
+		setBlue(blue + spec.blue);
 	}
 
 	public void clampMax(float f) {
-		this.setRed(Math.min(getRed(), f));
-		this.setGreen(Math.min(getGreen(), f));
-		this.setBlue(Math.min(getBlue(), f));
+		setRed(Math.min(getRed(), f));
+		setGreen(Math.min(getGreen(), f));
+		setBlue(Math.min(getBlue(), f));
 	}
 
 	public void clampMin(float f) {
-		this.setRed(Math.max(getRed(), f));
-		this.setGreen(Math.max(getGreen(), f));
-		this.setBlue(Math.max(getBlue(), f));
+		setRed(Math.max(getRed(), f));
+		setGreen(Math.max(getGreen(), f));
+		setBlue(Math.max(getBlue(), f));
 	}
 
 	public float getRed() {

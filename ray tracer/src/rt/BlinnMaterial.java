@@ -5,31 +5,31 @@ import javax.vecmath.Vector3f;
 public class BlinnMaterial extends Material {
 
 	public BlinnMaterial(Spectrum kd) {
-		this.setDiffuse(kd);
+		setDiffuse(kd);
 	}
 
 	public BlinnMaterial(Spectrum kd, Spectrum ks) {
-		this.setDiffuse(kd);
-		this.setSpecular(ks);
+		setDiffuse(kd);
+		setSpecular(ks);
 	}
 
 	public BlinnMaterial(Spectrum kd, Spectrum ks, Spectrum ka) {
-		this.setDiffuse(kd);
-		this.setSpecular(ks);
-		this.setAmbient(ka);
+		setDiffuse(kd);
+		setSpecular(ks);
+		setAmbient(ka);
 	}
 
 	public BlinnMaterial(Spectrum kd, Spectrum ks, float shininess) {
-		this.setDiffuse(kd);
-		this.setSpecular(ks);
-		this.setShininess(shininess);
+		setDiffuse(kd);
+		setSpecular(ks);
+		setShininess(shininess);
 	}
 
 	public BlinnMaterial(Spectrum kd, Spectrum ks, Spectrum ka, int shininess) {
-		this.setDiffuse(kd);
-		this.setSpecular(ks);
-		this.setAmbient(ka);
-		this.setShininess(shininess);
+		setDiffuse(kd);
+		setSpecular(ks);
+		setAmbient(ka);
+		setShininess(shininess);
 	}
 
 	@Override
@@ -44,19 +44,19 @@ public class BlinnMaterial extends Material {
 		// Diffuse reflectance term
 		float nDotL = normal.dot(L);
 		if (nDotL >= 0) {
-			spectrum.append(getDiffuse().multipliedBy(cl).multipliedBy(nDotL));
+			spectrum.append(cl.multipliedBy(getDiffuse()).multipliedBy(nDotL));
 		}
 
 		// Specular reflectance term
 		Vector3f e = new Vector3f(eye);
-		e.negate();
+		e.sub(hitPoint);
 		e.normalize();
-		Vector3f h = light.getL(hitPoint);
+		Vector3f h = new Vector3f(L);
+		h.normalize();
 		h.add(e);
 		h.normalize();
-		cl = light.getCl(hitPoint);
-		float hDotE = (float) Math.pow((h.dot(normal)), getShininess());
-		spectrum.append(getSpecular().multipliedBy(cl).multipliedBy(hDotE));
+		float hDotN = (float) Math.pow(h.dot(normal), getShininess());
+		spectrum.append(getSpecular().multipliedBy(cl).multipliedBy(hDotN));
 
 		// Ambient reflectance term
 		cl = light.getCl(hitPoint);
@@ -65,6 +65,9 @@ public class BlinnMaterial extends Material {
 
 		spectrum.clampMax(1.f);
 		spectrum.clampMin(0.f);
+
+		if (spectrum.green == 0)
+			System.out.println("sad");
 
 		return spectrum;
 	}

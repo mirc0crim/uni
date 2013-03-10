@@ -42,7 +42,7 @@ public class Assignment1_Basic implements Scene {
 		Vector3f eye = new Vector3f(0.f, 0.f, 2.f);
 		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
 		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
-		float fov = 60;
+		float fov = 60.f;
 		int width = 512;
 		int height = 512;
 		float aspect = (float) width / (float) height;

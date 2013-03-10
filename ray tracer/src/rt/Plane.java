@@ -13,6 +13,23 @@ public class Plane implements Intersectable {
 		distance = d;
 	}
 
+	@Override
+	public HitRecord intersect(Ray ray) {
+		Vector3f p0 = new Vector3f(normal);
+		p0.negate();
+		p0.scale(distance);
+		Vector3f l0 = new Vector3f(ray.getOrigin());
+		p0.sub(l0);
+		float t = p0.dot(normal) / ray.getDirection().dot(normal);
+		if (Float.isNaN(t))
+			return null;
+		if (t > 0)
+			return new HitRecord(t, ray.getHitPoint(t), normal, this, getMaterial(),
+					ray.getDirection());
+		else
+			return null;
+	}
+
 	public Vector3f getNormal() {
 		return normal;
 	}
@@ -27,24 +44,6 @@ public class Plane implements Intersectable {
 
 	public void setDistance(float d) {
 		distance = d;
-	}
-
-	@Override
-	public HitRecord intersect(Ray ray) {
-		Vector3f l = new Vector3f(ray.getDirection());
-		Vector3f p0 = new Vector3f(normal);
-		p0.scale(distance);
-		Vector3f l0 = new Vector3f(ray.getOrigin());
-		Vector3f n = new Vector3f(normal);
-		p0.sub(l0);
-		float t = p0.dot(n) / l.dot(n);
-		if (Float.isNaN(t))
-			return null;
-		if (t > 0)
-			return new HitRecord(t, ray.getHitPoint(t), normal, this, getMaterial(),
-					ray.getDirection());
-		else
-			return null;
 	}
 
 	public Material getMaterial() {

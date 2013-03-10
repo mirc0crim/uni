@@ -35,7 +35,7 @@ public class Main {
 			for (int h = 0; h < image.getFilm().getFilmHeight(); h++) {
 				Ray ray = image.getCamera().getPrimaryRay(w, h);
 				Spectrum spectrum = image.getIntegratorFactory().integrate(image.getObjects(),
-						image.getLights(), image.getCamera().getCenterOfProjection(), ray, 0);
+						image.getLights(), image.getCamera().getCenterOfProjection(), ray, 1);
 				image.getFilm().setPixel(w, h, spectrum);
 			}
 		image.getTonemapper().createImage(image.getFilm(), image.getOutputFileName());
