@@ -13,7 +13,6 @@ public class Plane implements Intersectable {
 		distance = d;
 	}
 
-	@Override
 	public Vector3f getNormal() {
 		return normal;
 	}
@@ -42,7 +41,8 @@ public class Plane implements Intersectable {
 		if (Float.isNaN(t))
 			return null;
 		if (t > 0)
-			return new HitRecord(t, ray.getHitPoint(t), normal, this, getMaterial());
+			return new HitRecord(t, ray.getHitPoint(t), normal, this, getMaterial(),
+					ray.getDirection());
 		else
 			return null;
 	}

@@ -1,14 +1,15 @@
 package scenes;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
 
 import rt.BlinnIntegrator;
 import rt.BlinnMaterial;
 import rt.Camera;
+import rt.DiffuseMaterial;
 import rt.Film;
 import rt.Instance;
 import rt.IntegratorFactory;
@@ -34,8 +35,7 @@ public class Assignment1_Instancing implements Scene {
 	/**
 	 * Timing: 22 sec on 8 core Xeon 2.5GHz
 	 */
-	public Assignment1_Instancing()
-	{
+	public Assignment1_Instancing() {
 		outputFileName = new String("Assignment1_Instancing.png");
 
 		// Specify integrator to be used
@@ -45,13 +45,13 @@ public class Assignment1_Instancing implements Scene {
 		tonemapper = new Tonemapper();
 
 		// Make camera and film
-		Vector3f eye = new Vector3f(0.f,0.f,2.f);
-		Vector3f lookAt = new Vector3f(0.f,0.f,0.f);
-		Vector3f up = new Vector3f(0.f,1.f,0.f);
+		Vector3f eye = new Vector3f(0.f, 0.f, 2.f);
+		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
+		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
 		float fov = 60.f;
 		int width = 256;
 		int height = 256;
-		float aspect = (float)width/(float)height;
+		float aspect = (float) width / (float) height;
 		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
 		film = new Film(width, height);
 
@@ -59,37 +59,38 @@ public class Assignment1_Instancing implements Scene {
 		objects = new IntersectableList();
 
 		// Box
-		Plane plane = new Plane(new Vector4f(0.f, 1.f, 0.f, 1), 1.f);
+		Plane plane = new Plane(new Vector3f(0.f, 1.f, 0.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(0.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
-		plane = new Plane(new Vector4f(0.f, 0.f, 1.f, 1), 1.f);
+		plane = new Plane(new Vector3f(0.f, 0.f, 1.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(0.3f, 0.8f, 0.8f)));
 		objects.add(plane);
 
-		plane = new Plane(new Vector4f(-1.f, 0.f, 0.f, 1), 1.f);
+		plane = new Plane(new Vector3f(-1.f, 0.f, 0.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(1.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
-		plane = new Plane(new Vector4f(1.f, 0.f, 0.f, 1), 1.f);
+		plane = new Plane(new Vector3f(1.f, 0.f, 0.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(0.f, 0.8f, 0.0f)));
 		objects.add(plane);
 
-		plane = new Plane(new Vector4f(0.f, -1.f, 0.f, 1), 1.f);
+		plane = new Plane(new Vector3f(0.f, -1.f, 0.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(0.8f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		// Add objects
-		Mesh mesh;
-		try
-		{
-
-			mesh = ObjReader.read("..\\obj\\teapot.obj", 1.f);
-		} catch(IOException e)
-		{
+		Mesh mesh = new Mesh();
+		File file = new File(".\\objects\\teapot.obj");
+		try {
+			mesh.loadObjFile(file, 1f);
+		} catch (IOException e) {
 			System.out.printf("Could not read .obj file\n");
 			return;
 		}
+
+		mesh.setMaterial(new DiffuseMaterial(new Spectrum(.5f, .5f, .5f)));
+
 		Matrix4f t = new Matrix4f();
 		t.setIdentity();
 
@@ -108,11 +109,11 @@ public class Assignment1_Instancing implements Scene {
 		// List of lights
 		lights = new LightList();
 
-		PointLight light = new PointLight(new Vector4f(0.f, 0.8f, 0.8f, 1), new Spectrum(.7f, .7f,
-				.7f));
+		PointLight light = new PointLight(new Vector3f(0.f, 0.8f, 0.8f), new Spectrum(.7f,
+				.7f, .7f));
 		lights.add(light);
 
-		light = new PointLight(new Vector4f(-0.8f, 0.2f, 1.f, 1), new Spectrum(.5f, .5f, .5f));
+		light = new PointLight(new Vector3f(-0.8f, 0.2f, 1.f), new Spectrum(.5f, .5f, .5f));
 		lights.add(light);
 	}
 

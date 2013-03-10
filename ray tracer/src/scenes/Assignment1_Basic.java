@@ -3,8 +3,8 @@ package scenes;
 import javax.vecmath.Vector3f;
 
 import rt.BlinnIntegrator;
-import rt.BlinnMaterial;
 import rt.Camera;
+import rt.DiffuseMaterial;
 import rt.Film;
 import rt.IntegratorFactory;
 import rt.Intersectable;
@@ -42,7 +42,7 @@ public class Assignment1_Basic implements Scene {
 		Vector3f eye = new Vector3f(0.f, 0.f, 2.f);
 		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
 		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
-		float fov = 50;
+		float fov = 60;
 		int width = 512;
 		int height = 512;
 		float aspect = (float) width / (float) height;
@@ -55,43 +55,43 @@ public class Assignment1_Basic implements Scene {
 		Vector3f center = new Vector3f(0.f, 0.f, 0.f);
 		float radius = 0.2f;
 		Sphere sphere = new Sphere(center, radius);
-		Spectrum kd = new Spectrum(0.2f, 0.2f, 0.2f);
-		sphere.setMaterial(new BlinnMaterial(kd));
+		Spectrum kd = new Spectrum(0.8f, 0.8f, 0.8f);
+		sphere.setMaterial(new DiffuseMaterial(kd));
 		objects.add(sphere);
 
 		Vector3f normal = new Vector3f(0.f, 1.f, 0.f);
 		float d = 1.f;
 		Plane plane = new Plane(normal, d);
 		kd = new Spectrum(0.f, 0.8f, 0.8f);
-		plane.setMaterial(new BlinnMaterial(kd));
+		plane.setMaterial(new DiffuseMaterial(kd));
 		objects.add(plane);
 
 		normal = new Vector3f(0.f, 0.f, 1.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(0.3f, 0.8f, 0.8f);
-		plane.setMaterial(new BlinnMaterial(kd));
+		plane.setMaterial(new DiffuseMaterial(kd));
 		objects.add(plane);
 
 		normal = new Vector3f(-1.f, 0.f, 0.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(1.f, 0.8f, 0.8f);
-		plane.setMaterial(new BlinnMaterial(kd));
+		plane.setMaterial(new DiffuseMaterial(kd));
 		objects.add(plane);
 
 		normal = new Vector3f(1.f, 0.f, 0.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(0.f, 0.8f, 0.0f);
-		plane.setMaterial(new BlinnMaterial(kd));
+		plane.setMaterial(new DiffuseMaterial(kd));
 		objects.add(plane);
 
 		normal = new Vector3f(0.f, -1.f, 0.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(0.8f, 0.8f, 0.8f);
-		plane.setMaterial(new BlinnMaterial(kd));
+		plane.setMaterial(new DiffuseMaterial(kd));
 		objects.add(plane);
 
 		Vector3f position = new Vector3f(0.f, 0.8f, 0.8f);

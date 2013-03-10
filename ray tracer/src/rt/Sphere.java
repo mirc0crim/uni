@@ -22,7 +22,7 @@ public class Sphere implements Intersectable {
 		Vector3f origin = new Vector3f(ray.getOrigin());
 		origin.sub(center);
 		float b = 2 * ray.getDirection().dot(origin);
-		float c = origin.dot(origin) - radius * radius;
+		float c = origin.dot(origin) - (float) (radius * radius);
 
 		// Find discriminant
 		float disc = b * b - 4 * a * c;
@@ -36,9 +36,9 @@ public class Sphere implements Intersectable {
 		float distSqrt = (float) Math.sqrt(disc);
 		float q;
 		if (b < 0)
-			q = (-b + distSqrt) / 2.0f;
+			q = (float) ((-b - distSqrt) / 2.0f);
 		else
-			q = (-b - distSqrt) / 2.0f;
+			q = (float) ((-b + distSqrt) / 2.0f);
 
 		// compute t0 and t1
 		float t0 = q / a;
@@ -58,21 +58,23 @@ public class Sphere implements Intersectable {
 		if (t1 < 0)
 			return null;
 
-		Vector3f normal;
+		Vector3f norm;
 
 		// if t0 is less than zero, the intersection point is at t1
 		if (t0 < 0) {
-			normal = new Vector3f(ray.getHitPoint(t1));
-			normal.sub(center);
-			normal.scale(1 / radius);
-			this.normal = normal;
-			return new HitRecord(t1, ray.getHitPoint(t1), normal, this, material);
+			norm = new Vector3f(ray.getHitPoint(t1));
+			norm.sub(center);
+			norm.scale(1 / radius);
+			normal = norm;
+			return new HitRecord(t1, ray.getHitPoint(t1), norm, this, material,
+					ray.getDirection());
 		} else {
-			normal = new Vector3f(ray.getHitPoint(t0));
-			normal.sub(center);
-			normal.scale(1 / radius);// else the intersection point is at t0
-			this.normal = normal;
-			return new HitRecord(t0, ray.getHitPoint(t0), normal, this, material);
+			norm = new Vector3f(ray.getHitPoint(t0));
+			norm.sub(center);
+			norm.scale(1 / radius);// else the intersection point is at t0
+			normal = norm;
+			return new HitRecord(t0, ray.getHitPoint(t0), norm, this, material,
+					ray.getDirection());
 		}
 	}
 
@@ -100,7 +102,6 @@ public class Sphere implements Intersectable {
 		material = mat;
 	}
 
-	@Override
 	public Vector3f getNormal() {
 		return normal;
 	}

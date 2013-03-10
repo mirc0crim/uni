@@ -4,10 +4,11 @@ import java.util.Iterator;
 
 import javax.vecmath.Vector3f;
 
-public class BlinnIntegrator extends IntegratorFactory {
+public class BlinnIntegrator implements IntegratorFactory {
 
 	@Override
-	public Spectrum integrate(Intersectable scene, LightList lights, Vector3f eye, Ray ray) {
+	public Spectrum integrate(Intersectable scene, LightList lights, Vector3f eye, Ray ray,
+			int bounces) {
 		HitRecord hitRecord = scene.intersect(ray);
 		Spectrum spectrum = new Spectrum(0, 0, 0);
 		Iterator<Light> lightIterator = lights.getLightList().iterator();

@@ -14,18 +14,11 @@ public class LightList {
 		lightList.add(light);
 	}
 
-	/**
-	 * @return the lightList
-	 */
 	public ArrayList<Light> getLightList() {
 		return lightList;
 	}
 
-	/**
-	 * @param lightList
-	 *            the lightList to set
-	 */
-	public void setLightList(ArrayList<Light> lightList) {
-		this.lightList = lightList;
+	public void setLightList(ArrayList<Light> lights) {
+		lightList = lights;
 	}
 }

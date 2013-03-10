@@ -11,8 +11,7 @@ public class Triangle implements Intersectable {
 	private Vector3f normal;
 	private Material material;
 
-	public Triangle(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f n1, Vector3f n2,
-			Vector3f n3) {
+	public Triangle(Vector3f p1, Vector3f p2, Vector3f p3) {
 		verticle1 = p1;
 		verticle2 = p2;
 		verticle3 = p3;
@@ -24,6 +23,25 @@ public class Triangle implements Intersectable {
 		Vector3f vTemp = new Vector3f(p3);
 		vTemp.sub(p1);
 		v = new Vector3f(v);
+
+		Vector3f nTemp = new Vector3f(uTemp);
+		nTemp.cross(uTemp, vTemp);
+		normal = new Vector3f(nTemp);
+	}
+
+	public Triangle(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f n1, Vector3f n2,
+			Vector3f n3) {
+		verticle1 = p1;
+		verticle2 = p2;
+		verticle3 = p3;
+
+		Vector3f uTemp = new Vector3f(p2);
+		uTemp.sub(p1);
+		u = new Vector3f(uTemp);
+
+		Vector3f vTemp = new Vector3f(p3);
+		vTemp.sub(p1);
+		v = new Vector3f(vTemp);
 
 		Vector3f nTemp = new Vector3f(uTemp);
 		nTemp.cross(uTemp, vTemp);
@@ -87,10 +105,9 @@ public class Triangle implements Intersectable {
 			nI.add(n3I);
 		}
 
-		return new HitRecord(t, hitPoint, nI, this, this.material);
+		return new HitRecord(t, hitPoint, nI, this, this.material, ray.getDirection());
 	}
 
-	@Override
 	public Vector3f getNormal() {
 		return normal;
 	}

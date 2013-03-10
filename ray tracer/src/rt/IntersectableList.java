@@ -2,8 +2,6 @@ package rt;
 
 import java.util.Iterator;
 
-import javax.vecmath.Vector3f;
-
 public class IntersectableList extends Aggregate implements Intersectable {
 
 	public IntersectableList() {
@@ -30,11 +28,5 @@ public class IntersectableList extends Aggregate implements Intersectable {
 			}
 		}
 		return hit;
-	}
-
-	@Override
-	public Vector3f getNormal() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

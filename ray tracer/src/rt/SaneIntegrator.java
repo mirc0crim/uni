@@ -2,10 +2,11 @@ package rt;
 
 import javax.vecmath.Vector3f;
 
-public class SaneIntegrator extends IntegratorFactory {
+public class SaneIntegrator implements IntegratorFactory {
 
 	@Override
-	public Spectrum integrate(Intersectable scene, LightList lights, Vector3f eye, Ray ray) {
+	public Spectrum integrate(Intersectable scene, LightList lights, Vector3f eye, Ray ray,
+			int bounces) {
 		HitRecord hitRecord = scene.intersect(ray);
 		if (hitRecord != null) {
 			float c = hitRecord.getIntersectionPoint().z / 2 * -1;

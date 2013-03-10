@@ -9,89 +9,64 @@ public class HitRecord {
 	private Vector3f normal;
 	private Intersectable object;
 	private Material material;
+	private Vector3f rayDir;
 
 	public HitRecord(float t, Vector3f intersectionPoint, Vector3f normal,
-			Intersectable object, Material material) {
+			Intersectable object, Material material, Vector3f rayDir) {
 		setT(t);
 		setIntersectionPoint(intersectionPoint);
 		setNormal(normal);
 		setObject(object);
 		setMaterial(material);
+		setRayDir(rayDir);
 	}
 
-	/**
-	 * @return the intersectionPoint
-	 */
 	public Vector3f getIntersectionPoint() {
 		return intersectionPoint;
 	}
 
-	/**
-	 * @param intersectionPoint
-	 *            the intersectionPoint to set
-	 */
-	public void setIntersectionPoint(Vector3f intersectionPoint) {
-		this.intersectionPoint = intersectionPoint;
+	public void setIntersectionPoint(Vector3f intersectionPt) {
+		intersectionPoint = intersectionPt;
 	}
 
-	/**
-	 * @return the t
-	 */
 	public float getT() {
 		return t;
 	}
 
-	/**
-	 * @param t
-	 *            the t to set
-	 */
-	public void setT(float t) {
-		this.t = t;
+	public void setT(float newt) {
+		t = newt;
 	}
 
-	/**
-	 * @return the normal
-	 */
 	public Vector3f getNormal() {
 		return normal;
 	}
 
-	/**
-	 * @param normal
-	 *            the normal to set
-	 */
-	public void setNormal(Vector3f normal) {
-		this.normal = normal;
+	public void setNormal(Vector3f norm) {
+		normal = norm;
 	}
 
-	/**
-	 * @return the object
-	 */
 	public Intersectable getObject() {
 		return object;
 	}
 
-	/**
-	 * @param object
-	 *            the object to set
-	 */
-	public void setObject(Intersectable object) {
-		this.object = object;
+	public void setObject(Intersectable obj) {
+		object = obj;
 	}
 
-	/**
-	 * @return the material
-	 */
 	public Material getMaterial() {
 		return material;
 	}
 
-	/**
-	 * @param material
-	 *            the material to set
-	 */
-	public void setMaterial(Material material) {
-		this.material = material;
+	public void setMaterial(Material mat) {
+		material = mat;
+	}
+
+	public Vector3f getRayDir() {
+		return rayDir;
+	}
+
+	public void setRayDir(Vector3f rayDirection) {
+		rayDir = rayDirection;
 	}
 
 }

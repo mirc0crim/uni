@@ -1,7 +1,6 @@
 package scenes;
 
 import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
 
 import rt.BlinnIntegrator;
 import rt.BlinnMaterial;
@@ -11,6 +10,7 @@ import rt.IntegratorFactory;
 import rt.Intersectable;
 import rt.IntersectableList;
 import rt.LightList;
+import rt.MirrorMaterial;
 import rt.Plane;
 import rt.PointLight;
 import rt.Spectrum;
@@ -30,8 +30,7 @@ public class Assignment1_Mirror implements Scene {
 	/**
 	 * Timing: 0.9 sec on 8 core Xeon 2.5GHz
 	 */
-	public Assignment1_Mirror()
-	{
+	public Assignment1_Mirror() {
 		outputFileName = new String("Assignment1_Mirror.png");
 
 		// Specify integrator to be used
@@ -41,57 +40,57 @@ public class Assignment1_Mirror implements Scene {
 		tonemapper = new Tonemapper();
 
 		// Make camera and film
-		Vector3f eye = new Vector3f(0.f,0.f,2.f);
-		Vector3f lookAt = new Vector3f(0.f,0.f,0.f);
-		Vector3f up = new Vector3f(0.f,1.f,0.f);
+		Vector3f eye = new Vector3f(0.f, 0.f, 2.f);
+		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
+		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
 		float fov = 60.f;
 		int width = 512;
 		int height = 512;
-		float aspect = (float)width/(float)height;
+		float aspect = (float) width / (float) height;
 		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
 		film = new Film(width, height);
 
 		// List of objects
 		objects = new IntersectableList();
 
-		Sphere sphere = new Sphere(new Vector4f(0.f, 0.f, 0.f, 1), .2f);
+		Sphere sphere = new Sphere(new Vector3f(0.f, 0.f, 0.f), .2f);
 		// BlinnMaterial(kd, ks, shininess)
-		sphere.setMaterial(new BlinnMaterial(new Spectrum(0.8f, 0.f, 0.f), new Spectrum(0.6f, 0.6f,
-				0.6f), 30.f));
+		sphere.setMaterial(new BlinnMaterial(new Spectrum(0.8f, 0.f, 0.f), new Spectrum(0.6f,
+				0.6f, 0.6f), 30.f));
 		objects.add(sphere);
 
-		sphere = new Sphere(new Vector4f(0.4f, 0.2f, -0.3f, 1), .3f);
+		sphere = new Sphere(new Vector3f(0.4f, 0.2f, -0.3f), .3f);
 		sphere.setMaterial(new MirrorMaterial(new Spectrum(0.8f, 0.8f, 0.8f)));
 		objects.add(sphere);
 
-		Plane plane = new Plane(new Vector4f(0.f, 1.f, 0.f, 0), 1.f);
+		Plane plane = new Plane(new Vector3f(0.f, 1.f, 0.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(0.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
-		plane = new Plane(new Vector4f(0.f, 0.f, 1.f, 0), 1.f);
+		plane = new Plane(new Vector3f(0.f, 0.f, 1.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(0.3f, 0.8f, 0.8f)));
 		objects.add(plane);
 
-		plane = new Plane(new Vector4f(-1.f, 0.f, 0.f, 0), 1.f);
+		plane = new Plane(new Vector3f(-1.f, 0.f, 0.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(1.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
-		plane = new Plane(new Vector4f(1.f, 0.f, 0.f, 0), 1.f);
+		plane = new Plane(new Vector3f(1.f, 0.f, 0.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(0.f, 0.8f, 0.0f)));
 		objects.add(plane);
 
-		plane = new Plane(new Vector4f(0.f, -1.f, 0.f, 0), 1.f);
+		plane = new Plane(new Vector3f(0.f, -1.f, 0.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(0.8f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		// List of lights
 		lights = new LightList();
 
-		PointLight light = new PointLight(new Vector4f(0.f, 0.8f, 0.8f, 1), new Spectrum(.7f, .7f,
-				.7f));
+		PointLight light = new PointLight(new Vector3f(0.f, 0.8f, 0.8f), new Spectrum(.7f,
+				.7f, .7f));
 		lights.add(light);
 
-		light = new PointLight(new Vector4f(-0.8f, 0.2f, 0.0f, 1), new Spectrum(.5f, .5f, .5f));
+		light = new PointLight(new Vector3f(-0.8f, 0.2f, 0.0f), new Spectrum(.5f, .5f, .5f));
 		lights.add(light);
 	}
 

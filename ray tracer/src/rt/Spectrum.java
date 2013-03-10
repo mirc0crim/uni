@@ -12,6 +12,12 @@ public class Spectrum {
 		blue = b;
 	}
 
+	public Spectrum(Spectrum spec) {
+		red = spec.red;
+		green = spec.green;
+		blue = spec.blue;
+	}
+
 	public Spectrum divideBy(float d) {
 		return new Spectrum(red / d, green / d, blue / d);
 	}

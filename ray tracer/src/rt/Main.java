@@ -2,20 +2,32 @@ package rt;
 
 import scenes.Assignment1_Basic;
 import scenes.Assignment1_First;
+import scenes.Assignment1_Instancing;
+import scenes.Assignment1_Mirror;
+import scenes.Assignment1_Refractive;
 import scenes.Scene;
 
 public class Main {
 
-	private static int sceneSelector = 2;
+	private static int sceneNo = 3;
 	private static Scene image;
 
 	public static void main(String[] args) {
-		switch (sceneSelector) {
+		switch (sceneNo) {
 		case 1:
 			image = new Assignment1_First();
 			break;
 		case 2:
 			image = new Assignment1_Basic();
+			break;
+		case 3:
+			image = new Assignment1_Instancing();
+			break;
+		case 4:
+			image = new Assignment1_Mirror();
+			break;
+		case 5:
+			image = new Assignment1_Refractive();
 			break;
 		}
 		System.out.println("Rendering image...");
@@ -23,7 +35,7 @@ public class Main {
 			for (int h = 0; h < image.getFilm().getFilmHeight(); h++) {
 				Ray ray = image.getCamera().getPrimaryRay(w, h);
 				Spectrum spectrum = image.getIntegratorFactory().integrate(image.getObjects(),
-						image.getLights(), image.getCamera().getCenterOfProjection(), ray);
+						image.getLights(), image.getCamera().getCenterOfProjection(), ray, 0);
 				image.getFilm().setPixel(w, h, spectrum);
 			}
 		image.getTonemapper().createImage(image.getFilm(), image.getOutputFileName());

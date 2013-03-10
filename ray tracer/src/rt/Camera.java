@@ -21,7 +21,7 @@ public class Camera {
 		centerOfProjection = from;
 		lookAtPoint = to;
 		upVector = up;
-		theta = fov;
+		theta = (float) (fov * 2 * Math.PI / 180.f);
 		aspectRatio = aspect;
 		width = w;
 		height = h;
@@ -135,14 +135,14 @@ public class Camera {
 	}
 
 	private float u(int i, int j) {
-		float t = (float) Math.tan(theta / (2 * Math.PI) / 2);
+		float t = (float) Math.tan(theta / 2);
 		float r = aspectRatio * t;
 		float l = -r;
 		return l + (r - l) * ((i + 0.5f) / width);
 	}
 
 	private float v(int i, int j) {
-		float t = (float) Math.tan(theta / (2 * Math.PI) / 2);
+		float t = (float) Math.tan(theta / 2);
 		float b = -t;
 		return b + (t - b) * ((j + 0.5f) / height);
 	}
