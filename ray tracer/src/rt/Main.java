@@ -10,9 +10,10 @@ import scenes.Scene;
 public class Main {
 
 	private static int sceneNo = 3;
+	private static int maxThreads = 8;
 	private static Scene image;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		switch (sceneNo) {
 		case 1:
 			image = new Assignment1_First();
@@ -31,22 +32,21 @@ public class Main {
 			break;
 		}
 		System.out.println("Rendering image...");
-		int p = image.getFilm().getFilmWidth() / 10;
-		int s = 10;
-		for (int w = 0; w < image.getFilm().getFilmWidth(); w++) {
-			if (w == p) {
-				System.out.println(s + "%");
-				s += 10;
-				p += image.getFilm().getFilmWidth() / 10;
+		long start = System.currentTimeMillis();
+		if (image.getFilm().getFilmWidth() % maxThreads != 0)
+			maxThreads = 1;
+		for (int w = 0; w < image.getFilm().getFilmWidth(); w += maxThreads) {
+			Thread[] a = new Thread[maxThreads];
+			for (int i = 0; i < maxThreads; i++) {
+				a[i] = new Thread(new MyThread(w + i, image));
+				a[i].start();
 			}
-			for (int h = 0; h < image.getFilm().getFilmHeight(); h++) {
-				Ray ray = image.getCamera().getPrimaryRay(w, h);
-				Spectrum spectrum = image.getIntegratorFactory().integrate(image.getObjects(),
-						image.getLights(), image.getCamera().getCenterOfProjection(), ray, 1);
-				image.getFilm().setPixel(w, h, spectrum);
+			for (int i = 0; i < maxThreads; i++) {
+				a[i].join();
 			}
 		}
 		image.getTonemapper().createImage(image.getFilm(), image.getOutputFileName());
-		System.out.println("Image successfully written to disk!");
+		long end = System.currentTimeMillis();
+		System.out.println("Image successfully written to disk! " + (end - start));
 	}
 }
