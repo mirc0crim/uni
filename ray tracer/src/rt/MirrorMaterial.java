@@ -8,23 +8,25 @@ public class MirrorMaterial extends Material {
 
 	public MirrorMaterial(float newks) {
 		ks = newks;
+		type = "mirror";
 	}
 
 	public MirrorMaterial(Spectrum newks) {
 		ks = (newks.blue + newks.red + newks.green) / 3f;
+		type = "mirror";
 	}
 
 	@Override
 	public Spectrum shade(HitRecord hit, Vector3f eye, Light light) {
 		Spectrum spectrum = new Spectrum(0.f, 0.f, 0.f);
 		Vector3f hitPoint = hit.getIntersectionPoint();
-		Vector3f n = hit.getNormal();
-		n.normalize();
+		Vector3f normal = hit.getNormal();
+		normal.normalize();
 		Spectrum cl = light.getCl(hitPoint);
 		Vector3f L = light.getL(hitPoint);
 
 		// Diffuse reflectance term
-		float nDotL = n.dot(L);
+		float nDotL = normal.dot(L);
 		if (nDotL >= 0) {
 			spectrum.append(cl.multipliedBy(diffuse).multipliedBy(nDotL));
 		}
@@ -36,7 +38,7 @@ public class MirrorMaterial extends Material {
 		Vector3f h = new Vector3f(L);
 		h.add(e);
 		h.normalize();
-		float hDotN = (float) Math.pow(h.dot(n), shininess);
+		float hDotN = (float) Math.pow(h.dot(normal), shininess);
 		spectrum.append(specular.multipliedBy(cl).multipliedBy(hDotN));
 
 		// Ambient reflectance term

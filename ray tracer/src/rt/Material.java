@@ -12,12 +12,14 @@ public class Material {
 	protected Spectrum specular;
 	protected Spectrum ambient;
 	protected float shininess;
+	protected String type;
 
 	public Material() {
 		setDiffuse(new Spectrum(1, 1, 1));
 		setSpecular(new Spectrum(1, 1, 1));
 		setAmbient(new Spectrum(.2f, .2f, .2f));
 		setShininess(32);
+		type = "";
 	}
 
 	public Spectrum shade(HitRecord hit, Vector3f eye, Light light) {

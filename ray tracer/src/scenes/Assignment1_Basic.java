@@ -2,7 +2,6 @@ package scenes;
 
 import javax.vecmath.Vector3f;
 
-import rt.BlinnIntegrator;
 import rt.Camera;
 import rt.DiffuseMaterial;
 import rt.Film;
@@ -12,6 +11,7 @@ import rt.IntersectableList;
 import rt.LightList;
 import rt.Plane;
 import rt.PointLight;
+import rt.ShadowIntegrator;
 import rt.Spectrum;
 import rt.Sphere;
 import rt.Tonemapper;
@@ -33,7 +33,7 @@ public class Assignment1_Basic implements Scene {
 		outputFileName = new String("Assignment1_Basic.png");
 
 		// Specify integrator to be used
-		integratorFactory = new BlinnIntegrator();
+		integratorFactory = new ShadowIntegrator();
 
 		// Specify pixel sampler to be used
 		tonemapper = new Tonemapper();
@@ -43,8 +43,8 @@ public class Assignment1_Basic implements Scene {
 		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
 		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
 		float fov = 60.f;
-		int width = 512;
-		int height = 512;
+		int width = 1024;
+		int height = 1024;
 		float aspect = (float) width / (float) height;
 		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
 		film = new Film(width, height);

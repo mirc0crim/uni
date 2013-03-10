@@ -6,7 +6,6 @@ import java.io.IOException;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
-import rt.BlinnIntegrator;
 import rt.Camera;
 import rt.DiffuseMaterial;
 import rt.Film;
@@ -18,6 +17,7 @@ import rt.LightList;
 import rt.Mesh;
 import rt.Plane;
 import rt.PointLight;
+import rt.ShadowIntegrator;
 import rt.Spectrum;
 import rt.Tonemapper;
 
@@ -38,7 +38,7 @@ public class Assignment1_Instancing implements Scene {
 		outputFileName = new String("Assignment1_Instancing.png");
 
 		// Specify integrator to be used
-		integratorFactory = new BlinnIntegrator();
+		integratorFactory = new ShadowIntegrator();
 
 		// Specify pixel sampler to be used
 		tonemapper = new Tonemapper();

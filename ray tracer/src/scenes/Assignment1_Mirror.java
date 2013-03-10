@@ -2,7 +2,6 @@ package scenes;
 
 import javax.vecmath.Vector3f;
 
-import rt.BlinnIntegrator;
 import rt.BlinnMaterial;
 import rt.Camera;
 import rt.Film;
@@ -10,6 +9,7 @@ import rt.IntegratorFactory;
 import rt.Intersectable;
 import rt.IntersectableList;
 import rt.LightList;
+import rt.MirrorIntegrator;
 import rt.MirrorMaterial;
 import rt.Plane;
 import rt.PointLight;
@@ -34,7 +34,7 @@ public class Assignment1_Mirror implements Scene {
 		outputFileName = new String("Assignment1_Mirror.png");
 
 		// Specify integrator to be used
-		integratorFactory = new BlinnIntegrator();
+		integratorFactory = new MirrorIntegrator();
 
 		// Specify pixel sampler to be used
 		tonemapper = new Tonemapper();
@@ -44,8 +44,8 @@ public class Assignment1_Mirror implements Scene {
 		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
 		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
 		float fov = 60.f;
-		int width = 512;
-		int height = 512;
+		int width = 1024;
+		int height = 1024;
 		float aspect = (float) width / (float) height;
 		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
 		film = new Film(width, height);

@@ -9,7 +9,7 @@ import scenes.Scene;
 
 public class Main {
 
-	private static int sceneNo = 3;
+	private static int sceneNo = 4;
 	private static int maxThreads = 8;
 	private static Scene image;
 
@@ -32,10 +32,19 @@ public class Main {
 			break;
 		}
 		System.out.println("Rendering image...");
+		int p = image.getFilm().getFilmWidth() / 10;
+		int s = 10;
 		long start = System.currentTimeMillis();
-		if (image.getFilm().getFilmWidth() % maxThreads != 0)
+		if (image.getFilm().getFilmWidth() % maxThreads != 0) {
 			maxThreads = 1;
+			System.out.println("Invalid Number of Threads");
+		}
 		for (int w = 0; w < image.getFilm().getFilmWidth(); w += maxThreads) {
+			if (w > p) {
+				System.out.println(s + "%");
+				s += 10;
+				p += image.getFilm().getFilmWidth() / 10;
+			}
 			Thread[] a = new Thread[maxThreads];
 			for (int i = 0; i < maxThreads; i++) {
 				a[i] = new Thread(new MyThread(w + i, image));
