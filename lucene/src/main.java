@@ -21,6 +21,6 @@ public class Main {
 		 * SearchFiles.searchIndex(s);
 		 */
 
-		VectorSpaceModel.searchVSM(query2);
+		VectorSpaceModel.searchVSM(query1);
 	}
 }
