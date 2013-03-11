@@ -2,9 +2,9 @@ package scenes;
 
 import javax.vecmath.Vector3f;
 
-import rt.BlinnIntegrator;
+import rt.BinaryIntegrator;
+import rt.BlinnMaterial;
 import rt.Camera;
-import rt.DiffuseMaterial;
 import rt.Film;
 import rt.IntegratorFactory;
 import rt.Intersectable;
@@ -29,7 +29,7 @@ public class Assignment1_First implements Scene {
 		outputFileName = new String("Assignment1_First.png");
 
 		// Specify integrator to be used
-		integratorFactory = new BlinnIntegrator();
+		integratorFactory = new BinaryIntegrator();
 
 		// Specify pixel sampler to be used
 		tonemapper = new Tonemapper();
@@ -53,7 +53,7 @@ public class Assignment1_First implements Scene {
 		float d = 1.f;
 		Plane plane = new Plane(normal, d);
 		Spectrum kd = new Spectrum(0.f, 0.8f, 0.8f);
-		plane.setMaterial(new DiffuseMaterial(kd));
+		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
 		Vector3f position = new Vector3f(0.f, 0.8f, 0.8f);
