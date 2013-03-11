@@ -5,8 +5,8 @@ import org.apache.lucene.queryParser.ParseException;
 public class Main {
 
 	/**
-	 * Index will be stored in "D:\lucene\index" and files have to be stored
-	 * in "D:\lucene\corpus"
+	 * Index will be stored in "D:\lucene\index" and files have to be stored in
+	 * "D:\lucene\corpus"
 	 */
 	public static void main(String[] args) throws IOException, ParseException {
 
@@ -16,13 +16,11 @@ public class Main {
 				"diego?", "are~", "\"the improvement\"", "home AND euro", "home and euro",
 				"home +euro", "home euro^4", "+home euro^4" };
 		/*
-		IndexFiles.buildIndex();
-		SearchFiles.searchIndex(query1);
-		SearchFiles.searchIndex(query2);
-		for (String s : optional)
-			SearchFiles.searchIndex(s);
+		 * IndexFiles.buildIndex(); SearchFiles.searchIndex(query1);
+		 * SearchFiles.searchIndex(query2); for (String s : optional)
+		 * SearchFiles.searchIndex(s);
 		 */
 
-		VectorSpaceModel.searchVSM(query1);
+		VectorSpaceModel.searchVSM(query2);
 	}
 }

@@ -66,9 +66,6 @@ public class BlinnMaterial extends Material {
 		spectrum.clampMax(1.f);
 		spectrum.clampMin(0.f);
 
-		if (spectrum.green == 0)
-			System.out.println("sad");
-
 		return spectrum;
 	}
 }

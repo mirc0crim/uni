@@ -9,8 +9,8 @@ import scenes.Scene;
 
 public class Main {
 
-	private static int sceneNo = 3;
-	private static int maxThreads = Runtime.getRuntime().availableProcessors() / 2;
+	private static int sceneNo = 4;
+	private static int maxThreads = Runtime.getRuntime().availableProcessors();
 	private static Scene image;
 
 	public static void main(String[] args) throws InterruptedException {
@@ -36,8 +36,8 @@ public class Main {
 		int s = 10;
 		long start = System.currentTimeMillis();
 		if (image.getFilm().getFilmWidth() % maxThreads != 0) {
+			System.out.println("The Film Width should be a multiple of " + maxThreads);
 			maxThreads = 1;
-			System.out.println("Invalid Number of Threads");
 		}
 		for (int w = 0; w < image.getFilm().getFilmWidth(); w += maxThreads) {
 			if (w > p) {

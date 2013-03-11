@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +16,24 @@ public class VectorSpaceModel {
 	public static void searchVSM(String queryString) throws IOException {
 
 		String[] query = queryString.split(" ");
+		Set<String> noDupSet = new HashSet<String>();
+		for (int i = 0; i < query.length; i++) {
+			noDupSet.add(query[i]);
+		}
+		String[] noDupQuery = noDupSet.toArray(new String[noDupSet.size()]);
+		String[][] qf = new String[noDupSet.size()][2];
+		for (int i = 0; i < noDupSet.size(); i++) {
+			Pattern p = Pattern.compile(noDupQuery[i]);
+			Matcher m = p.matcher(queryString);
+			int termFreq = 0;
+			while (m.find())
+				termFreq++;
+			qf[i][0] = noDupQuery[i];
+			qf[i][1] = termFreq + "";
+		}
+		query = noDupQuery;
+		for (int i = 0; i < qf.length; i++)
+			System.out.println(Arrays.toString(qf[i]));
 
 		int nDocs = 0; // number of documents
 		File[] listFiles = new File(docPath).listFiles();
@@ -35,7 +55,7 @@ public class VectorSpaceModel {
 						sb.append("\n");
 						line = br.readLine();
 					}
-					everything = sb.toString();
+					everything = sb.toString().toLowerCase();
 				} finally {
 					br.close();
 				}
@@ -60,20 +80,30 @@ public class VectorSpaceModel {
 		}
 		System.out.println("\ndf: " + Arrays.toString(df) + "\n");
 
-		double[][] weight = new double[query.length][nDocs];
-		for (int term = 0; term < weight.length; term++) {
-			double idf = Math.log(nDocs / df[term]);
+		double[][] weightT = new double[query.length][nDocs];
+		for (int term = 0; term < weightT.length; term++) {
+			double idf = Math.log((double) nDocs / (double) df[term]);
+			System.out.println(idf);
 			for (int doc = 0; doc < nDocs; doc++)
-				weight[term][doc] = tf[term][doc] * idf;
+				weightT[term][doc] = tf[term][doc] * idf;
 		}
 		for (int term = 0; term < query.length; term++)
-			System.out.println("weight: " + Arrays.toString(weight[term]));
+			System.out.println("weight: " + Arrays.toString(weightT[term]));
+
+		double[] weightQ = new double[query.length];
+		for (int term = 0; term < weightQ.length; term++) {
+			double idf = Math.log((double) nDocs / (double) df[term]);
+			System.out.println(idf);
+			weightQ[term] = Double.parseDouble(qf[term][1]) * idf;
+		}
+		for (int term = 0; term < query.length; term++)
+			System.out.println("weight: " + Arrays.toString(weightQ));
 
 		String[][] score = new String[nDocs][2];
 		for (int doc = 0; doc < nDocs; doc++) {
-			int total = 0;
+			double total = 0;
 			for (int term = 0; term < query.length; term++)
-				total += weight[term][doc];
+				total += weightT[term][doc] * weightQ[term];
 			score[doc][0] = total + "";
 			score[doc][1] = new File(docPath).listFiles()[doc].getName();
 		}
@@ -87,7 +117,7 @@ public class VectorSpaceModel {
 		});
 		System.out.println("\nscore:");
 		for (int doc = 0; doc < nDocs; doc++)
-			if (Integer.parseInt(score[doc][0]) > 0)
+			if (Double.parseDouble(score[doc][0]) > 0)
 				System.out.println(Arrays.toString(score[doc]));
 
 	}
