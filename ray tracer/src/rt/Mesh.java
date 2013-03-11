@@ -72,7 +72,7 @@ public class Mesh extends Aggregate implements Intersectable {
 		if (hit != null && this.material != null)
 			hit.setMaterial(material);
 		else if (hit != null && this.material == null)
-			hit.setMaterial(new DiffuseMaterial(new Spectrum(.6f, .6f, .6f)));
+			hit.setMaterial(new BlinnMaterial(new Spectrum(.6f, .6f, .6f)));
 		return hit;
 	}
 

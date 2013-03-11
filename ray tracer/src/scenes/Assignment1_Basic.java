@@ -2,8 +2,8 @@ package scenes;
 
 import javax.vecmath.Vector3f;
 
+import rt.BlinnMaterial;
 import rt.Camera;
-import rt.DiffuseMaterial;
 import rt.Film;
 import rt.IntegratorFactory;
 import rt.Intersectable;
@@ -56,42 +56,42 @@ public class Assignment1_Basic implements Scene {
 		float radius = 0.2f;
 		Sphere sphere = new Sphere(center, radius);
 		Spectrum kd = new Spectrum(0.8f, 0.8f, 0.8f);
-		sphere.setMaterial(new DiffuseMaterial(kd));
+		sphere.setMaterial(new BlinnMaterial(kd));
 		objects.add(sphere);
 
 		Vector3f normal = new Vector3f(0.f, 1.f, 0.f);
 		float d = 1.f;
 		Plane plane = new Plane(normal, d);
 		kd = new Spectrum(0.f, 0.8f, 0.8f);
-		plane.setMaterial(new DiffuseMaterial(kd));
+		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
 		normal = new Vector3f(0.f, 0.f, 1.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(0.3f, 0.8f, 0.8f);
-		plane.setMaterial(new DiffuseMaterial(kd));
+		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
 		normal = new Vector3f(-1.f, 0.f, 0.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(1.f, 0.8f, 0.8f);
-		plane.setMaterial(new DiffuseMaterial(kd));
+		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
 		normal = new Vector3f(1.f, 0.f, 0.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(0.f, 0.8f, 0.0f);
-		plane.setMaterial(new DiffuseMaterial(kd));
+		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
 		normal = new Vector3f(0.f, -1.f, 0.f);
 		d = 1.f;
 		plane = new Plane(normal, d);
 		kd = new Spectrum(0.8f, 0.8f, 0.8f);
-		plane.setMaterial(new DiffuseMaterial(kd));
+		plane.setMaterial(new BlinnMaterial(kd));
 		objects.add(plane);
 
 		Vector3f position = new Vector3f(0.f, 0.8f, 0.8f);

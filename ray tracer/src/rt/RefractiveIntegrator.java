@@ -41,7 +41,57 @@ public class RefractiveIntegrator implements IntegratorFactory {
 	}
 
 	private Ray refractionRay(Intersectable scene, HitRecord oldHit, Ray oldRay) {
-		// do some stuff
-		return null;
+		if (oldHit.getMaterial().type != "refractive")
+			return oldRay;
+		Vector3f v = new Vector3f(oldHit.getRayDir());
+		v.negate();
+		Vector3f normal = new Vector3f(oldHit.getNormal());
+		float theta1 = normal.dot(v);
+		float n1 = 1.00029f;
+		float n2 = ((RefractiveMaterial) oldHit.getMaterial()).getRefractiveIndex();
+
+		if (theta1 < 0) { // outgoing
+			normal.negate();
+			theta1 = normal.dot(v);
+			float tmp = n1;
+			n1 = n2;
+			n2 = tmp;
+		}
+
+		float criticalAngle = n2 / n1;
+		float theta2 = (float) (Math.asin(theta1 * (n1 / n2)));
+
+		if (theta1 > criticalAngle) {
+			Ray reflectedRay = reflectionRay(scene, oldHit, oldRay);
+			return reflectedRay;
+		}
+
+		v = new Vector3f(oldHit.getRayDir());
+		v.scale(n1 / n2);
+		Vector3f r = new Vector3f(oldHit.getNormal());
+		r.scale((n1 / n2) * (float) Math.cos(theta1) - (float) Math.cos(theta2));
+		r.add(v);
+		r.normalize();
+
+		Vector3f pos = new Vector3f(oldHit.getIntersectionPoint());
+		Vector3f bias = new Vector3f(oldHit.getRayDir());
+		bias.scale(0.00001f);
+		pos.add(bias);
+		return new Ray(r, pos);
+	}
+
+	private Ray reflectionRay(Intersectable scene, HitRecord oldHit, Ray oldRay) {
+		Vector3f normal = new Vector3f(oldHit.getNormal());
+		float dDotN = oldRay.getDirection().dot(normal);
+		Vector3f twodnn = new Vector3f(oldHit.getNormal());
+		twodnn.scale(dDotN * 2);
+		Vector3f refl = new Vector3f(oldRay.getDirection());
+		refl.sub(twodnn);
+		Vector3f bias = new Vector3f(oldHit.getRayDir());
+		bias.negate();
+		bias.scale(0.00001f);
+		Vector3f intPoint = new Vector3f(oldHit.getIntersectionPoint());
+		intPoint.add(bias);
+		return new Ray(refl, intPoint);
 	}
 }

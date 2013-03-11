@@ -52,7 +52,6 @@ public class BlinnMaterial extends Material {
 		e.sub(hitPoint);
 		e.normalize();
 		Vector3f h = new Vector3f(L);
-		h.normalize();
 		h.add(e);
 		h.normalize();
 		float hDotN = (float) Math.pow(h.dot(normal), shininess);

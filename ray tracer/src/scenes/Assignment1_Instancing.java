@@ -6,8 +6,8 @@ import java.io.IOException;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
+import rt.BlinnMaterial;
 import rt.Camera;
-import rt.DiffuseMaterial;
 import rt.Film;
 import rt.Instance;
 import rt.IntegratorFactory;
@@ -59,23 +59,23 @@ public class Assignment1_Instancing implements Scene {
 
 		// Box
 		Plane plane = new Plane(new Vector3f(0.f, 1.f, 0.f), 1.f);
-		plane.setMaterial(new DiffuseMaterial(new Spectrum(0.f, 0.8f, 0.8f)));
+		plane.setMaterial(new BlinnMaterial(new Spectrum(0.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		plane = new Plane(new Vector3f(0.f, 0.f, 1.f), 1.f);
-		plane.setMaterial(new DiffuseMaterial(new Spectrum(0.3f, 0.8f, 0.8f)));
+		plane.setMaterial(new BlinnMaterial(new Spectrum(0.3f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		plane = new Plane(new Vector3f(-1.f, 0.f, 0.f), 1.f);
-		plane.setMaterial(new DiffuseMaterial(new Spectrum(1.f, 0.8f, 0.8f)));
+		plane.setMaterial(new BlinnMaterial(new Spectrum(1.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		plane = new Plane(new Vector3f(1.f, 0.f, 0.f), 1.f);
-		plane.setMaterial(new DiffuseMaterial(new Spectrum(0.f, 0.8f, 0.0f)));
+		plane.setMaterial(new BlinnMaterial(new Spectrum(0.f, 0.8f, 0.0f)));
 		objects.add(plane);
 
 		plane = new Plane(new Vector3f(0.f, -1.f, 0.f), 1.f);
-		plane.setMaterial(new DiffuseMaterial(new Spectrum(0.8f, 0.8f, 0.8f)));
+		plane.setMaterial(new BlinnMaterial(new Spectrum(0.8f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		// Add objects
@@ -88,7 +88,7 @@ public class Assignment1_Instancing implements Scene {
 			return;
 		}
 
-		mesh.setMaterial(new DiffuseMaterial(new Spectrum(.5f, .5f, .5f)));
+		mesh.setMaterial(new BlinnMaterial(new Spectrum(.5f, .5f, .5f)));
 
 		Matrix4f t = new Matrix4f();
 		t.setIdentity();
