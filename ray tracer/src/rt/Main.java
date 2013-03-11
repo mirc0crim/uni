@@ -9,8 +9,8 @@ import scenes.Scene;
 
 public class Main {
 
-	private static int sceneNo = 4;
-	private static int maxThreads = 8;
+	private static int sceneNo = 3;
+	private static int maxThreads = Runtime.getRuntime().availableProcessors() / 2;
 	private static Scene image;
 
 	public static void main(String[] args) throws InterruptedException {
@@ -31,7 +31,7 @@ public class Main {
 			image = new Assignment1_Refractive();
 			break;
 		}
-		System.out.println("Rendering image...");
+		System.out.println("Rendering image with " + maxThreads + " Threads");
 		int p = image.getFilm().getFilmWidth() / 10;
 		int s = 10;
 		long start = System.currentTimeMillis();
