@@ -14,7 +14,7 @@ hs_err_pid*.log
 *.snm
 *.ap_
 *.dex
-*R.java
+R.java
 *.cache
 */.settings
 *Thumbs.db
