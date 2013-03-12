@@ -21,6 +21,7 @@ public class Main {
 		 * SearchFiles.searchIndex(s);
 		 */
 
-		VectorSpaceModel.searchVSM(query1);
+		// VectorSpaceModel.searchVSM(query1);
+		MyAnalysis.doAnalysis("document2.txt");
 	}
 }
