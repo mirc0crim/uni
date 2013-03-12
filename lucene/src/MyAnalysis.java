@@ -25,14 +25,14 @@ public class MyAnalysis {
 				sb.append(line);
 				line = br.readLine();
 			}
-			everything = sb.toString().toLowerCase();
+			everything = sb.toString();
 		} finally {
 			br.close();
 		}
 		System.out.println("\nDocument Text:");
 		System.out.println(everything);
 		everything = everything.replace(",", "").replace(".", "").replace("(", "")
-				.replace(")", "")
+				.replace(")", "").toLowerCase()
 				+ " ";
 		String[] words = everything.split(" ");
 		Set<String> noDupSet = new HashSet<String>();

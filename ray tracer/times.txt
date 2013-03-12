@@ -1,0 +1,2 @@
+1 Thread	2 Threads	4 Threads	8 Threads	16 Threads
+111'809		60'483		33'574		26'101		27'742
