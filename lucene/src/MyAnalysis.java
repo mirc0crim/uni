@@ -31,18 +31,18 @@ public class MyAnalysis {
 		}
 		System.out.println("\nDocument Text:");
 		System.out.println(everything);
-
+		everything = everything.replace(",", "").replace(".", "").replace("(", "")
+				.replace(")", "")
+				+ " ";
 		String[] words = everything.split(" ");
 		Set<String> noDupSet = new HashSet<String>();
 		for (int i = 0; i < words.length; i++) {
-			words[i].replace(",", "");
-			words[i].replace(".", "");
 			noDupSet.add(words[i]);
 		}
 		String[] noDupWords = noDupSet.toArray(new String[noDupSet.size()]);
 		String[][] wf = new String[noDupSet.size()][2]; // word frequency
 		for (int i = 0; i < noDupSet.size(); i++) {
-			Pattern p = Pattern.compile(noDupWords[i]);
+			Pattern p = Pattern.compile(" " + noDupWords[i] + " ");
 			Matcher m = p.matcher(everything);
 			int termFreq = 0;
 			while (m.find())
@@ -59,11 +59,18 @@ public class MyAnalysis {
 				return s2 - s1;
 			}
 		});
-		System.out.println("Word Frequency: [word, no of appearances]");
-		for (int i = 0; i < wf.length; i++)
-			if (Double.parseDouble(wf[i][0]) > 0)
-				System.out.println(Arrays.toString(wf[i]));
-
+		System.out.println("\nWord Frequency:");
+		System.out.println("Appear " + wf[0][0] + " times");
+		String out = "";
+		for (int i = 0; i < wf.length; i++) {
+			if (i > 0)
+				if (Integer.parseInt(wf[i - 1][0]) > Integer.parseInt(wf[i][0])) {
+					System.out.println(out.substring(0, out.length() - 2));
+					System.out.println("\nAppear " + wf[i][0] + " times");
+					out = "";
+				}
+			out += wf[i][1] + ", ";
+		}
+		System.out.println(out.substring(0, out.length() - 2));
 	}
-
 }
