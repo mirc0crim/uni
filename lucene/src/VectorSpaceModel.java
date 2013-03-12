@@ -41,8 +41,7 @@ public class VectorSpaceModel {
 
 		int nDocs = 0; // number of documents
 		File[] listFiles = new File(docPath).listFiles();
-		for (File f : listFiles)
-			nDocs++;
+		nDocs = listFiles.length;
 
 		int[][] tf = new int[query.length][nDocs]; // frequency of term in doc
 		for (int doc = 0; doc < nDocs; doc++) {

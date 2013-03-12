@@ -8,6 +8,8 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
@@ -19,8 +21,11 @@ public class IndexFiles {
 		for (final File f : new File(indexPath).listFiles())
 			f.delete();
 		System.out.println("Deleted old index.");
-		IndexWriter indexWriter = new IndexWriter(FSDirectory.open(new File(indexPath)),
-				new StandardAnalyzer(Version.LUCENE_36), IndexWriter.MaxFieldLength.LIMITED);
+		Directory indexDir = FSDirectory.open(new File(indexPath));
+		IndexWriterConfig writerConfig = new IndexWriterConfig(Version.LUCENE_36,
+				new StandardAnalyzer(Version.LUCENE_36));
+		writerConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+		IndexWriter indexWriter = new IndexWriter(indexDir, writerConfig);
 		final File folder = new File("D:\\lucene\\corpus");
 		ArrayList<String> textList = new ArrayList<String>();
 		ArrayList<String> fileList = new ArrayList<String>();
