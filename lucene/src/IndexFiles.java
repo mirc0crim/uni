@@ -9,6 +9,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 public class IndexFiles {
 
@@ -18,8 +19,8 @@ public class IndexFiles {
 		for (final File f : new File(indexPath).listFiles())
 			f.delete();
 		System.out.println("Deleted old index.");
-		IndexWriter indexWriter = new IndexWriter(FSDirectory.getDirectory(indexPath),
-				new StandardAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
+		IndexWriter indexWriter = new IndexWriter(FSDirectory.open(new File(indexPath)),
+				new StandardAnalyzer(Version.LUCENE_36), IndexWriter.MaxFieldLength.LIMITED);
 		final File folder = new File("D:\\lucene\\corpus");
 		ArrayList<String> textList = new ArrayList<String>();
 		ArrayList<String> fileList = new ArrayList<String>();
