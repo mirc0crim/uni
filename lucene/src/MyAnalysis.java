@@ -15,6 +15,8 @@ public class MyAnalysis {
 
 	public static void doAnalysis(String document) throws IOException {
 
+		System.out.println("Analysis of Document: " + document);
+
 		File f = new File(docPath + document);
 		BufferedReader br = new BufferedReader(new FileReader(f.getPath()));
 		String everything = "";
@@ -36,9 +38,8 @@ public class MyAnalysis {
 				+ " ";
 		String[] words = everything.split(" ");
 		Set<String> noDupSet = new HashSet<String>();
-		for (int i = 0; i < words.length; i++) {
-			noDupSet.add(words[i]);
-		}
+		for (String word : words)
+			noDupSet.add(word);
 		String[] noDupWords = noDupSet.toArray(new String[noDupSet.size()]);
 		String[][] wf = new String[noDupSet.size()][2]; // word frequency
 		for (int i = 0; i < noDupSet.size(); i++) {

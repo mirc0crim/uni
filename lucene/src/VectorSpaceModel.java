@@ -17,11 +17,12 @@ public class VectorSpaceModel {
 
 	public static void searchVSM(String queryString) throws IOException {
 
+		System.out.println("Query: " + queryString);
+
 		String[] query = queryString.split(" ");
 		Set<String> noDupSet = new HashSet<String>();
-		for (int i = 0; i < query.length; i++) {
-			noDupSet.add(query[i]);
-		}
+		for (String el : query)
+			noDupSet.add(el);
 		String[] noDupQuery = noDupSet.toArray(new String[noDupSet.size()]);
 		String[][] qf = new String[noDupSet.size()][2]; // query frequency
 		for (int i = 0; i < noDupSet.size(); i++) {
@@ -34,9 +35,9 @@ public class VectorSpaceModel {
 			qf[i][1] = termFreq + "";
 		}
 		query = noDupQuery;
-		System.out.println("Query Frequency: [term, no of appearances]");
-		for (int i = 0; i < qf.length; i++)
-			System.out.println(Arrays.toString(qf[i]));
+		System.out.println("Queryterm Frequency: [term, no of appearances]");
+		for (String[] element : qf)
+			System.out.println(Arrays.toString(element));
 
 		int nDocs = 0; // number of documents
 		File[] listFiles = new File(docPath).listFiles();
@@ -70,7 +71,7 @@ public class VectorSpaceModel {
 				tf[term][doc] = termFreq;
 			}
 		}
-		System.out.println("\nTerm Frequency: [doc1, ..., doc5]");
+		System.out.println("\nTerm Frequency: [doc1, ..., doc" + nDocs + "]");
 		for (int term = 0; term < query.length; term++)
 			System.out.println(query[term] + ": " + Arrays.toString(tf[term]));
 
