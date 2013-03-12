@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
@@ -23,7 +23,7 @@ public class IndexFiles {
 		System.out.println("Deleted old index.");
 		Directory indexDir = FSDirectory.open(new File(indexPath));
 		IndexWriterConfig writerConfig = new IndexWriterConfig(Version.LUCENE_36,
-				new StandardAnalyzer(Version.LUCENE_36));
+				new SnowballAnalyzer(Version.LUCENE_36, "English", Main.stopWordList));
 		writerConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 		IndexWriter indexWriter = new IndexWriter(indexDir, writerConfig);
 		final File folder = new File("D:\\lucene\\corpus");
