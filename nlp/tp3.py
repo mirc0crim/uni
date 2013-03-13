@@ -8,8 +8,10 @@ import fileMK
 corpusPath = "D:\\nlp\\corpus\\"
 outputPath = "D:\\nlp\\output\\"
 
+doc = False
+
 t = []
-t = fileMK.readFilesInArray(corpusPath)
+t = fileMK.readFilesInArray(corpusPath, doc)
 
 def choose():
     printInfo()
@@ -26,6 +28,12 @@ def choose():
     elif (ex == "4"):
         task4()
         choose()
+    elif (ex == "6"):
+        task6()
+        choose()
+    elif (ex == "7"):
+        toggleGH()
+        choose()
 
 def printInfo():
     print ""
@@ -35,10 +43,15 @@ def printInfo():
     print " 3 = Terms appearing once, twice & three times."
     print " 4 = Pattern Matching."
     #print " 5 = Verify Zipf's law. Plot and log-log-Plot."
-    #print " 6 = 15 most Frequent Word Types by Hamilton vs Madison."
+    print " 6 = 15 most Frequent Word Types by Hamilton vs Madison."
+    print " 7 = Toggle \"Glasgow Herald\" reading."
     print " Else Exit"
     print " --------------------------------------------------------------------"
-    print " Note: \"Glasgow Herald\" takes about a Minute to read"
+    if (doc):
+        print " Creating the Dictionary from \"Glasgow Herald\" in Task 1, 2 & 3"
+        print " will take about a Minute"
+    else:
+        print " \"Glasgow Herald\" will be omitted"
     print " --------------------------------------------------------------------"
 
 def task1():
@@ -114,6 +127,36 @@ def task4():
     print str(len(m)) + " Terms found"
     path = outputPath + "task4d.txt"
     fileMK.writeTextToFile(str(m), path)
+
+def task6():
+    # Task 6
+    hamilton = fileMK.readFile(corpusPath + "Federalist Hamilton.txt")
+    madison = fileMK.readFile(corpusPath + "Federalist Madison.txt")
+    sorted_hamilton = fileMK.sortedDictFromWords(hamilton.split(" "))
+    sorted_madison = fileMK.sortedDictFromWords(madison.split(" "))
+    sHamilton = ""
+    sMadison = ""
+    for i in range(15):
+        sHamilton += str(sorted_hamilton[i]) + "\n"
+        sMadison += str(sorted_madison[i]) + "\n"
+    sHamilton = sHamilton.replace("(", "").replace(")", "").replace("'","").replace(",",":")
+    sMadison = sMadison.replace("(", "").replace(")", "").replace("'","").replace(",",":")
+    h = "Hamilton:\n" + str(sHamilton)
+    m = "Madison:\n" + str(sMadison)
+    print h
+    print m
+    path = outputPath + "task6.txt"
+    fileMK.writeTextToFile(h + "\n" + m, path)
+
+def toggleGH():
+    global doc
+    global t
+    if (doc):
+        doc = False
+        t = fileMK.readFilesInArray(corpusPath, doc)
+    else:
+        doc = True
+        t = fileMK.readFilesInArray(corpusPath, doc)
 
 print "Path to Corpus " + corpusPath
 print "Path to Output " + outputPath

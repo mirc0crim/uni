@@ -3,14 +3,18 @@ import re
 import os
 import collections
 
-def readFilesInArray(filePath):
+def readFilesInArray(filePath, doc):
     t = []
     dirlist = os.listdir(filePath)
     for fname in dirlist:
         if (fname[0] != "~"):
-            f = open(filePath + "\\" + fname)
-            t.append(f.read().replace("\n", " "))
+            if (fname[-3:] != "doc" or doc):
+                t.append(readFile(filePath + "\\" + fname))
     return t
+
+def readFile(filePathName):
+    f = open(filePathName)
+    return f.read().replace("\n", " ")
 
 def countAllTags(text):
     m = re.findall("</(.*?)>", text)
