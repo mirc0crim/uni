@@ -22,4 +22,4 @@ bin/
 gen/
 lucene/src/org/apache
 lucene/src/org/tartarus
-
+*.pyc

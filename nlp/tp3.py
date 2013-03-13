@@ -51,31 +51,34 @@ def task1():
 
 def task2():
     # Task 2
-    words = []
+    w = []
+    count = 0
     for i in range(len(t)):
-        words += (t[i].split(" "))
-    sorted_dict = fileMK.sortedDictFromWords(words)
-    print "There are " + str(len(sorted_dict)) + " different Terms"
+        w += t[i].split(" ")
+    for i in range(len(w)):
+        if (not re.findall("<(.*?)>", w[i]) and len(w[i]) > 0 and not re.match("^\d*?$", w[i])):
+            count += 1
+    print "There are " + str(count) + " Terms"
     choose()
 
 def task3():
     # Task 3
     words = []
     for i in range(len(t)):
-        words += (t[i].split(" "))
+        words += t[i].split(" ")
     sorted_dict = fileMK.sortedDictFromWords(words)
-    for i in range(3):
-        times = {}
+    for i in range(1,4):
+        times = [key for key, value in sorted_dict if value == i]
         s = ""
-        for i in range(len(once)):
-            s += str(once[i]) + "; "
-        s = s.replace("(", "").replace(")", "").replace("'","").replace(",",":")
+        for j in range(len(times)):
+            s += str(times[j]) + "; "
+        print " Words occuring " + str(i) + " time(s):"
         print s
+        print str(len(s)) + " Words found occuring " + str(i) + " time(s)"
     choose()
 
 def task4():
     # Task 4
-
     choose()
 
 def task5():

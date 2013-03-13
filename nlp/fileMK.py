@@ -43,12 +43,18 @@ def numOfTokens(text, sep):
 def sortedDictFromWords(words):
     unsorted_dict = collections.defaultdict(int)
     for j in range(len(words)):
-        w = words[j].replace(",", "").replace(".","")
-        if (not re.findall("<(.*?)>", w) and len(w) > 0):
+        w = replaceSigns(words[j])
+        if (not re.findall("<(.*?)>", w) and len(w) > 0 and not re.match("^\d*?$", w)):
             if (w not in unsorted_dict):
                 unsorted_dict[w] = 0
-            unsorted_dict[words[j]] += 1
+            unsorted_dict[w] += 1
     return sorted(unsorted_dict.iteritems(), key=lambda item: -item[1])
+
+def replaceSigns(word):
+    w = word.replace(",", "").replace(".","").replace("(","")
+    w = w.replace(")","").replace(":", "").replace(";","")
+    w = w.replace("?", "").replace("!", "").replace("\"", "")
+    return w
 
 def writeTextToFile(text, path):
     if not path[-4:] == ".txt":
