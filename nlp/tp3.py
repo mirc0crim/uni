@@ -37,18 +37,14 @@ def choose():
 
 def task1():
     # Task 1
-    dict = collections.defaultdict(int)
-    for i in range(1):
-        words = t[i].split(" ")
-        for j in range(len(words)):
-            w = words[j].replace(",", "").replace(".","")
-            if (not re.findall("<(.*?)>", w) and len(w) > 0):
-                if (w not in dict):
-                    dict[w] = 0
-                dict[words[j]] += 1
-        print " Words in document " + str(i+1) + ":"
-        sorted_dict = sorted(dict.iteritems(), key=operator.itemgetter(1))
-        print sorted_dict
+    words = t[0].split(" ")
+    sorted_dict = fileMK.sortedDictFromWords(words)
+    s = ""
+    for i in range(50):
+        s += str(sorted_dict[i]) + "\n"
+    s = s.replace("(", "").replace(")", "").replace("'","").replace(",",":")
+    path = raw_input(" Enter Path & File\n")
+    fileMK.writeTextToFile(s, path)
     choose()
 
 def task2():

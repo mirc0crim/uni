@@ -1,6 +1,7 @@
 # -*- coding: ascii -*-
 import re
 import os
+import collections
 
 def readFilesInArray(filePath):
     t = []
@@ -38,3 +39,21 @@ def searchTextWithDocno(d, search):
 
 def numOfTokens(text, sep):
     return len(text.split(sep))
+
+def sortedDictFromWords(words):
+    unsorted_dict = collections.defaultdict(int)
+    for j in range(len(words)):
+        w = words[j].replace(",", "").replace(".","")
+        if (not re.findall("<(.*?)>", w) and len(w) > 0):
+            if (w not in unsorted_dict):
+                unsorted_dict[w] = 0
+            unsorted_dict[words[j]] += 1
+    return sorted(unsorted_dict.iteritems(), key=lambda item: -item[1])
+
+def writeTextToFile(text, path):
+    if not path[-4:] == ".txt":
+        path += ".txt"
+    f = open(path, "w+")
+    f.write(text)
+    print " Output File = " + path
+    f.close()
