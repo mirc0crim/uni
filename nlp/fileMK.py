@@ -2,6 +2,7 @@
 import re
 import os
 import collections
+from pylab import *
 
 def readFilesInArray(filePath, doc):
     t = []
@@ -72,3 +73,10 @@ def writeTextToFile(text, path):
     f.write(text)
     print " Text written to File: " + path
     f.close()
+
+def plotZipf(x, y, t):
+    plot(x, y)
+    ylabel("Frequency")
+    xlabel("Rank")
+    title(t)
+    show()

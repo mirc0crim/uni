@@ -3,6 +3,7 @@ import sys
 import re
 import collections
 import operator
+import math
 import fileMK
 
 corpusPath = "D:\\nlp\\corpus\\"
@@ -28,6 +29,9 @@ def choose():
     elif (ex == "4"):
         task4()
         choose()
+    elif (ex == "5"):
+        task5()
+        choose()
     elif (ex == "6"):
         task6()
         choose()
@@ -42,7 +46,7 @@ def printInfo():
     print " 2 = Number of Terms."
     print " 3 = Terms appearing once, twice & three times."
     print " 4 = Pattern Matching."
-    #print " 5 = Verify Zipf's law. Plot and log-log-Plot."
+    print " 5 = Verify Zipf's law. Plot and log-log-Plot."
     print " 6 = 15 most Frequent Word Types by Hamilton vs Madison."
     print " 7 = Toggle \"Glasgow Herald\" reading."
     print " Else Exit"
@@ -132,7 +136,23 @@ def task4():
 
 def task5():
     # Task 5
-    s = ""
+    hamilton = fileMK.readFile(corpusPath + "Federalist Hamilton.txt")
+    sorted_hamilton = fileMK.sortedDictFromWords(hamilton.split(" "))
+    x = []
+    y = []
+    for i in range(len(sorted_hamilton)):
+        x.append(i)
+        y.append(sorted_hamilton[i][1])
+    fileMK.plotZipf(x, y, "Zipf's Law - Plot")
+    x = []
+    y = []
+    for i in range(len(sorted_hamilton)):
+        if (i == 0):
+            x.append(0)
+        else:
+            x.append(math.log(i))
+        y.append(math.log(sorted_hamilton[i][1]))
+    fileMK.plotZipf(x, y, "Zipf's Law - Log-Log-Plot")
 
 def task6():
     # Task 6
