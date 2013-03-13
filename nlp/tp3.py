@@ -37,24 +37,40 @@ def choose():
 
 def task1():
     # Task 1
-    words = t[0].split(" ")
+    words = []
+    for i in range(len(t)):
+        words += (t[i].split(" "))
     sorted_dict = fileMK.sortedDictFromWords(words)
     s = ""
     for i in range(50):
         s += str(sorted_dict[i]) + "\n"
     s = s.replace("(", "").replace(")", "").replace("'","").replace(",",":")
-    path = raw_input(" Enter Path & File\n")
+    path = raw_input(" Enter Path & Filename (like \"D:\\termFrequency.txt\")\n")
     fileMK.writeTextToFile(s, path)
     choose()
 
 def task2():
     # Task 2
-
+    words = []
+    for i in range(len(t)):
+        words += (t[i].split(" "))
+    sorted_dict = fileMK.sortedDictFromWords(words)
+    print "There are " + str(len(sorted_dict)) + " different Terms"
     choose()
 
 def task3():
     # Task 3
-
+    words = []
+    for i in range(len(t)):
+        words += (t[i].split(" "))
+    sorted_dict = fileMK.sortedDictFromWords(words)
+    for i in range(3):
+        times = {}
+        s = ""
+        for i in range(len(once)):
+            s += str(once[i]) + "; "
+        s = s.replace("(", "").replace(")", "").replace("'","").replace(",",":")
+        print s
     choose()
 
 def task4():
