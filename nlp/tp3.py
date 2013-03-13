@@ -64,14 +64,18 @@ def task3():
     for i in range(len(t)):
         words += t[i].split(" ")
     sorted_dict = fileMK.sortedDictFromWords(words)
-    for i in range(1,4):
-        times = [key for key, value in sorted_dict if value == i]
-        s = ""
-        for j in range(len(times)):
-            s += str(times[j]) + "; "
-        print " Words occuring " + str(i) + " time(s):"
-        print s
-        print str(len(s)) + " Words found occuring " + str(i) + " time(s)"
+    try:
+        i = int(raw_input(" How many times should the term appear?\n"))
+    except ValueError:
+        print " Invalid Value, assuming 51\n"
+        i = 51
+    times = [key for key, value in sorted_dict if value == i]
+    s = ""
+    for j in range(len(times)):
+        s += str(times[j]) + "; "
+    print " Words occuring " + str(i) + " time(s):"
+    print " " + s
+    print " " + str(len(s.split("; "))-1) + " Words found occuring " + str(i) + " time(s)"
     choose()
 
 def task4():
