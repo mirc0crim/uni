@@ -37,7 +37,7 @@ def choose():
 
 def printInfo():
     print ""
-    print " --------------------------------------------------------------------"
+    print " ------------------------------------------------------------------"
     print " 1 = 50 Terms with highest Frequencies."
     print " 2 = Number of Terms."
     print " 3 = Terms appearing once, twice & three times."
@@ -46,13 +46,14 @@ def printInfo():
     print " 6 = 15 most Frequent Word Types by Hamilton vs Madison."
     print " 7 = Toggle \"Glasgow Herald\" reading."
     print " Else Exit"
-    print " --------------------------------------------------------------------"
+    print " ------------------------------------------------------------------"
     if (doc):
-        print " Creating the Dictionary from \"Glasgow Herald\" in Task 1, 2 & 3"
-        print " will take about a Minute"
+        print " Creating the Dictionary from \"Glasgow Herald\" in Task 1, 2 &"
+        print " 3 will take about a Minute but Task 4c won't find anything."
     else:
-        print " \"Glasgow Herald\" will be omitted"
-    print " --------------------------------------------------------------------"
+        print " \"Glasgow Herald\" will be omitted. Task 1, 2 & 3 will be fast"
+        print " but Task 4c wont' find anything"
+    print " ------------------------------------------------------------------"
 
 def task1():
     # Task 1
@@ -64,7 +65,7 @@ def task1():
     for i in range(50):
         s += str(sorted_dict[i]) + "\n"
     s = s.replace("(", "").replace(")", "").replace("'","").replace(",",":")
-    path = raw_input(" Enter Path & Filename (like \"D:\\termFrequency.txt\")\n")
+    path = raw_input(" Enter Path & Filename (like \"D:\\terms.txt\")\n")
     if path == "":
         path = outputPath + "task1.txt"
     fileMK.writeTextToFile(s, path)
@@ -88,14 +89,15 @@ def task3():
     except ValueError:
         print " Invalid Value, assuming 51\n"
         i = 51
-    times = [key for key, value in unsorted_dict if value == i]
+    times = [key for key, value in unsorted_dict.iteritems() if value == i]
     s = ""
     for j in range(len(times)):
         s += str(times[j]) + "; "
     print " Words occuring " + str(i) + " time(s):"
     print " " + s
-    print " " + str(len(s.split("; "))-1) + " Words found occuring " + str(i) + " time(s)"
-    path = outputPath + "task3-" + i + ".txt"
+    n = str(len(s.split("; "))-1)
+    print " " + n + " Words found occuring " + str(i) + " time(s)"
+    path = outputPath + "task3-" + str(i) + ".txt"
     fileMK.writeTextToFile(s, path)
 
 def task4():
@@ -128,6 +130,10 @@ def task4():
     path = outputPath + "task4d.txt"
     fileMK.writeTextToFile(str(m), path)
 
+def task5():
+    # Task 5
+    s = ""
+
 def task6():
     # Task 6
     hamilton = fileMK.readFile(corpusPath + "Federalist Hamilton.txt")
@@ -139,8 +145,8 @@ def task6():
     for i in range(15):
         sHamilton += str(sorted_hamilton[i]) + "\n"
         sMadison += str(sorted_madison[i]) + "\n"
-    sHamilton = sHamilton.replace("(", "").replace(")", "").replace("'","").replace(",",":")
-    sMadison = sMadison.replace("(", "").replace(")", "").replace("'","").replace(",",":")
+    sHamilton = sHamilton.replace("(", "").replace(")", "").replace("'","")
+    sMadison = sMadison.replace("(", "").replace(")", "").replace("'","")
     h = "Hamilton:\n" + str(sHamilton)
     m = "Madison:\n" + str(sMadison)
     print h

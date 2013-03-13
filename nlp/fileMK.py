@@ -48,7 +48,9 @@ def unsortedDictFromWords(words):
     unsorted_dict = collections.defaultdict(int)
     for j in range(len(words)):
         w = replaceSigns(words[j])
-        if (not re.findall("<(.*?)>", w) and len(w) > 0 and not re.match("^\d*?$", w)):
+        if (len(w) < 1):
+            next
+        if (not re.findall("<(.*?)>", w) and not re.match("^\d*?$", w)):
             if (w not in unsorted_dict):
                 unsorted_dict[w] = 0
             unsorted_dict[w] += 1
