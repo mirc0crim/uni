@@ -40,7 +40,7 @@ def searchTextWithDocno(d, search):
 def numOfTokens(text, sep):
     return len(text.split(sep))
 
-def sortedDictFromWords(words):
+def unsortedDictFromWords(words):
     unsorted_dict = collections.defaultdict(int)
     for j in range(len(words)):
         w = replaceSigns(words[j])
@@ -48,12 +48,15 @@ def sortedDictFromWords(words):
             if (w not in unsorted_dict):
                 unsorted_dict[w] = 0
             unsorted_dict[w] += 1
+    return unsorted_dict
+
+def sortedDictFromWords(words):
+    unsorted_dict = unsortedDictFromWords(words)
     return sorted(unsorted_dict.iteritems(), key=lambda item: -item[1])
 
 def replaceSigns(word):
-    w = word.replace(",", "").replace(".","").replace("(","")
-    w = w.replace(")","").replace(":", "").replace(";","")
-    w = w.replace("?", "").replace("!", "").replace("\"", "")
+    w = word.replace(",", "").replace(".","").replace("?", "")
+    w = w.replace(":", "").replace(";","").replace("!", "").replace("\"", "")
     return w
 
 def writeTextToFile(text, path):
@@ -61,5 +64,5 @@ def writeTextToFile(text, path):
         path += ".txt"
     f = open(path, "w+")
     f.write(text)
-    print " Output File = " + path
+    print " Text written to File: " + path
     f.close()
