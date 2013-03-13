@@ -52,13 +52,10 @@ def task1():
 def task2():
     # Task 2
     w = []
-    count = 0
     for i in range(len(t)):
         w += t[i].split(" ")
-    for i in range(len(w)):
-        if (not re.findall("<(.*?)>", w[i]) and len(w[i]) > 0 and not re.match("^\d*?$", w[i])):
-            count += 1
-    print "There are " + str(count) + " Terms"
+    sorted_dict = fileMK.sortedDictFromWords(w)
+    print "There are " + str(len(sorted_dict)) + " different Terms"
     choose()
 
 def task3():
