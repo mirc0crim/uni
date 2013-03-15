@@ -9,43 +9,51 @@ public class RefractiveIntegrator implements IntegratorFactory {
 	@Override
 	public Spectrum integrate(Intersectable scene, LightList lights, Ray ray, int bounces) {
 		HitRecord hit = scene.intersect(ray);
+		Spectrum spectrum = new Spectrum(0.f, 0.f, 0.f);
+		spectrum.append(doShading(scene, lights, hit, ray, bounces));
+		return spectrum;
+	}
+
+	private Spectrum doShading(Intersectable scene, LightList lights, HitRecord hit, Ray ray, int bounces) {
+		if (bounces <= 0 )
+			return makeShadow(scene, lights, hit);
+		if (hit != null && hit.getT() > 0 && hit.getT() <= Float.POSITIVE_INFINITY)
+			if (hit.getMaterial().type == "refractive")
+				return refractionSpec(scene, lights, hit, ray, --bounces);
+			else if(hit.getMaterial().type == "mirror"){
+				Ray reflectedRay = reflectionRay(hit, ray);
+				HitRecord mirrorHit = scene.intersect(reflectedRay);
+				return doShading(scene, lights, mirrorHit, reflectedRay, --bounces);
+			} else
+				return makeShadow(scene, lights, hit);
+		return new Spectrum(0.f, 0.f, 0.f);
+	}
+
+	private Spectrum makeShadow(Intersectable scene, LightList lights, HitRecord hit) {
 		Iterator<Light> it = lights.getLightList().iterator();
 		Spectrum spectrum = new Spectrum(0.f, 0.f, 0.f);
-
-		if (hit != null && hit.getT() > 0 && hit.getT() <= Float.POSITIVE_INFINITY) {
-			int rec = 0;
-			while ((hit.getMaterial().type == "refractive" || hit.getMaterial().type == "mirror")
-					&& rec <= bounces) {
-				Ray newRay;
-				if (hit.getMaterial().type == "refractive")
-					newRay = refractionRay(scene, hit, ray);
-				else
-					newRay = reflectionRay(scene, hit, ray);
-				hit = scene.intersect(newRay);
-				rec++;
-			}
-			while (it.hasNext()) {
-				Light light = it.next();
-				Vector3f hitToLight = new Vector3f(light.getPosition());
-				hitToLight.sub(hit.getIntersectionPoint());
-				hitToLight.normalize();
-				Vector3f pos = new Vector3f(hit.getIntersectionPoint());
-				Vector3f bias = new Vector3f(hit.getRayDir());
-				bias.negate();
-				bias.scale(0.00001f);
-				pos.add(bias);
-				HitRecord lightHit = scene.intersect(new Ray(hitToLight, pos));
-				Vector3f dist = new Vector3f();
-				dist.sub(light.getPosition(), pos);
-				if (lightHit == null || lightHit.getT() > dist.length())
-					spectrum.append(hit.getMaterial().shade(hit, light));
-			}
+		while (it.hasNext()) {
+			Light light = it.next();
+			Vector3f hitToLight = new Vector3f(light.getPosition());
+			hitToLight.sub(hit.getIntersectionPoint());
+			hitToLight.normalize();
+			Vector3f pos = new Vector3f(hit.getIntersectionPoint());
+			Vector3f bias = new Vector3f(hit.getRayDir());
+			bias.negate();
+			bias.scale(0.00001f);
+			pos.add(bias);
+			HitRecord lightHit = scene.intersect(new Ray(hitToLight, pos));
+			Vector3f dist = new Vector3f();
+			dist.sub(light.getPosition(), pos);
+			if (lightHit == null || lightHit.getT() > dist.length())
+				spectrum.append(hit.getMaterial().shade(hit, light));
 		}
 		return spectrum;
 	}
 
-	private Ray refractionRay(Intersectable scene, HitRecord oldHit, Ray oldRay) {
-		Vector3f v = new Vector3f(reflectionRay(scene, oldHit, oldRay).getDirection());
+	private Spectrum refractionSpec(Intersectable scene, LightList lights, HitRecord oldHit,
+			Ray oldRay, int bounces) {
+		Vector3f v = new Vector3f(reflectionRay(oldHit, oldRay).getDirection());
 		Vector3f n = new Vector3f(oldHit.getNormal());
 		float n1, n2;
 		float cosTheta1 = n.dot(v);
@@ -63,8 +71,11 @@ public class RefractiveIntegrator implements IntegratorFactory {
 		float theta1 = (float) Math.acos(n.dot(v));
 		float theta2 = (float) Math.asin(Math.sin(theta1) * n1 / n2);
 
+		Ray reflectedRay = reflectionRay(oldHit, oldRay);
+		HitRecord reflectionHit = scene.intersect(reflectedRay);
+
 		if (theta1 > thetaC)
-			return reflectionRay(scene, oldHit, oldRay);
+			return doShading(scene, lights, reflectionHit, reflectedRay, --bounces);
 
 		Vector3f v2 = new Vector3f(oldHit.getRayDir());
 		v2.normalize();
@@ -79,16 +90,37 @@ public class RefractiveIntegrator implements IntegratorFactory {
 		bias.scale(0.00001f);
 		pos.add(bias);
 
-		return new Ray(r, pos);
+		Ray refractedRay = new Ray(r, pos);
+		HitRecord refractionHit = scene.intersect(refractedRay);
+
+		// Fresnel equations
+		float R1 = (float) Math.pow(
+				(n1 * Math.cos(theta1) - n2 * Math.cos(theta2))
+				/ (n1 * Math.cos(theta1) + n2 * Math.cos(theta2)), 2);
+		float R2 = (float) Math.pow(
+				(n2 * Math.cos(theta1) - n1 * Math.cos(theta2))
+				/ (n2 * Math.cos(theta1) + n1 * Math.cos(theta2)), 2);
+		float R = (R1 + R2) / 2f;
+		float T = 1.f - R;
+
+		int newDepth = --bounces;
+		Spectrum reflectionSpectrum = doShading(scene, lights, reflectionHit, reflectedRay,
+				newDepth).multipliedBy(R);
+		Spectrum refractionSpectrum = doShading(scene, lights, refractionHit, refractedRay,
+				newDepth).multipliedBy(T);
+		Spectrum finalSpectrum = new Spectrum(reflectionSpectrum);
+		finalSpectrum.append(refractionSpectrum);
+		return finalSpectrum;
 	}
 
-	private Ray reflectionRay(Intersectable scene, HitRecord oldHit, Ray oldRay) {
+	private Ray reflectionRay(HitRecord oldHit, Ray oldRay) {
 		Vector3f normal = new Vector3f(oldHit.getNormal());
 		float dDotN = oldRay.getDirection().dot(normal);
 		Vector3f twodnn = new Vector3f(oldHit.getNormal());
 		twodnn.scale(dDotN * 2);
 		Vector3f refl = new Vector3f(oldRay.getDirection());
 		refl.sub(twodnn);
+		refl.normalize();
 		Vector3f bias = new Vector3f(oldHit.getRayDir());
 		bias.negate();
 		bias.scale(0.00001f);
