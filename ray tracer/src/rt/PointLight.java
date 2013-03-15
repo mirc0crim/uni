@@ -7,11 +7,12 @@ public class PointLight implements Light {
 	private Vector3f position;
 	private Spectrum cSrc;
 
-	public PointLight(Vector3f pos, Spectrum strength) {
+	public PointLight(Vector3f pos, Spectrum color) {
 		position = pos;
-		cSrc = strength;
+		cSrc = color;
 	}
 
+	@Override
 	public Spectrum getCl(Vector3f hitPoint) {
 		Vector3f p = new Vector3f(position);
 		p.sub(hitPoint);
@@ -19,6 +20,7 @@ public class PointLight implements Light {
 		return new Spectrum(cSrc.divideBy(len));
 	}
 
+	@Override
 	public Vector3f getL(Vector3f hitPoint) {
 		Vector3f L = new Vector3f(position);
 		L.sub(hitPoint);
@@ -26,6 +28,7 @@ public class PointLight implements Light {
 		return L;
 	}
 
+	@Override
 	public Vector3f getPosition() {
 		return position;
 	}

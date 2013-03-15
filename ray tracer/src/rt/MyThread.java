@@ -12,11 +12,12 @@ public class MyThread implements Runnable {
 		w = width;
 	}
 
+	@Override
 	public void run() {
 		for (int h = 0; h < image.getFilm().getFilmHeight(); h++) {
 			Ray ray = image.getCamera().getPrimaryRay(w, h);
 			Spectrum spectrum = image.getIntegratorFactory().integrate(image.getObjects(),
-					image.getLights(), image.getCamera().getCenterOfProjection(), ray, 10);
+					image.getLights(), ray, 10);
 			image.getFilm().setPixel(w, h, spectrum);
 		}
 	}

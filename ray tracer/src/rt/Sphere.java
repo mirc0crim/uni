@@ -22,7 +22,7 @@ public class Sphere implements Intersectable {
 		Vector3f origin = new Vector3f(ray.getOrigin());
 		origin.sub(center);
 		float b = 2 * ray.getDirection().dot(origin);
-		float c = origin.dot(origin) - (float) (radius * radius);
+		float c = origin.dot(origin) - radius * radius;
 
 		// Find discriminant
 		float disc = b * b - 4 * a * c;
@@ -36,9 +36,9 @@ public class Sphere implements Intersectable {
 		float distSqrt = (float) Math.sqrt(disc);
 		float q;
 		if (b < 0)
-			q = (float) ((-b - distSqrt) / 2.0f);
+			q = (-b + distSqrt) / 2.0f;
 		else
-			q = (float) ((-b + distSqrt) / 2.0f);
+			q = (-b - distSqrt) / 2.0f;
 
 		// compute t0 and t1
 		float t0 = q / a;

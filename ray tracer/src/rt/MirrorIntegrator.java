@@ -7,8 +7,7 @@ import javax.vecmath.Vector3f;
 public class MirrorIntegrator implements IntegratorFactory {
 
 	@Override
-	public Spectrum integrate(Intersectable scene, LightList lights, Vector3f eye, Ray ray,
-			int bounces) {
+	public Spectrum integrate(Intersectable scene, LightList lights, Ray ray, int bounces) {
 		HitRecord hit = scene.intersect(ray);
 		Iterator<Light> it = lights.getLightList().iterator();
 		Spectrum spectrum = new Spectrum(0.f, 0.f, 0.f);
@@ -34,7 +33,7 @@ public class MirrorIntegrator implements IntegratorFactory {
 				Vector3f dist = new Vector3f();
 				dist.sub(light.getPosition(), pos);
 				if (lightHit == null || lightHit.getT() > dist.length())
-					spectrum.append(hit.getMaterial().shade(hit, eye, light));
+					spectrum.append(hit.getMaterial().shade(hit, light));
 			}
 		}
 		return spectrum;

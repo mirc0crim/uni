@@ -50,9 +50,8 @@ public class Main {
 				a[i] = new Thread(new MyThread(w + i, image));
 				a[i].start();
 			}
-			for (int i = 0; i < maxThreads; i++) {
+			for (int i = 0; i < maxThreads; i++)
 				a[i].join();
-			}
 		}
 		image.getTonemapper().createImage(image.getFilm(), image.getOutputFileName());
 		long end = System.currentTimeMillis();

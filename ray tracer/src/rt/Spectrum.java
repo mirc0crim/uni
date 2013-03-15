@@ -31,21 +31,21 @@ public class Spectrum {
 	}
 
 	public void append(Spectrum spec) {
-		setRed(red + spec.red);
-		setGreen(green + spec.green);
-		setBlue(blue + spec.blue);
+		red += spec.red;
+		green += spec.green;
+		blue += spec.blue;
 	}
 
 	public void clampMax(float f) {
-		setRed(Math.min(getRed(), f));
-		setGreen(Math.min(getGreen(), f));
-		setBlue(Math.min(getBlue(), f));
+		red = Math.min(red, f);
+		green = Math.min(green, f);
+		blue = Math.min(blue, f);
 	}
 
 	public void clampMin(float f) {
-		setRed(Math.max(getRed(), f));
-		setGreen(Math.max(getGreen(), f));
-		setBlue(Math.max(getBlue(), f));
+		red = Math.max(red, f);
+		green = Math.max(green, f);
+		blue = Math.max(blue, f);
 	}
 
 	public float getRed() {
