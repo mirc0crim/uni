@@ -39,8 +39,8 @@ public class Assignment1_First implements Scene {
 		Vector3f lookAt = new Vector3f(0.f, 0.f, 0.f);
 		Vector3f up = new Vector3f(0.f, 1.f, 0.f);
 		float fov = 60.f;
-		int width = 1024;
-		int height = 1024;
+		int width = 2048;
+		int height = 2048;
 		float aspect = (float) width / (float) height;
 		camera = new Camera(eye, lookAt, up, fov, aspect, width, height);
 		film = new Film(width, height);
