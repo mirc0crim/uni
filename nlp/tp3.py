@@ -80,7 +80,10 @@ def task2():
     for i in range(len(t)):
         w += t[i].split(" ")
     unsorted_dict = fileMK.unsortedDictFromWords(w)
-    print "There are " + str(len(unsorted_dict)) + " different Terms"
+    s = "There are " + str(len(unsorted_dict)) + " different Terms"
+    print s
+    path = outputPath + "task2.txt"
+    fileMK.writeTextToFile(s, path)
 
 def task3():
     # Task 3
@@ -97,8 +100,6 @@ def task3():
     s = ""
     for j in range(len(times)):
         s += str(times[j]) + "; "
-    print " Words occuring " + str(i) + " time(s):"
-    print " " + s
     n = str(len(s.split("; "))-1)
     print " " + n + " Words found occuring " + str(i) + " time(s)"
     path = outputPath + "task3-" + str(i) + ".txt"
@@ -147,10 +148,7 @@ def task5():
     x = []
     y = []
     for i in range(len(sorted_hamilton)):
-        if (i == 0):
-            x.append(0)
-        else:
-            x.append(math.log(i))
+        x.append(math.log(i+1))
         y.append(math.log(sorted_hamilton[i][1]))
     fileMK.plotZipf(x, y, "Zipf's Law - Log-Log-Plot")
 

@@ -75,8 +75,11 @@ def writeTextToFile(text, path):
     f.close()
 
 def plotZipf(x, y, t):
-    plot(x, y)
+    plot(x, y, "o")
     ylabel("Frequency")
     xlabel("Rank")
     title(t)
+    x20 = max(x)/50
+    y20 = max(y)/50
+    axis([-x20, max(x)+x20, -y20, max(y)+y20])
     show()
