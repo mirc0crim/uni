@@ -12,13 +12,13 @@ import java.util.regex.Pattern;
 
 public class VectorSpaceModel {
 
-	private static String docPath = "D:\\lucene\\corpus";
 	private static DecimalFormat form = new DecimalFormat("#.###");
 
-	public static void searchVSM(String queryString) throws IOException {
+	public static void searchVSM(String queryString, String docPath) throws IOException {
 
 		System.out.println("Query: " + queryString);
 
+		queryString = removePluralS(queryString);
 		String[] query = queryString.split(" ");
 		Set<String> noDupSet = new HashSet<String>();
 		for (String el : query)
@@ -40,12 +40,15 @@ public class VectorSpaceModel {
 			System.out.println(Arrays.toString(element));
 
 		int nDocs = 0; // number of documents
-		File[] listFiles = new File(docPath).listFiles();
-		nDocs = listFiles.length;
+		for (File f : new File(docPath).listFiles())
+			if (!f.isDirectory())
+				nDocs++;
 
 		int[][] tf = new int[query.length][nDocs]; // frequency of term in doc
 		for (int doc = 0; doc < nDocs; doc++) {
 			File f = new File(docPath).listFiles()[doc];
+			if (f.isDirectory())
+				continue;
 			for (int term = 0; term < query.length; term++) {
 				String q = query[term];
 				BufferedReader br = new BufferedReader(new FileReader(f.getPath()));
@@ -55,10 +58,11 @@ public class VectorSpaceModel {
 					String line = br.readLine();
 					while (line != null) {
 						sb.append(line);
-						sb.append("\n");
 						line = br.readLine();
 					}
 					everything = sb.toString().toLowerCase();
+					everything = removeStopWords(everything);
+					everything = removePluralS(everything);
 				} finally {
 					br.close();
 				}
@@ -129,5 +133,27 @@ public class VectorSpaceModel {
 			if (Double.parseDouble(score[doc][0]) > 0)
 				System.out.println(Arrays.toString(score[doc]));
 
+	}
+
+	public static String removePluralS(String text) {
+		String[] t = text.split(" ");
+		String everything = "";
+		for (String s : t){
+			s = s.trim();
+			s = s.replace("'", "");
+			if (s.length() > 2)
+				if (s.endsWith("s")) {
+					s = s.substring(0, s.length() - 1);
+				}
+			everything += s + " ";
+		}
+		return everything;
+	}
+
+	public static String removeStopWords(String text) {
+		String everything = text;
+		for (String stop : Main.stopWordList)
+			everything = everything.replace(" " + stop + " ", " ");
+		return everything;
 	}
 }

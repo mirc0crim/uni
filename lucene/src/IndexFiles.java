@@ -19,6 +19,7 @@ public class IndexFiles {
 
 	public static void buildIndex() throws IOException {
 		for (final File f : new File(indexPath).listFiles())
+			if (!f.isDirectory())
 			f.delete();
 		System.out.println("Deleted old index.");
 		Directory indexDir = FSDirectory.open(new File(indexPath));
@@ -30,6 +31,8 @@ public class IndexFiles {
 		ArrayList<String> textList = new ArrayList<String>();
 		ArrayList<String> fileList = new ArrayList<String>();
 		for (final File fileEntry : folder.listFiles()) {
+			if (fileEntry.isDirectory())
+				continue;
 			BufferedReader br = new BufferedReader(new FileReader(folder.getPath() + "\\"
 					+ fileEntry.getName()));
 			String everything = "";
