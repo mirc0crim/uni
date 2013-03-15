@@ -56,17 +56,20 @@ public class VectorSpaceModel {
 				try {
 					StringBuilder sb = new StringBuilder();
 					String line = br.readLine();
+					sb.append(" ");
 					while (line != null) {
 						sb.append(line);
+						sb.append(" ");
 						line = br.readLine();
 					}
+					sb.append(" ");
 					everything = sb.toString().toLowerCase();
 					everything = removeStopWords(everything);
 					everything = removePluralS(everything);
 				} finally {
 					br.close();
 				}
-				Pattern p = Pattern.compile(q);
+				Pattern p = Pattern.compile(" " + q + " ");
 				Matcher m = p.matcher(everything);
 				int termFreq = 0;
 				while (m.find())
@@ -93,6 +96,8 @@ public class VectorSpaceModel {
 		double[][] weightT = new double[query.length][nDocs];
 		for (int term = 0; term < weightT.length; term++) {
 			double idf = Math.log((double) nDocs / (double) df[term]);
+			if (df[term] == 0)
+				idf = 0;
 			System.out.println(Double.valueOf(form.format(idf)));
 			for (int doc = 0; doc < nDocs; doc++)
 				weightT[term][doc] = Double.valueOf(form.format(tf[term][doc] * idf));
@@ -104,9 +109,10 @@ public class VectorSpaceModel {
 		System.out.println("\nidf:");
 		double[] weightQ = new double[query.length];
 		for (int term = 0; term < weightQ.length; term++) {
-			double idf = Double.valueOf(form.format(Math.log((double) nDocs
-					/ (double) df[term])));
-			System.out.println(idf);
+			double idf = Math.log((double) nDocs / (double) df[term]);
+			if (df[term] == 0)
+				idf = 0;
+			System.out.println(Double.valueOf(form.format(idf)));
 			weightQ[term] = Double.valueOf(form.format(Double.parseDouble(qf[term][1]) * idf));
 		}
 		System.out.println("\nQuery Weights:");
