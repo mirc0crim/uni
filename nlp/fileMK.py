@@ -83,3 +83,13 @@ def plotZipf(x, y, t):
     y20 = max(y)/50
     axis([-x20, max(x)+x20, -y20, max(y)+y20])
     show()
+
+def get2FollowingTerms(t, s):
+    w = []
+    for i in range(len(t)):
+        w += t[i].lower().split(" ")
+    f = []
+    for i in range(len(w)):
+        if (w[i] == s):
+            f.append(w[i+1] + " " + w[i+2])
+    return sorted(f)

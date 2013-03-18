@@ -91,81 +91,24 @@ def task3():
 
 def task4():
     # Task 4
-    words = ""
-    for i in range(len(t)):
-        words += t[i] + "\n"
-    # Task a
-    print " More than 3 Non-Space Characters in Brackets."
-    m = re.findall("[(]\S{3,}[)]", words)
-    print str(len(m)) + " Brackets found"
-    path = outputPath + "task4a.txt"
-    fileMK.writeTextToFile(str(m), path)
-    # Task b
-    print " More than 1 consecutive Words in Uppercase."
-    m = re.findall("[A-Z]{2,}\s[A-Z]{2,}[\s[A-Z]{2,}]*", words)
-    print str(len(m)) + " Words found"
-    path = outputPath + "task4b.txt"
-    fileMK.writeTextToFile(str(m), path)
-    # Task c
-    print " Numbers starting with \"#\"."
-    m = re.findall("#[0-9,]+", words)
-    print str(len(m)) + " Numbers found"
-    path = outputPath + "task4c.txt"
-    fileMK.writeTextToFile(str(m), path)
-    # Task d
-    print " Terms containing a Hyphen."
-    m = re.findall("[a-zA-Z]{3,}[-][a-zA-Z]{3,}", words)
-    print str(len(m)) + " Terms found"
-    path = outputPath + "task4d.txt"
-    fileMK.writeTextToFile(str(m), path)
+    s = ""
+    fcan = fileMK.get2FollowingTerms(t, "can")
+    for i in range(len(fcan)):
+        s+= "can " + fcan[i] + "\n"
+    path = outputPath + "task4-can.txt"
+    fileMK.writeTextToFile(s, path)
+    s = ""
+    fgeneral = fileMK.get2FollowingTerms(t, "general")
+    for i in range(len(fgeneral)):
+        s += "general " + fgeneral[i] + "\n"
+    path = outputPath + "task4-general.txt"
+    fileMK.writeTextToFile(s, path)
 
 def task5():
     # Task 5
-    hamilton = fileMK.readFile(corpusPath + "Federalist Hamilton.txt")
-    sorted_hamilton = fileMK.sortedDictFromWords(hamilton.split(" "))
-    x = []
-    y = []
-    for i in range(len(sorted_hamilton)):
-        x.append(i)
-        y.append(sorted_hamilton[i][1])
-    fileMK.plotZipf(x, y, "Zipf's Law - Plot")
-    x = []
-    y = []
-    for i in range(len(sorted_hamilton)):
-        x.append(math.log(i+1))
-        y.append(math.log(sorted_hamilton[i][1]))
-    fileMK.plotZipf(x, y, "Zipf's Law - Log-Log-Plot")
+    raw_input()
 
-def task6():
-    # Task 6
-    hamilton = fileMK.readFile(corpusPath + "Federalist Hamilton.txt")
-    madison = fileMK.readFile(corpusPath + "Federalist Madison.txt")
-    sorted_hamilton = fileMK.sortedDictFromWords(hamilton.split(" "))
-    sorted_madison = fileMK.sortedDictFromWords(madison.split(" "))
-    sHamilton = ""
-    sMadison = ""
-    for i in range(15):
-        sHamilton += str(sorted_hamilton[i]) + "\n"
-        sMadison += str(sorted_madison[i]) + "\n"
-    sHamilton = sHamilton.replace("(", "").replace(")", "").replace("'","")
-    sMadison = sMadison.replace("(", "").replace(")", "").replace("'","")
-    h = "Hamilton:\n" + str(sHamilton)
-    m = "Madison:\n" + str(sMadison)
-    print h
-    print m
-    path = outputPath + "task6.txt"
-    fileMK.writeTextToFile(h + "\n" + m, path)
 
-def toggleGH():
-    global doc
-    global t
-    if (doc):
-        doc = False
-        t = fileMK.readFilesInArray(corpusPath, doc)
-    else:
-        doc = True
-        t = fileMK.readFilesInArray(corpusPath, doc)
-
-print "Path to Corpus " + corpusPath
+print "Path to Federalist Hamilton " + fedHamPath
 print "Path to Output " + outputPath
 choose()
