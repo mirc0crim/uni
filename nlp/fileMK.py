@@ -15,7 +15,11 @@ def readFilesInArray(filePath, doc):
 
 def readFile(filePathName):
     f = open(filePathName)
-    return f.read().replace("\n", " ")
+    return f.read().replace("\n", " ").lower()
+
+def readFileToArray(filePathName):
+    f = open(filePathName)
+    return f.read().lower().split("\n")
 
 def countAllTags(text):
     m = re.findall("</(.*?)>", text)

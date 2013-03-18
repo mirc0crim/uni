@@ -106,7 +106,20 @@ def task4():
 
 def task5():
     # Task 5
-    raw_input()
+    tcan = fileMK.readFileToArray(outputPath + "task4-can.txt")
+    dictcan = fileMK.sortedDictFromWords(tcan)
+    s = ""
+    for i in range(10):
+        s += str(dictcan[i]).replace("can ","") + "\n"
+    path = outputPath + "task5-can.txt"
+    fileMK.writeTextToFile(s, path)
+    tgeneral = fileMK.readFileToArray(outputPath + "task4-general.txt")
+    dictgeneral = fileMK.sortedDictFromWords(tgeneral)
+    s = ""
+    for i in range(10):
+        s += str(dictgeneral[i]).replace("general ","") + "\n"
+    path = outputPath + "task5-general.txt"
+    fileMK.writeTextToFile(s, path)
 
 
 print "Path to Federalist Hamilton " + fedHamPath

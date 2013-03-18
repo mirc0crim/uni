@@ -64,6 +64,7 @@ public class VectorSpaceModel {
 					}
 					sb.append(" ");
 					everything = sb.toString().toLowerCase();
+					everything = everything.replace(",", "").replace(".", "");
 					everything = removeStopWords(everything);
 					everything = removePluralS(everything);
 				} finally {
