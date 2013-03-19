@@ -5,11 +5,12 @@ import scenes.Assignment1_First;
 import scenes.Assignment1_Instancing;
 import scenes.Assignment1_Mirror;
 import scenes.Assignment1_Refractive;
+import scenes.Assignment1_Triangle;
 import scenes.Scene;
 
 public class Main {
 
-	private static int sceneNo = 3;
+	private static int sceneNo = 6;
 	private static int maxThreads = Runtime.getRuntime().availableProcessors();
 	private static Scene image;
 
@@ -29,6 +30,9 @@ public class Main {
 			break;
 		case 5:
 			image = new Assignment1_Refractive();
+			break;
+		case 6:
+			image = new Assignment1_Triangle();
 			break;
 		}
 		System.out.println("Rendering image with " + maxThreads + " Threads");

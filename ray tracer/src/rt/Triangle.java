@@ -55,6 +55,9 @@ public class Triangle implements Intersectable {
 	@Override
 	public HitRecord intersect(Ray ray) {
 
+		if (!intersectsBoundingbox(ray))
+			return null;
+
 		Vector3f rayDir = ray.getDirection();
 		Vector3f rayOrigin = ray.getOrigin();
 
@@ -108,6 +111,51 @@ public class Triangle implements Intersectable {
 		return new HitRecord(t, hitPoint, nI, this, this.material, ray.getDirection());
 	}
 
+	@Override
+	public Boundingbox getBox() {
+		float minX = getMin(new float[] { verticle1.x, verticle2.x, verticle3.x });
+		float minY = getMin(new float[] { verticle1.y, verticle2.y, verticle3.y });
+		float minZ = getMin(new float[] { verticle1.z, verticle2.z, verticle3.z });
+		float maxX = getMax(new float[] { verticle1.x, verticle2.x, verticle3.x });
+		float maxY = getMax(new float[] { verticle1.y, verticle2.y, verticle3.y });
+		float maxZ = getMax(new float[] { verticle1.z, verticle2.z, verticle3.z });
+
+		Vector3f bfl = new Vector3f(minX, minY, minZ);
+		Vector3f tbr = new Vector3f(maxX, maxY, maxZ);
+		return new Boundingbox(bfl, tbr);
+	}
+
+	private boolean intersectsBoundingbox(Ray ray) {
+		float txmin, txmax, tymin, tymax;
+		float d_x = ray.getDirection().x;
+		float d_y = ray.getDirection().y;
+		float e_x = ray.getOrigin().x;
+		float e_y = ray.getOrigin().y;
+		float x_min = getMin(new float[] { verticle1.x, verticle2.x, verticle3.x });
+		float x_max = getMax(new float[] { verticle1.x, verticle2.x, verticle3.x });
+		float y_min = getMin(new float[] { verticle1.y, verticle2.y, verticle3.y });
+		float y_max = getMax(new float[] { verticle1.y, verticle2.y, verticle3.y });
+		if (d_x >= 0) {
+			txmin = (x_min - e_x) / d_x;
+			txmax = (x_max - e_x) / d_x;
+		} else {
+			txmin = (x_max - e_x) / d_x;
+			txmax = (x_min - e_x) / d_x;
+		}
+		if (d_y >= 0) {
+			tymin = (y_min - e_y) / d_y;
+			tymax = (y_max - e_y) / d_y;
+		} else {
+			tymin = (y_max - e_y) / d_y;
+			tymax = (y_min - e_y) / d_y;
+		}
+		if ((txmin > tymax) || (tymin > txmax)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	public Vector3f getNormal() {
 		return normal;
 	}
@@ -122,6 +170,22 @@ public class Triangle implements Intersectable {
 
 	public void setMaterial(Material mat) {
 		material = mat;
+	}
+
+	private float getMin(float[] values) {
+		float minVal = Float.MAX_VALUE;
+		for (float v : values)
+			if (v < minVal)
+				minVal = v;
+		return minVal;
+	}
+
+	private float getMax(float[] values) {
+		float maxVal = Float.MIN_VALUE;
+		for (float v : values)
+			if (v > maxVal)
+				maxVal = v;
+		return maxVal;
 	}
 
 }

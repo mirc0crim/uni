@@ -16,6 +16,7 @@ public class Mesh extends Aggregate implements Intersectable {
 	ArrayList<Triangle> triangles;
 	String name;
 	private Material material;
+	
 
 	public Mesh() {
 		triangles = new ArrayList<Triangle>();
@@ -74,6 +75,14 @@ public class Mesh extends Aggregate implements Intersectable {
 		else if (hit != null && this.material == null)
 			hit.setMaterial(new BlinnMaterial(new Spectrum(.6f, .6f, .6f)));
 		return hit;
+	}
+
+	@Override
+	public Boundingbox getBox() {
+		ArrayList<Boundingbox> bb = new ArrayList<Boundingbox>();
+		for (Triangle t : triangles)
+			bb.add(t.getBox());
+		return Boundingbox.combineBox(bb);
 	}
 
 	public ArrayList<Triangle> getTriangles() {

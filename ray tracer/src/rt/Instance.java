@@ -61,6 +61,11 @@ public class Instance implements Intersectable {
 		return new Ray(rayDir3, rayOrigin3);
 	}
 
+	@Override
+	public Boundingbox getBox() {
+		return objectRef.getBox();
+	}
+
 	public Intersectable getObject() {
 		return this.objectRef;
 	}

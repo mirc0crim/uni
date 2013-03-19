@@ -1,5 +1,6 @@
 package rt;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class IntersectableList extends Aggregate implements Intersectable {
@@ -28,5 +29,13 @@ public class IntersectableList extends Aggregate implements Intersectable {
 			}
 		}
 		return hit;
+	}
+
+	@Override
+	public Boundingbox getBox() {
+		ArrayList<Boundingbox> bb = new ArrayList<Boundingbox>();
+		for (Intersectable t : intersectables)
+			bb.add(t.getBox());
+		return Boundingbox.combineBox(bb);
 	}
 }

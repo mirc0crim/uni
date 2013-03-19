@@ -30,6 +30,13 @@ public class Plane implements Intersectable {
 			return null;
 	}
 
+	@Override
+	public Boundingbox getBox() {
+		Vector3f bfl = new Vector3f(10, 10, 10);
+		Vector3f tbr = new Vector3f(10, 10, 10);
+		return new Boundingbox(bfl, tbr);
+	}
+
 	public Vector3f getNormal() {
 		return normal;
 	}

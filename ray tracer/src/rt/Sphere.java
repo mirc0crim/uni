@@ -17,6 +17,8 @@ public class Sphere implements Intersectable {
 
 	@Override
 	public HitRecord intersect(Ray ray) {
+		if (!intersectsBoundingbox(ray))
+			return null;
 		// Compute A, B and C coefficients
 		float a = ray.getDirection().dot(ray.getDirection());
 		Vector3f origin = new Vector3f(ray.getOrigin());
@@ -75,6 +77,44 @@ public class Sphere implements Intersectable {
 			normal = norm;
 			return new HitRecord(t0, ray.getHitPoint(t0), norm, this, material,
 					ray.getDirection());
+		}
+	}
+
+	@Override
+	public Boundingbox getBox() {
+		Vector3f bfl = new Vector3f(center.x - radius, center.y - radius, center.z - radius);
+		Vector3f tbr = new Vector3f(center.x + radius, center.y + radius, center.z + radius);
+		return new Boundingbox(bfl, tbr);
+	}
+
+	private boolean intersectsBoundingbox(Ray ray) {
+		float txmin, txmax, tymin, tymax;
+		float d_x = ray.getDirection().x;
+		float d_y = ray.getDirection().y;
+		float e_x = ray.getOrigin().x;
+		float e_y = ray.getOrigin().y;
+		float x_min = center.x - radius;
+		float x_max = center.x + radius;
+		float y_min = center.y - radius;
+		float y_max = center.y + radius;
+		if ( d_x >= 0 ) {
+			txmin = (x_min - e_x) / d_x;
+			txmax = (x_max - e_x) / d_x;
+		} else {
+			txmin = (x_max - e_x) / d_x;
+			txmax = (x_min - e_x) / d_x;
+		}
+		if (d_y >= 0) {
+			tymin = (y_min - e_y) / d_y;
+			tymax = (y_max - e_y) / d_y;
+		} else {
+			tymin = (y_max - e_y) / d_y;
+			tymax = (y_min - e_y) / d_y;
+		}
+		if ((txmin > tymax) || (tymin > txmax)) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 
