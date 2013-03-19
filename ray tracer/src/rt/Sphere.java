@@ -17,8 +17,10 @@ public class Sphere implements Intersectable {
 
 	@Override
 	public HitRecord intersect(Ray ray) {
+
 		if (!intersectsBoundingbox(ray))
 			return null;
+
 		// Compute A, B and C coefficients
 		float a = ray.getDirection().dot(ray.getDirection());
 		Vector3f origin = new Vector3f(ray.getOrigin());

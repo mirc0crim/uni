@@ -16,6 +16,7 @@ public class Mesh extends Aggregate implements Intersectable {
 	ArrayList<Triangle> triangles;
 	String name;
 	private Material material;
+	Boundingbox box;
 	
 
 	public Mesh() {
@@ -53,10 +54,16 @@ public class Mesh extends Aggregate implements Intersectable {
 				triangles.add(new Triangle(p1, p2, p3));
 		}
 
+		ArrayList<Boundingbox> bb = new ArrayList<Boundingbox>();
+		for (Triangle t : triangles)
+			bb.add(t.getBox());
+		box = Boundingbox.combineBox(bb);
 	}
 
 	@Override
 	public HitRecord intersect(Ray ray) {
+		if (!intersectsBoundingbox(ray))
+			return null;
 		HitRecord tempHit = null;
 		HitRecord hit = null;
 		Iterator<Triangle> it = triangles.iterator();
@@ -79,10 +86,38 @@ public class Mesh extends Aggregate implements Intersectable {
 
 	@Override
 	public Boundingbox getBox() {
-		ArrayList<Boundingbox> bb = new ArrayList<Boundingbox>();
-		for (Triangle t : triangles)
-			bb.add(t.getBox());
-		return Boundingbox.combineBox(bb);
+		return box;
+	}
+
+	private boolean intersectsBoundingbox(Ray ray) {
+		float txmin, txmax, tymin, tymax;
+		float d_x = ray.getDirection().x;
+		float d_y = ray.getDirection().y;
+		float e_x = ray.getOrigin().x;
+		float e_y = ray.getOrigin().y;
+		float x_min = getBox().bottomFrontLeft.x;
+		float x_max = getBox().topBackRight.x;
+		float y_min = getBox().bottomFrontLeft.y;
+		float y_max = getBox().topBackRight.y;
+		if (d_x >= 0) {
+			txmin = (x_min - e_x) / d_x;
+			txmax = (x_max - e_x) / d_x;
+		} else {
+			txmin = (x_max - e_x) / d_x;
+			txmax = (x_min - e_x) / d_x;
+		}
+		if (d_y >= 0) {
+			tymin = (y_min - e_y) / d_y;
+			tymax = (y_max - e_y) / d_y;
+		} else {
+			tymin = (y_max - e_y) / d_y;
+			tymax = (y_min - e_y) / d_y;
+		}
+		if ((txmin > tymax) || (tymin > txmax)) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	public ArrayList<Triangle> getTriangles() {

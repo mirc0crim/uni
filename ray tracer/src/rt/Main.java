@@ -10,7 +10,7 @@ import scenes.Scene;
 
 public class Main {
 
-	private static int sceneNo = 6;
+	private static int sceneNo = 3;
 	private static int maxThreads = Runtime.getRuntime().availableProcessors();
 	private static Scene image;
 
