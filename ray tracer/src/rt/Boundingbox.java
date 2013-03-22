@@ -22,12 +22,12 @@ public class Boundingbox {
 		ArrayList<Float> tbry = new ArrayList<Float>();
 		ArrayList<Float> tbrz = new ArrayList<Float>();
 		for (Boundingbox b : bb) {
-			bflx.add(b.bottomFrontLeft.x);
-			bfly.add(b.bottomFrontLeft.x);
-			bflz.add(b.bottomFrontLeft.x);
-			tbrx.add(b.bottomFrontLeft.x);
-			tbry.add(b.bottomFrontLeft.x);
-			tbrz.add(b.bottomFrontLeft.x);
+			bflx.add(b.getBFL().x);
+			bfly.add(b.getBFL().y);
+			bflz.add(b.getBFL().z);
+			tbrx.add(b.getTBR().x);
+			tbry.add(b.getTBR().y);
+			tbrz.add(b.getTBR().z);
 		}
 		float minX = getMin(bflx.toArray(new Float[bflx.size()]));
 		float minY = getMin(bfly.toArray(new Float[bfly.size()]));
@@ -38,7 +38,16 @@ public class Boundingbox {
 
 		Vector3f bfl = new Vector3f(minX, minY, minZ);
 		Vector3f tbr = new Vector3f(maxX, maxY, maxZ);
+
 		return new Boundingbox(bfl, tbr);
+	}
+
+	public Vector3f getBFL() {
+		return bottomFrontLeft;
+	}
+
+	public Vector3f getTBR() {
+		return topBackRight;
 	}
 
 	private static float getMin(Float[] values) {

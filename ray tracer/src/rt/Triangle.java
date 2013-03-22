@@ -1,5 +1,7 @@
 package rt;
 
+import java.util.ArrayList;
+
 import javax.vecmath.Vector3f;
 
 public class Triangle implements Intersectable {
@@ -55,9 +57,6 @@ public class Triangle implements Intersectable {
 	@Override
 	public HitRecord intersect(Ray ray) {
 
-		if (!intersectsBoundingbox(ray))
-			return null;
-
 		Vector3f rayDir = ray.getDirection();
 		Vector3f rayOrigin = ray.getOrigin();
 
@@ -91,7 +90,7 @@ public class Triangle implements Intersectable {
 		if (beta < 0 || beta > 1)
 			return null;
 		float gamma = (uv * wu - uu * wv) / D;
-		if (gamma < 0 || (beta + gamma) > 1)
+		if (gamma < 0 || beta + gamma > 1)
 			return null;
 		float alpha = 1 - beta - gamma;
 
@@ -108,7 +107,7 @@ public class Triangle implements Intersectable {
 			nI.add(n3I);
 		}
 
-		return new HitRecord(t, hitPoint, nI, this, this.material, ray.getDirection());
+		return new HitRecord(t, hitPoint, nI, this, material, ray.getDirection());
 	}
 
 	@Override
@@ -125,35 +124,31 @@ public class Triangle implements Intersectable {
 		return new Boundingbox(bfl, tbr);
 	}
 
-	private boolean intersectsBoundingbox(Ray ray) {
-		float txmin, txmax, tymin, tymax;
-		float d_x = ray.getDirection().x;
-		float d_y = ray.getDirection().y;
-		float e_x = ray.getOrigin().x;
-		float e_y = ray.getOrigin().y;
-		float x_min = getMin(new float[] { verticle1.x, verticle2.x, verticle3.x });
-		float x_max = getMax(new float[] { verticle1.x, verticle2.x, verticle3.x });
-		float y_min = getMin(new float[] { verticle1.y, verticle2.y, verticle3.y });
-		float y_max = getMax(new float[] { verticle1.y, verticle2.y, verticle3.y });
-		if (d_x >= 0) {
-			txmin = (x_min - e_x) / d_x;
-			txmax = (x_max - e_x) / d_x;
-		} else {
-			txmin = (x_max - e_x) / d_x;
-			txmax = (x_min - e_x) / d_x;
+	public static ArrayList<Triangle> splitAtYAxis(Vector3f axis, boolean above,
+			ArrayList<Triangle> tri) {
+		ArrayList<Triangle> newTri = new ArrayList<Triangle>();
+		for (Triangle t : tri)
+			if ((t.verticle1.y > axis.y || t.verticle2.y > axis.y || t.verticle3.y > axis.y)
+					&& above)
+				newTri.add(t);
+			else if ((t.verticle1.y < axis.y || t.verticle2.y < axis.y || t.verticle3.y < axis.y)
+					&& !above)
+				newTri.add(t);
+		return newTri;
+	}
+
+	public static ArrayList<Triangle> splitAtXAxis(Vector3f axis, boolean left,
+			ArrayList<Triangle> tri) {
+		ArrayList<Triangle> newTri = new ArrayList<Triangle>();
+		for (Triangle t : tri) {
+			if (left)
+				if (t.verticle1.x <= axis.x || t.verticle2.x <= axis.x || t.verticle3.x <= axis.x)
+					newTri.add(t);
+			if (!left)
+				if (t.verticle1.x >= axis.x || t.verticle2.x >= axis.x || t.verticle3.x >= axis.x)
+					newTri.add(t);
 		}
-		if (d_y >= 0) {
-			tymin = (y_min - e_y) / d_y;
-			tymax = (y_max - e_y) / d_y;
-		} else {
-			tymin = (y_max - e_y) / d_y;
-			tymax = (y_min - e_y) / d_y;
-		}
-		if ((txmin > tymax) || (tymin > txmax)) {
-			return false;
-		} else {
-			return true;
-		}
+		return newTri;
 	}
 
 	public Vector3f getNormal() {

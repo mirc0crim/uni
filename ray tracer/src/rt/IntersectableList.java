@@ -21,12 +21,11 @@ public class IntersectableList extends Aggregate implements Intersectable {
 		while (iter.hasNext()) {
 			Intersectable object = iter.next();
 			newhit = object.intersect(ray);
-			if (newhit != null) {
+			if (newhit != null)
 				if (hit == null)
 					hit = newhit;
 				else if (newhit.getT() < hit.getT())
 					hit = newhit;
-			}
 		}
 		return hit;
 	}

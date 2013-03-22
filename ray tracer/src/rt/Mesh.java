@@ -17,7 +17,8 @@ public class Mesh extends Aggregate implements Intersectable {
 	String name;
 	private Material material;
 	Boundingbox box;
-	
+	protected BSPAccelerator tree;
+
 
 	public Mesh() {
 		triangles = new ArrayList<Triangle>();
@@ -62,24 +63,28 @@ public class Mesh extends Aggregate implements Intersectable {
 
 	@Override
 	public HitRecord intersect(Ray ray) {
-		if (!intersectsBoundingbox(ray))
-			return null;
 		HitRecord tempHit = null;
 		HitRecord hit = null;
-		Iterator<Triangle> it = triangles.iterator();
+		ArrayList<Triangle> shorterList = new ArrayList<Triangle>();
+		if (tree.intersectsBoundingbox(ray, tree.getRoot().getBox())) {
+			if (tree.intersectsBoundingbox(ray, tree.getRoot().getChild1().getBox()))
+				shorterList.addAll(tree.getRoot().getChild1().getTriangles());
+			if (tree.intersectsBoundingbox(ray, tree.getRoot().getChild2().getBox()))
+				shorterList.addAll(tree.getRoot().getChild2().getTriangles());
+		}
+		Iterator<Triangle> it = shorterList.iterator();
 		while (it.hasNext()) {
 			Triangle triangle = it.next();
 			tempHit = triangle.intersect(ray);
-			if (tempHit != null) {
+			if (tempHit != null)
 				if (hit == null)
 					hit = tempHit;
 				else if (tempHit.getT() < hit.getT())
 					hit = tempHit;
-			}
 		}
-		if (hit != null && this.material != null)
+		if (hit != null && material != null)
 			hit.setMaterial(material);
-		else if (hit != null && this.material == null)
+		else if (hit != null && material == null)
 			hit.setMaterial(new BlinnMaterial(new Spectrum(.6f, .6f, .6f)));
 		return hit;
 	}
@@ -89,43 +94,20 @@ public class Mesh extends Aggregate implements Intersectable {
 		return box;
 	}
 
-	private boolean intersectsBoundingbox(Ray ray) {
-		float txmin, txmax, tymin, tymax;
-		float d_x = ray.getDirection().x;
-		float d_y = ray.getDirection().y;
-		float e_x = ray.getOrigin().x;
-		float e_y = ray.getOrigin().y;
-		float x_min = getBox().bottomFrontLeft.x;
-		float x_max = getBox().topBackRight.x;
-		float y_min = getBox().bottomFrontLeft.y;
-		float y_max = getBox().topBackRight.y;
-		if (d_x >= 0) {
-			txmin = (x_min - e_x) / d_x;
-			txmax = (x_max - e_x) / d_x;
-		} else {
-			txmin = (x_max - e_x) / d_x;
-			txmax = (x_min - e_x) / d_x;
-		}
-		if (d_y >= 0) {
-			tymin = (y_min - e_y) / d_y;
-			tymax = (y_max - e_y) / d_y;
-		} else {
-			tymin = (y_max - e_y) / d_y;
-			tymax = (y_min - e_y) / d_y;
-		}
-		if ((txmin > tymax) || (tymin > txmax)) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
 	public ArrayList<Triangle> getTriangles() {
 		return triangles;
 	}
 
 	public void setTriangles(ArrayList<Triangle> triang) {
 		triangles = triang;
+	}
+
+	public void setTree(BSPAccelerator t) {
+		tree = t;
+	}
+
+	public BSPAccelerator getTree() {
+		return tree;
 	}
 
 	public Material getMaterial() {
