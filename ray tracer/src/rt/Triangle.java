@@ -127,13 +127,14 @@ public class Triangle implements Intersectable {
 	public static ArrayList<Triangle> splitAtYAxis(Vector3f axis, boolean above,
 			ArrayList<Triangle> tri) {
 		ArrayList<Triangle> newTri = new ArrayList<Triangle>();
-		for (Triangle t : tri)
-			if ((t.verticle1.y > axis.y || t.verticle2.y > axis.y || t.verticle3.y > axis.y)
-					&& above)
-				newTri.add(t);
-			else if ((t.verticle1.y < axis.y || t.verticle2.y < axis.y || t.verticle3.y < axis.y)
-					&& !above)
-				newTri.add(t);
+		for (Triangle t : tri) {
+			if (above)
+				if (t.verticle1.y > axis.y || t.verticle2.y > axis.y || t.verticle3.y > axis.y)
+					newTri.add(t);
+			if (!above)
+				if (t.verticle1.y < axis.y || t.verticle2.y < axis.y || t.verticle3.y < axis.y)
+					newTri.add(t);
+		}
 		return newTri;
 	}
 

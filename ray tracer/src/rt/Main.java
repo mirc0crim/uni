@@ -16,6 +16,7 @@ public class Main {
 	private static Scene image;
 
 	public static void main(String[] args) throws InterruptedException {
+		long start = System.currentTimeMillis();
 		switch (sceneNo) {
 		case 1:
 			image = new Assignment1_First();
@@ -42,11 +43,13 @@ public class Main {
 		System.out.println("Rendering image with " + maxThreads + " Threads");
 		int p = image.getFilm().getFilmWidth() / 10;
 		int s = 10;
-		long start = System.currentTimeMillis();
+		long end = System.currentTimeMillis();
+		System.out.println("Setup time: " + (end - start));
 		if (image.getFilm().getFilmWidth() % maxThreads != 0) {
 			System.out.println("The Film Width should be a multiple of " + maxThreads);
 			maxThreads = 1;
 		}
+		start = System.currentTimeMillis();
 		for (int w = 0; w < image.getFilm().getFilmWidth(); w += maxThreads) {
 			if (w > p) {
 				System.out.println(s + "%");
@@ -61,8 +64,8 @@ public class Main {
 			for (int i = 0; i < maxThreads; i++)
 				a[i].join();
 		}
+		end = System.currentTimeMillis();
 		image.getTonemapper().createImage(image.getFilm(), image.getOutputFileName());
-		long end = System.currentTimeMillis();
-		System.out.println("Image successfully written to disk! " + (end - start));
+		System.out.println("Image successfully written to disk! Render time: " + (end - start));
 	}
 }

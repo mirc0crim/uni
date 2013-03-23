@@ -15,29 +15,66 @@ public class BSPAccelerator implements Intersectable {
 
 	public void construct(Mesh m) {
 		float midX = (root.getBox().bottomFrontLeft.x + root.getBox().topBackRight.x) / 2;
+		float midY = (root.getBox().bottomFrontLeft.y + root.getBox().topBackRight.y) / 2;
+		Vector3f axis = new Vector3f(midX, midY, 0);
 
-		ArrayList<Triangle> t1 = Triangle.splitAtXAxis(new Vector3f(midX, 0, 0), true,
-				m.getTriangles());
-		ArrayList<Boundingbox> b1 = new ArrayList<Boundingbox>();
-		for (Triangle t : t1)
-			b1.add(t.getBox());
-		Boundingbox bb1 = Boundingbox.combineBox(b1);
-		BSPNode c1 = new BSPNode(t1, bb1);
-
-		ArrayList<Triangle> t2 = Triangle.splitAtXAxis(new Vector3f(midX, 0, 0), false,
-				m.getTriangles());
-		ArrayList<Boundingbox> b2 = new ArrayList<Boundingbox>();
-		for (Triangle t : t2)
-			b2.add(t.getBox());
-		Boundingbox bb2 = Boundingbox.combineBox(b2);
-		BSPNode c2 = new BSPNode(t2, bb2);
-
+		BSPNode c1 = makeChild1(axis, m.getTriangles(), "x");
+		BSPNode c2 = makeChild2(axis, m.getTriangles(), "x");
 		root.addChild(c1, c2);
+
+		BSPNode c11 = makeChild1(axis, c1.getTriangles(), "y");
+		BSPNode c12 = makeChild2(axis, c1.getTriangles(), "y");
+		c1.addChild(c11, c12);
+
+		BSPNode c21 = makeChild1(axis, c2.getTriangles(), "y");
+		BSPNode c22 = makeChild2(axis, c2.getTriangles(), "y");
+		c2.addChild(c21, c22);
+	}
+
+	private BSPNode makeChild1(Vector3f axis, ArrayList<Triangle> triList, String ax) {
+		ArrayList<Triangle> triangles = new ArrayList<Triangle>();
+		if (ax == "x")
+			triangles = Triangle.splitAtXAxis(axis, true, triList);
+		if (ax == "y")
+			triangles = Triangle.splitAtYAxis(axis, true, triList);
+		ArrayList<Boundingbox> box = new ArrayList<Boundingbox>();
+		for (Triangle tri : triangles)
+			box.add(tri.getBox());
+		Boundingbox boundingbox = Boundingbox.combineBox(box);
+		BSPNode child = new BSPNode(triangles, boundingbox);
+		return child;
+	}
+
+	private BSPNode makeChild2(Vector3f axis, ArrayList<Triangle> triList, String ax) {
+		ArrayList<Triangle> triangles = new ArrayList<Triangle>();
+		if (ax == "x")
+			triangles = Triangle.splitAtXAxis(axis, false, triList);
+		if (ax == "y")
+			triangles = Triangle.splitAtYAxis(axis, false, triList);
+		ArrayList<Boundingbox> box = new ArrayList<Boundingbox>();
+		for (Triangle tri : triangles)
+			box.add(tri.getBox());
+		Boundingbox boundingbox = Boundingbox.combineBox(box);
+		BSPNode child = new BSPNode(triangles, boundingbox);
+		return child;
 	}
 
 	@Override
 	public HitRecord intersect(Ray ray) {
 		return null;
+	}
+
+	public ArrayList<Triangle> getTriangles(Ray ray, BSPNode node) {
+		ArrayList<Triangle> shorterList = new ArrayList<Triangle>();
+		if (intersectsBoundingbox(ray, node.getBox())) {
+			if (node.getChild1() != null)
+				shorterList.addAll(getTriangles(ray, node.getChild1()));
+			if (node.getChild2() != null)
+				shorterList.addAll(getTriangles(ray, node.getChild2()));
+			if (node.getChild1() == null && node.getChild2() == null)
+				shorterList.addAll(node.getTriangles());
+		}
+		return shorterList;
 	}
 
 	@Override

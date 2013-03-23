@@ -6,7 +6,6 @@ import java.io.IOException;
 import javax.vecmath.Vector3f;
 
 import rt.BSPAccelerator;
-import rt.BlinnIntegrator;
 import rt.BlinnMaterial;
 import rt.Camera;
 import rt.Film;
@@ -17,6 +16,7 @@ import rt.LightList;
 import rt.Mesh;
 import rt.Plane;
 import rt.PointLight;
+import rt.ShadowIntegrator;
 import rt.Spectrum;
 import rt.Tonemapper;
 
@@ -38,7 +38,7 @@ public class Assignment1_Mesh implements Scene {
 		outputFileName = new String("Assignment1_Mesh.png");
 
 		// Specify integrator to be used
-		integratorFactory = new BlinnIntegrator();
+		integratorFactory = new ShadowIntegrator();
 
 		// Specify pixel sampler to be used
 		tonemapper = new Tonemapper();
@@ -62,25 +62,25 @@ public class Assignment1_Mesh implements Scene {
 		plane.setMaterial(new BlinnMaterial(new Spectrum(0.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
+		plane = new Plane(new Vector3f(0.f, -1.f, 0.f), 1.f);
+		plane.setMaterial(new BlinnMaterial(new Spectrum(0.8f, 0.8f, 0.8f)));
+		objects.add(plane);
+
 		plane = new Plane(new Vector3f(0.f, 0.f, 1.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(0.3f, 0.8f, 0.8f)));
+		objects.add(plane);
+
+		plane = new Plane(new Vector3f(1.f, 0.f, 0.f), 1.f);
+		plane.setMaterial(new BlinnMaterial(new Spectrum(1.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
 		plane = new Plane(new Vector3f(-1.f, 0.f, 0.f), 1.f);
 		plane.setMaterial(new BlinnMaterial(new Spectrum(1.f, 0.8f, 0.8f)));
 		objects.add(plane);
 
-		plane = new Plane(new Vector3f(1.f, 0.f, 0.f), 1.f);
-		plane.setMaterial(new BlinnMaterial(new Spectrum(0.f, 0.8f, 0.0f)));
-		objects.add(plane);
-
-		plane = new Plane(new Vector3f(0.f, -1.f, 0.f), 1.f);
-		plane.setMaterial(new BlinnMaterial(new Spectrum(0.8f, 0.8f, 0.8f)));
-		objects.add(plane);
-
 		// Add objects
 		Mesh mesh = new Mesh();
-		File file = new File(".\\objects\\teapot.obj");
+		File file = new File(".\\objects\\magnum.obj");
 		try {
 			mesh.loadObjFile(file, 1f);
 		} catch (IOException e) {

@@ -65,14 +65,7 @@ public class Mesh extends Aggregate implements Intersectable {
 	public HitRecord intersect(Ray ray) {
 		HitRecord tempHit = null;
 		HitRecord hit = null;
-		ArrayList<Triangle> shorterList = new ArrayList<Triangle>();
-		if (tree.intersectsBoundingbox(ray, tree.getRoot().getBox())) {
-			if (tree.intersectsBoundingbox(ray, tree.getRoot().getChild1().getBox()))
-				shorterList.addAll(tree.getRoot().getChild1().getTriangles());
-			if (tree.intersectsBoundingbox(ray, tree.getRoot().getChild2().getBox()))
-				shorterList.addAll(tree.getRoot().getChild2().getTriangles());
-		}
-		Iterator<Triangle> it = shorterList.iterator();
+		Iterator<Triangle> it = tree.getTriangles(ray, tree.getRoot()).iterator();
 		while (it.hasNext()) {
 			Triangle triangle = it.next();
 			tempHit = triangle.intersect(ray);
