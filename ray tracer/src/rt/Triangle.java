@@ -132,7 +132,7 @@ public class Triangle implements Intersectable {
 				if (t.verticle1.y >= axis.y || t.verticle2.y >= axis.y || t.verticle3.y >= axis.y)
 					newTri.add(t);
 			} else if (t.verticle1.y <= axis.y || t.verticle2.y <= axis.y || t.verticle3.y <= axis.y)
-					newTri.add(t);
+				newTri.add(t);
 		return newTri;
 	}
 
@@ -144,12 +144,16 @@ public class Triangle implements Intersectable {
 				if (t.verticle1.x <= axis.x || t.verticle2.x <= axis.x || t.verticle3.x <= axis.x)
 					newTri.add(t);
 			} else if (t.verticle1.x >= axis.x || t.verticle2.x >= axis.x || t.verticle3.x >= axis.x)
-					newTri.add(t);
+				newTri.add(t);
 		return newTri;
 	}
 
 	public Vector3f getNormal() {
 		return normal;
+	}
+
+	public Vector3f getV1() {
+		return verticle1;
 	}
 
 	public void setNormal(Vector3f norm) {

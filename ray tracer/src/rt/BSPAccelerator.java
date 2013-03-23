@@ -1,7 +1,6 @@
 package rt;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.vecmath.Vector3f;
 
@@ -26,11 +25,30 @@ public class BSPAccelerator implements Intersectable {
 	}
 
 	private void addChildren(ArrayList<Triangle> triList, BSPNode node, String ax, int dept) {
-		float midX = (node.getBox().bottomFrontLeft.x + node.getBox().topBackRight.x) / 2f
-				* (new Random().nextFloat() / 10f + 0.95f);
-		float midY = (node.getBox().bottomFrontLeft.y + node.getBox().topBackRight.y) / 2f
-				* (new Random().nextFloat() / 10f + 0.95f);
+		float midX;
+		float midY;
+		ArrayList<Float> mx = new ArrayList<Float>();
+		ArrayList<Float> my = new ArrayList<Float>();
+		for (Triangle t : triList) {
+			mx.add(t.getV1().x);
+			my.add(t.getV1().y);
+		}
+		int middlex = mx.size() / 2;
+		int middley = my.size() / 2;
+		if (mx.size() % 2 == 1) {
+			midX = mx.get(middlex);
+			midY = my.get(middley);
+		} else {
+			midX = (mx.get(middlex + 1) + mx.get(middlex)) / 2f;
+			midY = (my.get(middley + 1) + my.get(middley)) / 2f;
+		}
 		Vector3f axis = new Vector3f(midX, midY, 0);
+
+		String otherAxis;
+		if (ax == "x")
+			otherAxis = "y";
+		else
+			otherAxis = "x";
 
 		BSPNode c1 = makeChild1(axis, triList, ax);
 		BSPNode c2 = makeChild2(axis, triList, ax);
@@ -38,29 +56,27 @@ public class BSPAccelerator implements Intersectable {
 
 		dept++;
 
-		if (dept > 8 + 1.3 * Math.log(root.getTriangles().size()))
+		if (dept > 7)
 			return;
 
-		String otherAxis;
-		if (ax == "x")
-			otherAxis = "y";
-		else
-			otherAxis = "x";
-		if (c1.getTriangles().size() > 100)
+		if (c1.getTriangles().size() > 50)
 			addChildren(c1.getTriangles(), c1, otherAxis, dept);
-		if (c2.getTriangles().size() > 100)
+		if (c2.getTriangles().size() > 50)
 			addChildren(c2.getTriangles(), c2, otherAxis, dept);
 	}
 
 	public ArrayList<Triangle> getTriangles(Ray ray, BSPNode node, Vector3f dirfrac) {
 		ArrayList<Triangle> shorterList = new ArrayList<Triangle>();
-		if (intersectsBoundingbox(ray, node.getBox(), dirfrac)) {
+		if (node.getChild1() == null && node.getChild2() == null) {
+			if (intersectsBoundingbox(ray, node.getBox(), dirfrac))
+				return node.getTriangles();
+		} else {
 			if (node.getChild1() != null)
-				shorterList.addAll(getTriangles(ray, node.getChild1(), dirfrac));
+				if (intersectsBoundingbox(ray, node.getChild1().getBox(), dirfrac))
+					shorterList.addAll(getTriangles(ray, node.getChild1(), dirfrac));
 			if (node.getChild2() != null)
-				shorterList.addAll(getTriangles(ray, node.getChild2(), dirfrac));
-			if (node.getChild1() == null && node.getChild2() == null)
-				shorterList = node.getTriangles();
+				if (intersectsBoundingbox(ray, node.getChild2().getBox(), dirfrac))
+					shorterList.addAll(getTriangles(ray, node.getChild2(), dirfrac));
 		}
 		return shorterList;
 	}
