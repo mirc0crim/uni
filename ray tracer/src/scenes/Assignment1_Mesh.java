@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.vecmath.Vector3f;
 
 import rt.BSPAccelerator;
+import rt.BlinnIntegrator;
 import rt.BlinnMaterial;
 import rt.Camera;
 import rt.Film;
@@ -16,7 +17,6 @@ import rt.LightList;
 import rt.Mesh;
 import rt.Plane;
 import rt.PointLight;
-import rt.ShadowIntegrator;
 import rt.Spectrum;
 import rt.Tonemapper;
 
@@ -38,7 +38,7 @@ public class Assignment1_Mesh implements Scene {
 		outputFileName = new String("Assignment1_Mesh.png");
 
 		// Specify integrator to be used
-		integratorFactory = new ShadowIntegrator();
+		integratorFactory = new BlinnIntegrator();
 
 		// Specify pixel sampler to be used
 		tonemapper = new Tonemapper();

@@ -127,28 +127,24 @@ public class Triangle implements Intersectable {
 	public static ArrayList<Triangle> splitAtYAxis(Vector3f axis, boolean above,
 			ArrayList<Triangle> tri) {
 		ArrayList<Triangle> newTri = new ArrayList<Triangle>();
-		for (Triangle t : tri) {
-			if (above)
-				if (t.verticle1.y > axis.y || t.verticle2.y > axis.y || t.verticle3.y > axis.y)
+		for (Triangle t : tri)
+			if (above){
+				if (t.verticle1.y >= axis.y || t.verticle2.y >= axis.y || t.verticle3.y >= axis.y)
 					newTri.add(t);
-			if (!above)
-				if (t.verticle1.y < axis.y || t.verticle2.y < axis.y || t.verticle3.y < axis.y)
+			} else if (t.verticle1.y <= axis.y || t.verticle2.y <= axis.y || t.verticle3.y <= axis.y)
 					newTri.add(t);
-		}
 		return newTri;
 	}
 
 	public static ArrayList<Triangle> splitAtXAxis(Vector3f axis, boolean left,
 			ArrayList<Triangle> tri) {
 		ArrayList<Triangle> newTri = new ArrayList<Triangle>();
-		for (Triangle t : tri) {
-			if (left)
+		for (Triangle t : tri)
+			if (left){
 				if (t.verticle1.x <= axis.x || t.verticle2.x <= axis.x || t.verticle3.x <= axis.x)
 					newTri.add(t);
-			if (!left)
-				if (t.verticle1.x >= axis.x || t.verticle2.x >= axis.x || t.verticle3.x >= axis.x)
+			} else if (t.verticle1.x >= axis.x || t.verticle2.x >= axis.x || t.verticle3.x >= axis.x)
 					newTri.add(t);
-		}
 		return newTri;
 	}
 
