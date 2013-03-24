@@ -32,7 +32,7 @@ for i in range(10):
     trainset.append(calcDHash(map(ord, wr.readframes(wr.getnframes()))))
 
 for i in range(10):
-    wr = wave.open("D:\\aai\\test\\" + str(i) + ".wav")
+    wr = wave.open("D:\\aai\\finalTest\\" + str(i) + ".wav")
     testset.append(calcDHash(map(ord, wr.readframes(wr.getnframes()))))
 
 def getBest(num):
@@ -45,9 +45,9 @@ def getBest(num):
         diff.append(d)
 
     print diff
-    print str(num) + " : " + str(argmin(diff)) + " => " + str(min(diff))
+    print "Input", str(num), "matched", str(argmin(diff))
+    print "dHash Hamming distance", str(min(diff))
     print ""
 
 for i in range(10):
     getBest(i)
-    
