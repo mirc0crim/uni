@@ -15,7 +15,7 @@ t.append(fileMK.readFile(fedHamPath))
 
 def choose():
     printInfo()
-    ex = raw_input()
+    ex = input()
     if (ex == "1"):
         task1()
         choose()
@@ -33,15 +33,15 @@ def choose():
         choose()
 
 def printInfo():
-    print ""
-    print " ------------------------------------------------------------------"
-    print " 1 = 50 Terms with highest Frequencies."
-    print " 2 = Number of Terms."
-    print " 3 = Terms appearing once, twice & three times."
-    print " 4 = Context for \"can\" and \"general\" with two terms."
-    print " 5 = 10 most frequent Words around specific term."
-    print " Else Exit"
-    print " ------------------------------------------------------------------"
+    print("")
+    print(" ------------------------------------------------------------------")
+    print(" 1 = 50 Terms with highest Frequencies.")
+    print(" 2 = Number of Terms.")
+    print(" 3 = Terms appearing once, twice & three times.")
+    print(" 4 = Context for \"can\" and \"general\" with two terms.")
+    print(" 5 = 10 most frequent Words around specific term.")
+    print(" Else Exit")
+    print(" ------------------------------------------------------------------")
 
 def task1():
     # Task 1
@@ -53,7 +53,7 @@ def task1():
     for i in range(50):
         s += str(sorted_dict[i]) + "\n"
     s = s.replace("(", "").replace(")", "").replace("'","").replace(",",":")
-    path = raw_input(" Enter Path & Filename (like \"D:\\terms.txt\")\n")
+    path = input(" Enter Path & Filename (like \"D:\\terms.txt\")\n")
     if path == "":
         path = outputPath + "task1.txt"
     fileMK.writeTextToFile(s, path)
@@ -65,7 +65,7 @@ def task2():
         w += t[i].split(" ")
     unsorted_dict = fileMK.unsortedDictFromWords(w)
     s = "There are " + str(len(unsorted_dict)) + " different Terms"
-    print s
+    print(s)
     path = outputPath + "task2.txt"
     fileMK.writeTextToFile(s, path)
 
@@ -76,16 +76,16 @@ def task3():
         words += t[i].split(" ")
     unsorted_dict = fileMK.unsortedDictFromWords(words)
     try:
-        i = int(raw_input(" How many times should the term appear?\n"))
+        i = int(input(" How many times should the term appear?\n"))
     except ValueError:
-        print " Invalid Value, assuming 51\n"
+        print(" Invalid Value, assuming 51\n")
         i = 51
-    times = [key for key, value in unsorted_dict.iteritems() if value == i]
+    times = [key for key, value in unsorted_dict.items() if value == i]
     s = ""
     for j in range(len(times)):
         s += str(times[j]) + "; "
     n = str(len(s.split("; "))-1)
-    print " " + n + " Words found occuring " + str(i) + " time(s)"
+    print(" " + n + " Words found occuring " + str(i) + " time(s)")
     path = outputPath + "task3-" + str(i) + ".txt"
     fileMK.writeTextToFile(s, path)
 
@@ -122,6 +122,6 @@ def task5():
     fileMK.writeTextToFile(s, path)
 
 
-print "Path to Federalist Hamilton " + fedHamPath
-print "Path to Output " + outputPath
+print("Path to Federalist Hamilton " + fedHamPath)
+print("Path to Output " + outputPath)
 choose()

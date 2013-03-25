@@ -2,7 +2,8 @@
 import re
 import os
 import collections
-from pylab import *
+import matplotlib.pyplot as pyplot
+#from pylab import *
 
 def readFilesInArray(filePath, doc):
     t = []
@@ -15,7 +16,7 @@ def readFilesInArray(filePath, doc):
 
 def readFile(filePathName):
     f = open(filePathName)
-    return f.read().replace("\n", " ").lower()
+    return f.read().replace("\n", " ")
 
 def readFileToArray(filePathName):
     f = open(filePathName)
@@ -63,7 +64,7 @@ def unsortedDictFromWords(words):
 
 def sortedDictFromWords(words):
     unsorted_dict = unsortedDictFromWords(words)
-    return sorted(unsorted_dict.iteritems(), key=lambda item: -item[1])
+    return sorted(unsorted_dict.items(), key=lambda item: -item[1])
 
 def replaceSigns(word):
     w = word.replace(",", "").replace(".","").replace("?", "")
@@ -75,18 +76,18 @@ def writeTextToFile(text, path):
         path += ".txt"
     f = open(path, "w+")
     f.write(text)
-    print " Text written to File: " + path
+    print(" Text written to File: " + path)
     f.close()
 
 def plotZipf(x, y, t):
-    plot(x, y, "o")
-    ylabel("Frequency")
-    xlabel("Rank")
-    title(t)
+    pyplot.plot(x, y, "o")
+    pyplot.ylabel("Frequency")
+    pyplot.xlabel("Rank")
+    pyplot.title(t)
     x20 = max(x)/50
     y20 = max(y)/50
-    axis([-x20, max(x)+x20, -y20, max(y)+y20])
-    show()
+    pyplot.axis([-x20, max(x)+x20, -y20, max(y)+y20])
+    pyplot.show()
 
 def get2FollowingTerms(t, s):
     w = []
