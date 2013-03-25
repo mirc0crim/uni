@@ -1,7 +1,5 @@
 import wave
 from numpy import *
-from pylab import *
-from scipy import *
 
 trainset = []
 testset = []
@@ -16,15 +14,11 @@ def calcDHash(w):
     for i in range(noSplits-1):
 	sums.append(sum(w[splits[i]:splits[i+1]]))
     bits = []
-    for i in range(noSplits-2):
+    for i in range(-1,noSplits-2):
 	if sums[i] < sums[i+1]:
 		bits.append(1)
 	else:
 		bits.append(0)
-    if sums[noSplits-2] < sums[0]:
-	bits.append(1)
-    else:
-	bits.append(0)
     return bits
 
 for i in range(10):
