@@ -1,6 +1,4 @@
 # -*- coding: ascii -*-
-import sys
-import re
 import fileMK
 
 path = "D:\\nlp\\corpus"

@@ -1,9 +1,4 @@
 # -*- coding: ascii -*-
-import sys
-import re
-import collections
-import operator
-import math
 import fileMK
 
 corpusPath = "D:\\nlp\\corpus\\"

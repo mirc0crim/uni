@@ -3,7 +3,6 @@ import re
 import os
 import collections
 import matplotlib.pyplot as pyplot
-#from pylab import *
 
 def readFilesInArray(filePath, doc):
     t = []
