@@ -17,7 +17,7 @@ public class Mesh extends Aggregate implements Intersectable {
 	String name;
 	private Material material;
 	Boundingbox box;
-	protected BSPAccelerator tree;
+	protected BVHAccelerator tree;
 
 
 	public Mesh() {
@@ -100,11 +100,11 @@ public class Mesh extends Aggregate implements Intersectable {
 		triangles = triang;
 	}
 
-	public void setTree(BSPAccelerator t) {
+	public void setTree(BVHAccelerator t) {
 		tree = t;
 	}
 
-	public BSPAccelerator getTree() {
+	public BVHAccelerator getTree() {
 		return tree;
 	}
 

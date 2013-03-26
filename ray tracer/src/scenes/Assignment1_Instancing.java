@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
-import rt.BSPAccelerator;
+import rt.BVHAccelerator;
 import rt.BlinnMaterial;
 import rt.Camera;
 import rt.Film;
@@ -31,7 +31,7 @@ public class Assignment1_Instancing implements Scene {
 	public IntegratorFactory integratorFactory;
 	public String outputFileName;
 	public Tonemapper tonemapper;
-	public BSPAccelerator myTree;
+	public BVHAccelerator myTree;
 
 	/**
 	 * Timing: 22 sec on 8 core Xeon 2.5GHz
@@ -89,7 +89,7 @@ public class Assignment1_Instancing implements Scene {
 			System.out.printf("Could not read .obj file\n");
 			return;
 		}
-		myTree = new BSPAccelerator(mesh);
+		myTree = new BVHAccelerator(mesh);
 		mesh.setTree(myTree);
 		mesh.setMaterial(new BlinnMaterial(new Spectrum(.5f, .5f, .5f)));
 
@@ -149,7 +149,7 @@ public class Assignment1_Instancing implements Scene {
 		return lights;
 	}
 
-	public BSPAccelerator getBSPAccelerator() {
+	public BVHAccelerator getBSPAccelerator() {
 		return myTree;
 	}
 

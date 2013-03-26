@@ -2,14 +2,14 @@ package rt;
 
 import java.util.ArrayList;
 
-public class BSPNode {
+public class BVHNode {
 
-	private BSPNode child1;
-	private BSPNode child2;
+	private BVHNode child1;
+	private BVHNode child2;
 	private Boundingbox box;
 	private ArrayList<Triangle> triangles;
 
-	public BSPNode(ArrayList<Triangle> tri, Boundingbox b) {
+	public BVHNode(ArrayList<Triangle> tri, Boundingbox b) {
 		box = b;
 		triangles = tri;
 	}
@@ -22,16 +22,16 @@ public class BSPNode {
 		box = b;
 	}
 
-	public void addChild(BSPNode c1, BSPNode c2) {
+	public void addChild(BVHNode c1, BVHNode c2) {
 		child1 = c1;
 		child2 = c2;
 	}
 
-	public BSPNode getChild1() {
+	public BVHNode getChild1() {
 		return child1;
 	}
 
-	public BSPNode getChild2() {
+	public BVHNode getChild2() {
 		return child2;
 	}
 
