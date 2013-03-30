@@ -45,23 +45,59 @@ def task2():
     # Task 2
     words = fileMK.readFile(outputPath + "task1")
     inp = input(" Enter a Word\n")
+    s = " "
     if len(inp) == 3:
-        s = " "
         for i in range(4):
-            m = re.findall("\'(" + inp[:i] + "." + inp[i:] + ")\'", words)
+            newInp = inp[:i] + "." + inp[i:]
+            m = re.findall("\'(" + newInp + ")\'", words)
             if m:
                 s += str(m)
                 s += ", "
         if len(s) > 2:
             print(" Found the following words with an additional letter:")
             print(s.replace("[", "").replace("]", "").replace("'", "")[:-2])
+        else:
+            print(" No correction found with an additional letter")
     if len(inp) == 4:
-        print(" Two letter switching test")
-    
+        
+        if len(s) > 2:
+            print(" Found the following words with 2 switched letters:")
+            print(s.replace("[", "").replace("]", "").replace("'", "")[:-2])
+        else:
+            print(" No correction found with 2 switched letters")
 
 def task3():
     # Task 3
-    print("")
+    words = fileMK.readFile(outputPath + "task1")
+    inp = input(" Enter a Word\n")
+    if len(inp) == 4:
+        s = " "
+        if (re.findall("\'(" + inp + ")\'", words)):
+            print(" Word is written correctly")
+            return
+        for i in range(4):
+            newInp = inp[:i] + "." + inp[i+1:]
+            m = re.findall("\'(" + newInp + ")\'", words)
+            if m:
+                s += str(m)
+                s += ", "
+        if len(s) > 2:
+            print(" Found the following words with replaced letters:")
+            print(s.replace("[", "").replace("]", "").replace("'", "")[:-2])
+        else:
+            print(" No correction found with replaced letters")
+        s = " "
+        a = fileMK.permutationString(inp).split(" ")
+        for i in range(len(a)):
+            m = re.findall("\'(" + a[i] + ")\'", words)
+            if m:
+                s += str(m)
+                s += ", "
+        if len(s) > 2:
+            print(" Found the following words with switched letters:")
+            print(s.replace("[", "").replace("]", "").replace("'", "")[:-2])
+        else:
+            print(" No correction found with switched letters")
 
 
 print("Path to Federalist Hamilton " + fedHamPath)
