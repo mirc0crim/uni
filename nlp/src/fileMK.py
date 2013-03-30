@@ -15,10 +15,14 @@ def readFilesInArray(filePath, doc):
     return t
 
 def readFile(filePathName):
+    if not filePathName[-4:] == ".txt":
+        filePathName += ".txt"
     f = open(filePathName)
     return f.read().replace("\n", " ")
 
 def readFileToArray(filePathName):
+    if not filePathName[-4:] == ".txt":
+        filePathName += ".txt"
     f = open(filePathName)
     return f.read().lower().split("\n")
 
