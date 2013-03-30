@@ -3,6 +3,7 @@ import re
 import os
 import collections
 import matplotlib.pyplot as pyplot
+from stemming.porter2 import stem
 
 def readFilesInArray(filePath, doc):
     t = []
@@ -97,3 +98,6 @@ def get2FollowingTerms(t, s):
         if (w[i] == s):
             f.append(w[i+1] + " " + w[i+2])
     return sorted(f)
+
+def stemText(text):
+    return stem(text)

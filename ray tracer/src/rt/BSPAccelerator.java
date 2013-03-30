@@ -1,19 +1,18 @@
 package rt;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.vecmath.Vector3f;
 
-public class BVHAccelerator implements Intersectable {
+public class BSPAccelerator implements Intersectable {
 
-	protected BVHNode root;
+	protected BSPNode root;
 
-	public BVHAccelerator(Mesh m) {
+	public BSPAccelerator(Mesh m) {
 		int dept = 0;
-		root = new BVHNode(m.getTriangles(), m.getBox());
+		root = new BSPNode(m.getTriangles(), m.getBox(), "x");
 		construct(m.getTriangles(), dept);
-		BVHNode node = root;
+		BSPNode node = root;
 		while (node.getChild1() != null) {
 			System.out.println(node.getTriangles().size());
 			node = node.getChild1();
@@ -25,7 +24,7 @@ public class BVHAccelerator implements Intersectable {
 		addChildren(triList, root, "x", dept);
 	}
 
-	private void addChildren(ArrayList<Triangle> triList, BVHNode node, String ax, int dept) {
+	private void addChildren(ArrayList<Triangle> triList, BSPNode node, String ax, int dept) {
 		float midX;
 		float midY;
 		ArrayList<Float> mx = new ArrayList<Float>();
@@ -34,24 +33,14 @@ public class BVHAccelerator implements Intersectable {
 			mx.add(t.getV1().x);
 			my.add(t.getV1().y);
 		}
-		float[] mxA = new float[mx.size()];
-		for (int i = 0; i < mxA.length; i++) {
-			mxA[i] = mx.get(i);
-		}
-		float[] myA = new float[my.size()];
-		for (int i = 0; i < myA.length; i++) {
-			myA[i] = my.get(i);
-		}
-		Arrays.sort(mxA);
-		Arrays.sort(myA);
-		int middlex = mxA.length / 2;
-		int middley = myA.length / 2;
+		int middlex = mx.size() / 2;
+		int middley = my.size() / 2;
 		if (mx.size() % 2 == 1) {
-			midX = mxA[middlex];
-			midY = myA[middley];
+			midX = mx.get(middlex);
+			midY = my.get(middley);
 		} else {
-			midX = (mxA[middlex + 1] + mxA[middlex]) / 2f;
-			midY = (myA[middley + 1] + myA[middley]) / 2f;
+			midX = (mx.get(middlex + 1) + mx.get(middlex)) / 2f;
+			midY = (my.get(middley + 1) + my.get(middley)) / 2f;
 		}
 		Vector3f axis = new Vector3f(midX, midY, 0);
 
@@ -61,8 +50,8 @@ public class BVHAccelerator implements Intersectable {
 		else
 			otherAxis = "x";
 
-		BVHNode c1 = makeChild1(axis, triList, ax);
-		BVHNode c2 = makeChild2(axis, triList, ax);
+		BSPNode c1 = makeChild1(axis, triList, ax);
+		BSPNode c2 = makeChild2(axis, triList, ax);
 		node.addChild(c1, c2);
 
 		dept++;
@@ -70,13 +59,13 @@ public class BVHAccelerator implements Intersectable {
 		if (dept > 5)
 			return;
 
-		if (c1.getTriangles().size() > 5)
+		if (c1.getTriangles().size() > 50)
 			addChildren(c1.getTriangles(), c1, otherAxis, dept);
-		if (c2.getTriangles().size() > 5)
+		if (c2.getTriangles().size() > 50)
 			addChildren(c2.getTriangles(), c2, otherAxis, dept);
 	}
 
-	public ArrayList<Triangle> getTriangles(Ray ray, BVHNode node, Vector3f dirfrac) {
+	public ArrayList<Triangle> getTriangles(Ray ray, BSPNode node, Vector3f dirfrac) {
 		ArrayList<Triangle> shorterList = new ArrayList<Triangle>();
 		if (node.getChild1() == null && node.getChild2() == null) {
 			if (intersectsBoundingbox(ray, node.getBox(), dirfrac))
@@ -92,7 +81,7 @@ public class BVHAccelerator implements Intersectable {
 		return shorterList;
 	}
 
-	private BVHNode makeChild1(Vector3f axis, ArrayList<Triangle> triList, String ax) {
+	private BSPNode makeChild1(Vector3f axis, ArrayList<Triangle> triList, String ax) {
 		ArrayList<Triangle> triangles = new ArrayList<Triangle>();
 		if (ax == "x")
 			triangles = Triangle.splitAtXAxis(axis, true, triList);
@@ -102,11 +91,11 @@ public class BVHAccelerator implements Intersectable {
 		for (Triangle tri : triangles)
 			box.add(tri.getBox());
 		Boundingbox boundingbox = Boundingbox.combineBox(box);
-		BVHNode child = new BVHNode(triangles, boundingbox);
+		BSPNode child = new BSPNode(triangles, boundingbox, ax);
 		return child;
 	}
 
-	private BVHNode makeChild2(Vector3f axis, ArrayList<Triangle> triList, String ax) {
+	private BSPNode makeChild2(Vector3f axis, ArrayList<Triangle> triList, String ax) {
 		ArrayList<Triangle> triangles = new ArrayList<Triangle>();
 		if (ax == "x")
 			triangles = Triangle.splitAtXAxis(axis, false, triList);
@@ -116,7 +105,7 @@ public class BVHAccelerator implements Intersectable {
 		for (Triangle tri : triangles)
 			box.add(tri.getBox());
 		Boundingbox boundingbox = Boundingbox.combineBox(box);
-		BVHNode child = new BVHNode(triangles, boundingbox);
+		BSPNode child = new BSPNode(triangles, boundingbox, ax);
 		return child;
 	}
 
@@ -130,7 +119,7 @@ public class BVHAccelerator implements Intersectable {
 		return root.getBox();
 	}
 
-	public BVHNode getRoot() {
+	public BSPNode getRoot() {
 		return root;
 	}
 

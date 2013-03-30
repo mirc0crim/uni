@@ -71,6 +71,9 @@ public class Mesh extends Aggregate implements Intersectable {
 		dirfrac.z = 1.0f / ray.direction.z;
 		ArrayList<Triangle> shorterList = tree.getTriangles(ray, tree.getRoot(), dirfrac);
 		Iterator<Triangle> it = shorterList.iterator();
+		if (shorterList.size() > tree.getRoot().getTriangles().size()) {
+			it = tree.getRoot().getTriangles().iterator();
+		}
 		while (it.hasNext()) {
 			Triangle triangle = it.next();
 			tempHit = triangle.intersect(ray);
