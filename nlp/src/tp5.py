@@ -59,10 +59,29 @@ def task2():
         else:
             print(" No correction found with an additional letter")
     if len(inp) == 4:
-        
+        if (re.findall("\'(" + inp + ")\'", words)):
+            print(" Word is written correctly")
+            return
+        newInp = []
+        for i in range(4):
+            l = len(inp)
+            for j in range(4):
+                a = list(inp)
+                a[i] = inp[l - j - 1]
+                a[l - j - 1] = inp[i]
+                out = "".join(a)
+                if out != inp:
+                    newInp.append(out)
+        for k in range(len(newInp)):
+            m = re.findall("\'(" + newInp[k] + ")\'", words)
+            if m:
+                s += str(m)
+                s += ", "
         if len(s) > 2:
+            mDict = fileMK.unsortedDictFromWords(s.split(" "))
+            s = str(sorted(mDict.keys())).replace("\"", "")
             print(" Found the following words with 2 switched letters:")
-            print(s.replace("[", "").replace("]", "").replace("'", "")[:-2])
+            print("", s.replace("[", "").replace("]", "").replace("'", ""))
         else:
             print(" No correction found with 2 switched letters")
 
@@ -94,8 +113,10 @@ def task3():
                 s += str(m)
                 s += ", "
         if len(s) > 2:
+            mDict = fileMK.unsortedDictFromWords(s.split(" "))
+            s = str(sorted(mDict.keys())).replace("\"", "")
             print(" Found the following words with switched letters:")
-            print(s.replace("[", "").replace("]", "").replace("'", "")[:-2])
+            print("", s.replace("[", "").replace("]", "").replace("'", ""))
         else:
             print(" No correction found with switched letters")
 
