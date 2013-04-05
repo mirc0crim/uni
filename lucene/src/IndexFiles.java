@@ -15,11 +15,18 @@ import org.apache.lucene.util.Version;
 
 public class IndexFiles {
 
-	private static String indexPath = "D:\\lucene\\index";
+	private String indexPath = "D:\\lucene\\index";
+	private Analyzer analyzer;
+	private boolean cat_subcat;
 
-	private static boolean verbose = false;
+	private boolean verbose = false;
 
-	public static void buildIndex(String docPath, Analyzer analyzer, boolean cat_subcat) throws IOException {
+	public IndexFiles(Analyzer a, boolean csc) {
+		analyzer = a;
+		cat_subcat = csc;
+	}
+
+	public void buildIndex(String docPath) throws IOException {
 		for (final File f : new File(indexPath).listFiles())
 			if (!f.isDirectory())
 				f.delete();
@@ -58,14 +65,14 @@ public class IndexFiles {
 					line = br.readLine();
 				}
 				if (verbose) {
-					System.out.println("cat:\n" + cat);
-					System.out.println("subcat:\n" + subcat);
+					System.out.println("cat: " + cat);
+					System.out.println("subcat: " + subcat);
 					System.out.println("body:\n" + sb.toString());
 				}
-				if (!cat_subcat)
-					bodyText = cat + "\n" + subcat + "\n" + sb.toString();
-				else
+				if (cat_subcat)
 					bodyText = sb.toString();
+				else
+					bodyText = cat + "\n" + subcat + "\n" + sb.toString();
 			} finally {
 				br.close();
 			}

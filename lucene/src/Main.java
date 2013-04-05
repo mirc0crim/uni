@@ -22,7 +22,7 @@ public class Main {
 
 	private static String docPath = "D:\\lucene\\corpus";
 
-	private static int TP = 4;
+	private final static int TP = 4;
 
 	private static Analyzer simpleAnalyzer = new SimpleAnalyzer(Version.LUCENE_36);
 	private static Analyzer standardAnalyzer = new StandardAnalyzer(Version.LUCENE_36);
@@ -35,16 +35,20 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException, ParseException {
 
+		SearchFiles searcher = new SearchFiles(standardAnalyzer);
+		IndexFiles indexer = new IndexFiles(standardAnalyzer, false);
+		IndexFiles catIndexer = new IndexFiles(standardAnalyzer, true);
+
 		System.out.println("Stop Words:\n" + Arrays.toString(stopWordList) + "\n");
 
 		switch (TP) {
 		case 1:
-			IndexFiles.buildIndex(docPath, standardAnalyzer, false);
-			SearchFiles.searchIndex(query1, standardAnalyzer, false);
-			SearchFiles.searchIndex(query2, standardAnalyzer, false);
+			indexer.buildIndex(docPath);
+			searcher.searchIndex(query1);
+			searcher.searchIndex(query2);
 
 			for (String s : optional)
-				SearchFiles.searchIndex(s, standardAnalyzer, false);
+				searcher.searchIndex(s);
 			break;
 		case 2:
 			VectorSpaceModel.searchVSM(query1, docPath);
@@ -60,14 +64,13 @@ public class Main {
 					simpleAnalyzer };
 			for (Analyzer analyzer : analyzers){
 				System.out.println("\n" + analyzer);
-				IndexFiles.buildIndex("D:\\lucene\\corpus\\TP4", analyzer, false);
-				SearchFiles.searchIndex("1923", analyzer, false);
+				new IndexFiles(analyzer, false).buildIndex("D:\\lucene\\corpus\\TP4");
+				new SearchFiles(analyzer).searchIndex("1923");
 			}
-
-			IndexFiles.buildIndex("D:\\lucene\\corpus\\TP4", standardAnalyzer, false);
-			SearchFiles.searchIndex("Business", standardAnalyzer, false);
-			IndexFiles.buildIndex("D:\\lucene\\corpus\\TP4", standardAnalyzer, true);
-			SearchFiles.searchIndex("Business", standardAnalyzer, true);
+			indexer.buildIndex("D:\\lucene\\corpus\\TP4");
+			searcher.searchIndex("Business");
+			catIndexer.buildIndex("D:\\lucene\\corpus\\TP4");
+			searcher.searchIndex("Business");
 			break;
 		}
 	}

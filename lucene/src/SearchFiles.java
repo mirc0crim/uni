@@ -17,10 +17,16 @@ import org.apache.lucene.util.Version;
 
 public class SearchFiles {
 
-	private static String indexPath = "D:\\lucene\\index";
+	private String indexPath = "D:\\lucene\\index";
+	private Analyzer analyzer;
 
-	public static void searchIndex(String queryString, Analyzer analyzer, boolean cat_subcat)
+	public SearchFiles(Analyzer a) {
+		analyzer = a;
+	}
+
+	public void searchIndex(String queryString)
 			throws IOException, ParseException {
+		boolean cat_subcat = false;
 		QueryParser parser = new QueryParser(Version.LUCENE_36, "text", analyzer);
 		Directory indexDir = FSDirectory.open(new File(indexPath));
 		IndexReader reader = IndexReader.open(indexDir);
@@ -33,7 +39,8 @@ public class SearchFiles {
 			ScoreDoc hit = results.scoreDocs[i];
 			Document doc = searcher.doc(hit.doc);
 			score[i][0] = hit.score + "";
-			if (cat_subcat) {
+			if (doc.get("cat") != null) {
+				cat_subcat = true;
 				score[i][1] = doc.get("cat");
 				score[i][2] = doc.get("sub-cat");
 			}
@@ -65,9 +72,10 @@ public class SearchFiles {
 		}
 		searcher.close();
 		reader.close();
+		indexDir.close();
 	}
 
-	private static void sortArray(String[][] score, final int arg, final boolean ascending) {
+	private void sortArray(String[][] score, final int arg, final boolean ascending) {
 		Arrays.sort(score, new Comparator<String[]>() {
 			@Override
 			public int compare(final String[] entry1, final String[] entry2) {
