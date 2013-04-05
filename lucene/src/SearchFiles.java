@@ -32,44 +32,52 @@ public class SearchFiles {
 		for (int i = 0; i < results.totalHits; i++) {
 			ScoreDoc hit = results.scoreDocs[i];
 			Document doc = searcher.doc(hit.doc);
-			score[i][0] = hit.score + " ";
+			score[i][0] = hit.score + "";
 			if (cat_subcat) {
-				score[i][1] = doc.get("cat") + " ";
-				score[i][2] = doc.get("sub-cat") + " ";
-			} else {
-				score[i][1] = "";
-				score[i][2] = "";
+				score[i][1] = doc.get("cat");
+				score[i][2] = doc.get("sub-cat");
 			}
 			score[i][3] = doc.get("name");
 		}
-		Arrays.sort(score, new Comparator<String[]>() {
-			@Override
-			public int compare(final String[] entry1, final String[] entry2) {
-				final String s1 = entry1[2];
-				final String s2 = entry2[2];
-				return s2.compareTo(s1);
-			}
-		});
-		Arrays.sort(score, new Comparator<String[]>() {
-			@Override
-			public int compare(final String[] entry1, final String[] entry2) {
-				final String s1 = entry1[1];
-				final String s2 = entry2[1];
-				return s1.compareTo(s2);
-			}
-		});
-		Arrays.sort(score, new Comparator<String[]>() {
-			@Override
-			public int compare(final String[] entry1, final String[] entry2) {
-				final String s1 = entry1[0];
-				final String s2 = entry2[0];
-				return s2.compareTo(s1);
-			}
-		});
-		for (int i = 0; i < results.totalHits; i++)
-			System.out
-			.println(score[i][0] + "" + score[i][1] + "" + score[i][2] + "" + score[i][3]);
+		if (cat_subcat) {
+			System.out.println("\nSorted by score (desc)");
+			sortArray(score, 0, false);
+			for (int i = 0; i < results.totalHits; i++)
+				System.out.printf("%5.3f %s %s %s\n", Float.parseFloat(score[i][0]), score[i][1],
+						score[i][2], score[i][3]);
+			sortArray(score, 1, true);
+			sortArray(score, 0, false);
+			System.out.println("\nSorted by score (desc) and category (asc)");
+			for (int i = 0; i < results.totalHits; i++)
+				System.out.printf("%5.3f %s %s %s\n", Float.parseFloat(score[i][0]), score[i][1],
+						score[i][2], score[i][3]);
+			sortArray(score, 2, false);
+			sortArray(score, 1, true);
+			sortArray(score, 0, false);
+			System.out.println("\nSorted by score (desc), category (asc) and subcategory (desc)");
+			for (int i = 0; i < results.totalHits; i++)
+				System.out.printf("%5.3f %s %s %s\n", Float.parseFloat(score[i][0]),
+						score[i][1], score[i][2], score[i][3]);
+		} else {
+			sortArray(score, 0, false);
+			for (int i = 0; i < results.totalHits; i++)
+				System.out.printf("%5.3f %s\n", Float.parseFloat(score[i][0]), score[i][3]);
+		}
 		searcher.close();
 		reader.close();
+	}
+
+	private static void sortArray(String[][] score, final int arg, final boolean ascending) {
+		Arrays.sort(score, new Comparator<String[]>() {
+			@Override
+			public int compare(final String[] entry1, final String[] entry2) {
+				final String s1 = entry1[arg];
+				final String s2 = entry2[arg];
+				if (ascending)
+					return s1.compareTo(s2);
+				else
+					return s2.compareTo(s1);
+			}
+		});
 	}
 }
