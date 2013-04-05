@@ -96,9 +96,7 @@ public class VectorSpaceModel {
 		System.out.println("\nidf:");
 		double[][] weightT = new double[query.length][nDocs];
 		for (int term = 0; term < weightT.length; term++) {
-			double idf = Math.log((double) nDocs / (double) df[term]);
-			if (df[term] == 0)
-				idf = 0;
+			double idf = Math.log((double) nDocs / (double) (df[term] + 1));
 			System.out.println(Double.valueOf(form.format(idf)));
 			for (int doc = 0; doc < nDocs; doc++)
 				weightT[term][doc] = Double.valueOf(form.format(tf[term][doc] * idf));
@@ -137,8 +135,7 @@ public class VectorSpaceModel {
 		});
 		System.out.println("\nscore:");
 		for (int doc = 0; doc < nDocs; doc++)
-			if (Double.parseDouble(score[doc][0]) > 0)
-				System.out.println(Arrays.toString(score[doc]));
+			System.out.println(Arrays.toString(score[doc]));
 
 	}
 
@@ -149,9 +146,8 @@ public class VectorSpaceModel {
 			s = s.trim();
 			s = s.replace("'", "");
 			if (s.length() > 2)
-				if (s.endsWith("s")) {
+				if (s.endsWith("s"))
 					s = s.substring(0, s.length() - 1);
-				}
 			everything += s + " ";
 		}
 		return everything;

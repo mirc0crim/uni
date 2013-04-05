@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
@@ -17,17 +17,17 @@ public class IndexFiles {
 
 	private static String indexPath = "D:\\lucene\\index";
 
-	public static void buildIndex() throws IOException {
+	public static void buildIndex(String docPath, Analyzer analyzer, boolean verbose) throws IOException {
 		for (final File f : new File(indexPath).listFiles())
 			if (!f.isDirectory())
-			f.delete();
-		System.out.println("Deleted old index.");
+				f.delete();
+		if (verbose)
+			System.out.println("Deleted old index.");
 		Directory indexDir = FSDirectory.open(new File(indexPath));
-		IndexWriterConfig writerConfig = new IndexWriterConfig(Version.LUCENE_36,
-				new SnowballAnalyzer(Version.LUCENE_36, "English", Main.stopWordList));
+		IndexWriterConfig writerConfig = new IndexWriterConfig(Version.LUCENE_36, analyzer);
 		writerConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 		IndexWriter indexWriter = new IndexWriter(indexDir, writerConfig);
-		final File folder = new File("D:\\lucene\\corpus");
+		final File folder = new File(docPath);
 		ArrayList<String> textList = new ArrayList<String>();
 		ArrayList<String> fileList = new ArrayList<String>();
 		for (final File fileEntry : folder.listFiles()) {
@@ -56,7 +56,8 @@ public class IndexFiles {
 			doc.add(new Field("text", textList.get(i), Field.Store.YES, Field.Index.ANALYZED));
 			doc.add(new Field("name", fileList.get(i), Field.Store.YES, Field.Index.ANALYZED));
 			indexWriter.addDocument(doc);
-			System.out.println(fileList.get(i) + " added to index.");
+			if (verbose)
+				System.out.println(fileList.get(i) + " added to index.");
 		}
 		indexWriter.close();
 	}

@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.ParseException;
@@ -17,9 +17,8 @@ public class SearchFiles {
 
 	private static String indexPath = "D:\\lucene\\index";
 
-	public static void searchIndex(String queryString) throws IOException, ParseException {
-		QueryParser parser = new QueryParser(Version.LUCENE_36, "text", new SnowballAnalyzer(
-				Version.LUCENE_36, "English", Main.stopWordList));
+	public static void searchIndex(String queryString, Analyzer analyzer) throws IOException, ParseException {
+		QueryParser parser = new QueryParser(Version.LUCENE_36, "text", analyzer);
 		Directory indexDir = FSDirectory.open(new File(indexPath));
 		IndexReader reader = IndexReader.open(indexDir);
 		IndexSearcher searcher = new IndexSearcher(reader);
@@ -31,5 +30,6 @@ public class SearchFiles {
 			System.out.printf("%5.3f %s\n", hit.score, doc.get("name"));
 		}
 		searcher.close();
+		reader.close();
 	}
 }
