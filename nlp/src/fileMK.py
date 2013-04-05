@@ -2,6 +2,7 @@
 import re
 import os
 import collections
+from itertools import permutations
 import matplotlib.pyplot as pyplot
 from stemming.porter2 import stem
 
@@ -15,10 +16,14 @@ def readFilesInArray(filePath, doc):
     return t
 
 def readFile(filePathName):
+    if not filePathName[-4:] == ".txt":
+        filePathName += ".txt"
     f = open(filePathName)
     return f.read().replace("\n", " ")
 
 def readFileToArray(filePathName):
+    if not filePathName[-4:] == ".txt":
+        filePathName += ".txt"
     f = open(filePathName)
     return f.read().lower().split("\n")
 
@@ -101,3 +106,11 @@ def get2FollowingTerms(t, s):
 
 def stemText(text):
     return stem(text)
+
+def permutationString(myString):
+    perms = (p for p in permutations(myString))
+    s = ""
+    for p in perms:
+        s += ''.join(p)
+        s += " "
+    return s[:-1]
