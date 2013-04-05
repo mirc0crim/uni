@@ -17,7 +17,9 @@ public class IndexFiles {
 
 	private static String indexPath = "D:\\lucene\\index";
 
-	public static void buildIndex(String docPath, Analyzer analyzer, boolean verbose) throws IOException {
+	private static boolean verbose = false;
+
+	public static void buildIndex(String docPath, Analyzer analyzer, boolean cat_subcat) throws IOException {
 		for (final File f : new File(indexPath).listFiles())
 			if (!f.isDirectory())
 				f.delete();
@@ -29,32 +31,58 @@ public class IndexFiles {
 		IndexWriter indexWriter = new IndexWriter(indexDir, writerConfig);
 		final File folder = new File(docPath);
 		ArrayList<String> textList = new ArrayList<String>();
+		ArrayList<String> catList = new ArrayList<String>();
+		ArrayList<String> subcatList = new ArrayList<String>();
 		ArrayList<String> fileList = new ArrayList<String>();
 		for (final File fileEntry : folder.listFiles()) {
 			if (fileEntry.isDirectory())
 				continue;
 			BufferedReader br = new BufferedReader(new FileReader(folder.getPath() + "\\"
 					+ fileEntry.getName()));
-			String everything = "";
+			String bodyText = "";
+			String cat = "";
+			String subcat = "";
 			try {
 				StringBuilder sb = new StringBuilder();
 				String line = br.readLine();
 				while (line != null) {
-					sb.append(line);
-					sb.append("\n");
+					if (subcat == "") {
+						if (cat == "")
+							cat = line;
+						else
+							subcat = line;
+					} else {
+						sb.append(line);
+						sb.append("\n");
+					}
 					line = br.readLine();
 				}
-				everything = sb.toString();
+				if (verbose) {
+					System.out.println("cat:\n" + cat);
+					System.out.println("subcat:\n" + subcat);
+					System.out.println("body:\n" + sb.toString());
+				}
+				if (!cat_subcat)
+					bodyText = cat + "\n" + subcat + "\n" + sb.toString();
+				else
+					bodyText = sb.toString();
 			} finally {
 				br.close();
 			}
-			textList.add(everything);
+			catList.add(cat);
+			subcatList.add(subcat);
+			textList.add(bodyText);
 			fileList.add(fileEntry.getName());
 		}
 		for (int i = 0; i < textList.size(); i++) {
 			Document doc = new Document();
 			doc.add(new Field("text", textList.get(i), Field.Store.YES, Field.Index.ANALYZED));
 			doc.add(new Field("name", fileList.get(i), Field.Store.YES, Field.Index.ANALYZED));
+			if (cat_subcat) {
+				doc.add(new Field("cat", catList.get(i), Field.Store.YES, Field.Index.ANALYZED));
+				doc.add(new Field("sub-cat", subcatList.get(i), Field.Store.YES,
+						Field.Index.ANALYZED));
+			}
 			indexWriter.addDocument(doc);
 			if (verbose)
 				System.out.println(fileList.get(i) + " added to index.");

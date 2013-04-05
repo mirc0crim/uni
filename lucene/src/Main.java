@@ -5,7 +5,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.StopAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.util.Version;
@@ -24,14 +23,11 @@ public class Main {
 	private static String docPath = "D:\\lucene\\corpus";
 
 	private static int TP = 4;
-	private static boolean verbose = false;
 
 	private static Analyzer simpleAnalyzer = new SimpleAnalyzer(Version.LUCENE_36);
 	private static Analyzer standardAnalyzer = new StandardAnalyzer(Version.LUCENE_36);
 	private static Analyzer stopAnalyzer = new StopAnalyzer(Version.LUCENE_36);
 	private static Analyzer whitespaceAnalyzer = new WhitespaceAnalyzer(Version.LUCENE_36);
-	private static Analyzer snowballAnalyzer = new SnowballAnalyzer(Version.LUCENE_36, "English",
-			Main.stopWordList);
 
 	/**
 	 * Index will be stored in "D:\lucene\index" and files have to be stored in
@@ -43,12 +39,12 @@ public class Main {
 
 		switch (TP) {
 		case 1:
-			IndexFiles.buildIndex(docPath, standardAnalyzer, verbose);
-			SearchFiles.searchIndex(query1, standardAnalyzer);
-			SearchFiles.searchIndex(query2, standardAnalyzer);
+			IndexFiles.buildIndex(docPath, standardAnalyzer, false);
+			SearchFiles.searchIndex(query1, standardAnalyzer, false);
+			SearchFiles.searchIndex(query2, standardAnalyzer, false);
 
 			for (String s : optional)
-				SearchFiles.searchIndex(s, standardAnalyzer);
+				SearchFiles.searchIndex(s, standardAnalyzer, false);
 			break;
 		case 2:
 			VectorSpaceModel.searchVSM(query1, docPath);
@@ -62,13 +58,16 @@ public class Main {
 		case 4:
 			Analyzer[] analyzers = { standardAnalyzer, stopAnalyzer, whitespaceAnalyzer,
 					simpleAnalyzer };
-
 			for (Analyzer analyzer : analyzers){
 				System.out.println("\n" + analyzer);
-				IndexFiles.buildIndex("D:\\lucene\\corpus\\TP4", analyzer, verbose);
-				SearchFiles.searchIndex("1923", analyzer);
-				SearchFiles.searchIndex("Business", analyzer);
+				IndexFiles.buildIndex("D:\\lucene\\corpus\\TP4", analyzer, false);
+				SearchFiles.searchIndex("1923", analyzer, false);
 			}
+
+			IndexFiles.buildIndex("D:\\lucene\\corpus\\TP4", standardAnalyzer, false);
+			SearchFiles.searchIndex("Business", standardAnalyzer, false);
+			IndexFiles.buildIndex("D:\\lucene\\corpus\\TP4", standardAnalyzer, true);
+			SearchFiles.searchIndex("Business", standardAnalyzer, true);
 			break;
 		}
 	}
