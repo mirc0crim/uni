@@ -11,6 +11,8 @@ names = []
 inc = []
 char = []
 sect = []
+corr = 0
+fals = 0
 
 def init(f):
     m = open("D:\\aai\\apa\\apa\\" + f + ".dat")
@@ -28,36 +30,42 @@ def output(num):
     Img2=Image.fromarray(numpy.uint8(b))
     name = inc[-2:] + "-" + str(num) + "-" + char[num].replace("\"","") + ".png"
     Img2.save("D:\\aai\\apa\\output\\" + name)
-    Img2 = Img2.resize((8,9), Image.BILINEAR)
+    Img2 = Img2.resize((8,9), Image.ANTIALIAS)
     c = [k[0] for k in list(Img2.getdata())]
     hash.append(calcDHash(c))
     names.append(name)
-    print "saved", name
+    #print "saved", name
 
 def compareMe(num):
-    global char, sect, hash, inc
+    global char, sect, hash, inc, corr, fals
     b = makeImage(num)
 
     Img2=Image.fromarray(numpy.uint8(b))
-    Img2.save("D:\\aai\\apa\\output\\test.png")
-    Img2.show()
-    Img2 = Img2.resize((8,9), Image.BILINEAR)
+    Img2.save("D:\\aai\\apa\\output\\test-" + char[num].replace("\"","") + ".png")
+    #Img2.show()
+    Img2 = Img2.resize((8,9), Image.ANTIALIAS)
     c = [k[0] for k in list(Img2.getdata())]
     thisHash = calcDHash(c)
     diff = []
     for i in range(len(hash)):
         d = 0
         for j in range(len(hash[i])):
-            if hash[i][j] <> thisHash[i]:
+            if hash[i][j] <> thisHash[j]:
                 d += 1
         diff.append(d)
 
     print diff
-    print "Input", str(num), "matched", str(argmin(diff))
+    n = char[num].replace("\"","")
+    if (n == names[argmin(diff)][-5]):
+        print "Input", "test-" + n +".png", "matched", names[argmin(diff)], "correctly"
+        corr += 1
+    else:
+        print "Input", "test-" + n +".png", "matched", names[argmin(diff)], "falsely"
+        fals += 1
     print "dHash Hamming distance", str(min(diff))
-    print "", names[num]
-    Img1 = Image.open("D:\\aai\\apa\\output\\" + names[num])
-    Img1.show()
+    print ""
+    #Img1 = Image.open("D:\\aai\\apa\\output\\" + names[num])
+    #Img1.show()
 
 def makeImage(num):
     b = []
@@ -112,4 +120,7 @@ for i in range(len(char)):
     output(i)
 
 init("apa00\\app0034")
-compareMe(1)
+for i in range(len(char)):
+    compareMe(i)
+    
+print corr, ":", fals
