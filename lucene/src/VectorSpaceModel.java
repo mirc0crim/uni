@@ -155,7 +155,8 @@ public class VectorSpaceModel {
 
 	public static String removeStopWords(String text) {
 		String everything = text;
-		for (String stop : Main.stopWordList)
+		Attributes att = new Attributes();
+		for (String stop : att.stopWordList)
 			everything = everything.replace(" " + stop + " ", " ");
 		return everything;
 	}
