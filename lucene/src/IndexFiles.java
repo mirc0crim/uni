@@ -95,5 +95,6 @@ public class IndexFiles {
 				System.out.println(fileList.get(i) + " added to index.");
 		}
 		indexWriter.close();
+		indexDir.close();
 	}
 }
