@@ -8,26 +8,24 @@ fedHamPath = "D:\\nlp\\corpus\\Federalist Hamilton.txt"
 t = []
 t.append(fileMK.readFile(fedHamPath))
 
-def choose():
-    printInfo()
-    ex = input()
-    if (ex == "1"):
-        task1()
-        choose()
+print()
+print(" ----------------------------------------------------------------")
+print(" 100 most Significant Two-Word Phrases (w/o stemming & Stopwords)")
+print(" ----------------------------------------------------------------")
+print()
+print(" Path to Federalist Hamilton " + fedHamPath)
+print(" Path to Output " + outputPath)
+print()
 
-def printInfo():
-    print("")
-    print(" ----------------------------------------------------------------")
-    print(" 1 = 100 most Significant Two-Word Phrases.")
-    print(" Else Exit")
-    print(" ----------------------------------------------------------------")
+lower = t[0].lower()
+noPunct = fileMK.replaceSigns(lower)
+stemmed = fileMK.stemText(noPunct)
+noStop = fileMK.removeStopWords(stemmed, None)
+g = fileMK.extract2gram(noStop)
+sorted_dict = fileMK.sortedDictFromWords(g)
+s = ""
+for i in range(100):
+    s += str(sorted_dict[i][0]) + "\n"
+fileMK.writeTextToFile(s, outputPath + "task1")
 
-def task1():
-    # Task 1
-    # TODO: rem punctuation; stem; stop words; t-Test with 5% significance
-    a = fileMK.stemText(t[0])
-
-
-print("Path to Federalist Hamilton " + fedHamPath)
-print("Path to Output " + outputPath)
-choose()
+# TODO: t-Test with 5% significance    

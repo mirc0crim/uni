@@ -114,3 +114,19 @@ def permutationString(myString):
         s += ''.join(p)
         s += " "
     return s[:-1]
+
+def removeStopWords(text, words):
+    if not words:
+        words = ["the", "to", "of", "and", "or", "a", "an", "in", "he", "it", "for", "is", "this", "his"]
+    print(" Stopwords:", words)
+    for w in words:
+        text = text.replace(" " + w + " ", " ")
+    return text
+
+def extract2gram(text):
+    g = []
+    t = text.split(" ")
+    for i in range(len(t)-1):
+        if len(t[i]) > 1:
+            g.append(t[i] + " " + t[i+1])
+    return g
