@@ -29,11 +29,11 @@ for i in range(100):
     s += str(dict2words[i][0]) + "\n"
 fileMK.writeTextToFile(s, outputPath + "task1a")    
 
-significance = 2.576
+significance = 1.645
 
 print()
 print(" ----------------------------------------------------------------")
-print(" T-Test w/ alpha 0.5% ->", significance)
+print(" T-Test w/ alpha 5% ->", significance)
 print(" Total Two-Word-Phrases:", len(dict2words))
 print(" ----------------------------------------------------------------")
 print()

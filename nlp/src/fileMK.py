@@ -127,6 +127,6 @@ def extract2gram(text):
     g = []
     t = text.split(" ")
     for i in range(len(t)-1):
-        if len(t[i]) > 1:
+        if len(t[i]) > 1 and len(t[i+1]) > 1:
             g.append(t[i] + " " + t[i+1])
     return g
