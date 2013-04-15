@@ -1,5 +1,6 @@
 import Image
 import numpy
+import os
 import random
 import re
 import scipy
@@ -14,8 +15,10 @@ sect = []
 corr = 0
 fals = 0
 
+outPath = "D:\\aai\\apa\\output\\"
+
 def init(f):
-    m = open("D:\\aai\\apa\\apa\\" + f + ".dat")
+    m = open(f)
     global inc, char, sect
     a = m.read()
     inc = re.findall("\.INCLUDE apa/data/([\w/]*)", a)
@@ -28,12 +31,12 @@ def output(num):
     b = makeImage(num)
 
     Img2=Image.fromarray(numpy.uint8(b))
-    name = inc[-2:] + "-" + str(num) + "-" + char[num].replace("\"","") + ".png"
-    Img2.save("D:\\aai\\apa\\output\\" + name)
-    Img2 = Img2.resize((8,9), Image.ANTIALIAS)
+    name = inc[-2:] + "-" + str(num) + "-" + char[num].replace("\"","")
+    Img2.save(outPath + name + ".png")
+    Img2 = Img2.resize((10,10), Image.ANTIALIAS)
     c = [k[0] for k in list(Img2.getdata())]
     hash.append(calcDHash(c))
-    names.append(name)
+    names.append(name + ".png")
     #print "saved", name
 
 def compareMe(num):
@@ -41,9 +44,9 @@ def compareMe(num):
     b = makeImage(num)
 
     Img2=Image.fromarray(numpy.uint8(b))
-    Img2.save("D:\\aai\\apa\\output\\test-" + char[num].replace("\"","") + ".png")
+    Img2.save(outPath + "test-" + char[num].replace("\"","") + ".png")
     #Img2.show()
-    Img2 = Img2.resize((8,9), Image.ANTIALIAS)
+    Img2 = Img2.resize((10,10), Image.ANTIALIAS)
     c = [k[0] for k in list(Img2.getdata())]
     thisHash = calcDHash(c)
     diff = []
@@ -56,14 +59,14 @@ def compareMe(num):
 
     print diff
     n = char[num].replace("\"","")
+    outText = "Input test-" + n +".png matched " + names[argmin(diff)]
     if (n == names[argmin(diff)][-5]):
-        print "Input", "test-" + n +".png", "matched", names[argmin(diff)], "correctly"
+        print outText, "correctly"
         corr += 1
     else:
-        print "Input", "test-" + n +".png", "matched", names[argmin(diff)], "falsely"
+        print outText, "falsely"
         fals += 1
-    print "dHash Hamming distance", str(min(diff))
-    print ""
+        print "dHash Hamming distance", str(min(diff))
     #Img1 = Image.open("D:\\aai\\apa\\output\\" + names[num])
     #Img1.show()
 
@@ -98,11 +101,11 @@ def makeImage(num):
     for i in range(maxX-minX + 1):
         a = []
         for j in range(maxY-minY + 1):
-            a.append([0,0,0])
+            a.append([255,255,255])
         b.append(a)
 
     for i in range(len(r)):
-        b[int(r[i][0]) - minX][int(r[i][1]) - minY] = [255,255,255]
+        b[int(r[i][0]) - minX][int(r[i][1]) - minY] = [0,0,0]
     
     return b
 
@@ -115,12 +118,18 @@ def calcDHash(w):
             bits.append(0)
     return bits
 
-init("apa00\\app0032")
-for i in range(len(char)):
-    output(i)
+for root, dirs, files in os.walk("D:\\aai\\apa\\apa\\"):
+    for currFile in files:
+        if "apa19" not in str(root) and "apa20" not in str(root):
+            print "train", root + "\\" + currFile
+            init(root + "\\" + currFile)
+            for i in range(len(char)):
+                output(i)
+        else:
+            print "\ntest", root + "\\" + currFile
+            init(root + "\\" + currFile)
+            for i in range(len(char)):
+                compareMe(i)
 
-init("apa00\\app0034")
-for i in range(len(char)):
-    compareMe(i)
-    
-print corr, ":", fals
+print "correct vs. false" 
+print "    ", corr, " : ", fals
