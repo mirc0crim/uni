@@ -28,7 +28,7 @@ def init(f):
     sect = re.findall("\.SEGMENT CHARACTER (.*) \? .*", a)
 
 def output(num):
-    global char, sect, hash, inc
+    global char, hash, inc
 
     Img2=Image.fromarray(numpy.uint8(makeImage(num)))
     name = inc[-2:] + "-" + str(num) + "-" + char[num].replace("\"","")
@@ -39,14 +39,13 @@ def output(num):
     names.append(name + ".png")
 
 def compareMe(num):
-    global char, sect, hash, inc, corr, fals
+    global char, hash, corr, fals
 
     Img2=Image.fromarray(numpy.uint8(makeImage(num)))
     Img2.save(outPath + "test-" + char[num].replace("\"","") + ".png")
     Img2 = Img2.resize(resize, Image.ANTIALIAS)
     c = [k[0] for k in list(Img2.getdata())]
-    thisHash = calcDHash(c)
-    diff = compHash(thisHash, hash)
+    diff = compHash(calcDHash(c), hash)
 
     n = char[num].replace("\"","")
     outText = "test-" + n +".png matched " + names[argmin(diff)]
@@ -62,9 +61,7 @@ def imgCompare():
     Img3 = Image.open("D:\\aai\\apa\\hand.png")
     Img3 = Img3.resize(resize, Image.ANTIALIAS)
     c = [k[0] for k in list(Img3.getdata())]
-    thisHash = calcDHash(c)
-    diff = compHash(thisHash, hash)
-
+    diff = compHash(calcDHash(c), hash)
     print diff
     outText = "hand.png matched " + names[argmin(diff)]
     print outText, "w/ dist", str(min(diff))
@@ -77,7 +74,6 @@ def compHash(thisHash, hash):
             if hash[i][j] <> thisHash[j]:
                 d += 1
         diff.append(d)
-
     return diff
 
 def makeImage(num):
@@ -129,14 +125,13 @@ def calcDHash(w):
 
 for root, dirs, files in os.walk("D:\\aai\\apa\\apa\\"):
     for currFile in files:
+        init(root + "\\" + currFile)
         if "apa19" not in str(root) and "apa20" not in str(root):
             print "train", root + "\\" + currFile
-            init(root + "\\" + currFile)
             for i in range(len(char)):
                 output(i)
         else:
             print "\ntest", root + "\\" + currFile
-            init(root + "\\" + currFile)
             for i in range(len(char)):
                 compareMe(i)
 
