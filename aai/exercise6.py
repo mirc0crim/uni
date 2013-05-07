@@ -2,7 +2,7 @@ import Image
 import os
 from numpy import *
 
-print "started"
+print "started\n"
 
 hash = []
 names = []
@@ -10,8 +10,8 @@ corr = 0
 fals = 0
 resize = (8,8)
 trainPath = "D:\\aai\\cedar\\train\\bindigis\\"
-testPath1 = "D:\\aai\\cedar\\test\\bindigis\\bs\\"
-testPath2 = "D:\\aai\\cedar\\test\\bindigis\\goodbs\\"
+testPath1 = "D:\\aai\\cedar\\test\\bindigis\\goodbs\\"
+testPath2 = "D:\\aai\\cedar\\test\\bindigis\\bs\\"
     
 def compHash(thisHash, hash):
     diff = []
@@ -52,12 +52,12 @@ def compImg(testP, fileName):
     else:
         fals += 1
 
-print "loading"
+print "training \\train\\bindigis\\"
 for file in os.listdir(trainPath):
     if file[-4:] == ".png":
         imgHash(file)
 
-print "testing 1"
+print "\ntesting 1 \\test\\bindigis\\goodbs\\"
 for file in os.listdir(testPath1):
     if file[-4:] == ".png":
         compImg(testPath1, file)
@@ -67,10 +67,11 @@ print "  ", corr, "  :  ", fals
 corr = 0
 fals = 0
 
-print "testing 2"
+print "\ntesting 2 \\test\\bindigis\\bs\\"
 for file in os.listdir(testPath2):
     if file[-4:] == ".png":
         compImg(testPath2, file)
 
 print "correct vs. false" 
 print "  ", corr, "  :  ", fals
+print "\ndone"
