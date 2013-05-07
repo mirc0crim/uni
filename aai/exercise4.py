@@ -111,6 +111,14 @@ def makeImage(num):
         b.append(a)
     for i in range(len(r)):
         b[int(r[i][0]) - minX][int(r[i][1]) - minY] = [0,0,0]
+        if int(r[i][0]) - minX - 1 >= 0:
+            b[int(r[i][0]) - minX - 1][int(r[i][1]) - minY] = [0,0,0]
+        if int(r[i][1]) - minY - 1 >= 0:
+            b[int(r[i][0]) - minX][int(r[i][1]) - minY - 1] = [0,0,0]
+        if maxX - int(r[i][0]) - 1 >= 0:
+            b[int(r[i][0]) - minX + 1][int(r[i][1]) - minY] = [0,0,0]
+        if maxY - int(r[i][1]) - 1 >= 0:
+            b[int(r[i][0]) - minX][int(r[i][1]) - minY + 1] = [0,0,0]
     
     return b
 
