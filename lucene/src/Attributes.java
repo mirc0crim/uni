@@ -11,6 +11,7 @@ import org.apache.lucene.util.Version;
 public class Attributes {
 
 	String docPath = "D:\\lucene\\corpus";
+	String cacmPath = "D:\\lucene\\cacm\\";
 
 	Analyzer simpleAnalyzer = new SimpleAnalyzer(Version.LUCENE_36);
 	Analyzer standardAnalyzer = new StandardAnalyzer(Version.LUCENE_36);

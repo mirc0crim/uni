@@ -97,4 +97,20 @@ public class IndexFiles {
 		indexWriter.close();
 		indexDir.close();
 	}
+
+	public void buildIndex(String ID, String Keywords, String Title, String Abstract)
+			throws IOException {
+		Directory indexDir = FSDirectory.open(new File(indexPath));
+		IndexWriterConfig writerConfig = new IndexWriterConfig(Version.LUCENE_36, analyzer);
+		writerConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+		IndexWriter indexWriter = new IndexWriter(indexDir, writerConfig);
+		Document doc = new Document();
+		doc.add(new Field("id", ID, Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field("keywords", Keywords, Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field("title", Title, Field.Store.YES, Field.Index.ANALYZED));
+		doc.add(new Field("abstract", Abstract, Field.Store.YES, Field.Index.ANALYZED));
+		indexWriter.addDocument(doc);
+		indexWriter.close();
+		indexDir.close();
+	}
 }

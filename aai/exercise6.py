@@ -25,8 +25,9 @@ def compHash(thisHash, hash):
 
 def calcDHash(w):
     bits = []
-    for i in range(len(w)-1):
-        if w[i] < w[i+1]:
+    avg = sum(w)/len(w)
+    for i in range(len(w)):
+        if w[i] < avg:
             bits.append(1)
         else:
             bits.append(0)
