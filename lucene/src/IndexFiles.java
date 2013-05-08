@@ -98,18 +98,20 @@ public class IndexFiles {
 		indexDir.close();
 	}
 
-	public void buildIndex(String ID, String Keywords, String Title, String Abstract)
+	public void buildIndex(String[] ID, String[] Keywords, String[] Title, String[] Abstract)
 			throws IOException {
 		Directory indexDir = FSDirectory.open(new File(indexPath));
 		IndexWriterConfig writerConfig = new IndexWriterConfig(Version.LUCENE_36, analyzer);
 		writerConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 		IndexWriter indexWriter = new IndexWriter(indexDir, writerConfig);
-		Document doc = new Document();
-		doc.add(new Field("id", ID, Field.Store.YES, Field.Index.ANALYZED));
-		doc.add(new Field("keywords", Keywords, Field.Store.YES, Field.Index.ANALYZED));
-		doc.add(new Field("title", Title, Field.Store.YES, Field.Index.ANALYZED));
-		doc.add(new Field("abstract", Abstract, Field.Store.YES, Field.Index.ANALYZED));
-		indexWriter.addDocument(doc);
+		for (int i = 1; i < ID.length; i++) {
+			Document doc = new Document();
+			doc.add(new Field("id", ID[i], Field.Store.YES, Field.Index.ANALYZED));
+			doc.add(new Field("keywords", Keywords[i], Field.Store.YES, Field.Index.ANALYZED));
+			doc.add(new Field("title", Title[i], Field.Store.YES, Field.Index.ANALYZED));
+			doc.add(new Field("abstract", Abstract[i], Field.Store.YES, Field.Index.ANALYZED));
+			indexWriter.addDocument(doc);
+		}
 		indexWriter.close();
 		indexDir.close();
 	}

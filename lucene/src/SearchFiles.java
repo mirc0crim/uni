@@ -27,15 +27,16 @@ public class SearchFiles {
 	public void searchIndex(String queryString)
 			throws IOException, ParseException {
 		boolean cat_subcat = false;
-		QueryParser parser = new QueryParser(Version.LUCENE_36, "text", analyzer);
+		QueryParser parser = new QueryParser(Version.LUCENE_36, "title", analyzer);
 		Directory indexDir = FSDirectory.open(new File(indexPath));
 		IndexReader reader = IndexReader.open(indexDir);
 		IndexSearcher searcher = new IndexSearcher(reader);
 		System.out.println("\nsearching for: " + queryString);
 		TopDocs results = searcher.search(parser.parse(queryString), 100);
 		System.out.println("total hits: " + results.totalHits);
-		String[][] score = new String[results.totalHits][4];
-		for (int i = 0; i < results.totalHits; i++) {
+		int len = Math.min(10, results.totalHits);
+		String[][] score = new String[len][4];
+		for (int i = 0; i < len; i++) {
 			ScoreDoc hit = results.scoreDocs[i];
 			Document doc = searcher.doc(hit.doc);
 			score[i][0] = hit.score + "";
@@ -44,7 +45,7 @@ public class SearchFiles {
 				score[i][1] = doc.get("cat");
 				score[i][2] = doc.get("sub-cat");
 			}
-			score[i][3] = doc.get("name");
+			score[i][3] = doc.get("id") + " " + doc.get("title").replace("\n", "");
 		}
 		if (cat_subcat) {
 			System.out.println("\nSorted by score (desc)");
@@ -67,7 +68,7 @@ public class SearchFiles {
 						score[i][1], score[i][2], score[i][3]);
 		} else {
 			sortArray(score, 0, false);
-			for (int i = 0; i < results.totalHits; i++)
+			for (int i = 0; i < len; i++)
 				System.out.printf("%5.3f %s\n", Float.parseFloat(score[i][0]), score[i][3]);
 		}
 		searcher.close();

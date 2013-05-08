@@ -2,7 +2,9 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.util.Version;
 
 public class Main {
 
@@ -53,25 +55,38 @@ public class Main {
 		case 7:
 			CacmParser cp = new CacmParser(att.cacmPath);
 			String[] docs = cp.parseDocsInArray();
+			Analyzer a = new SnowballAnalyzer(Version.LUCENE_36, "English", cp.getStopwords());
+			IndexFiles indexer7 = new IndexFiles(a, false);
+			SearchFiles searcher7 = new SearchFiles(a);
 			System.out.println("Total " + docs.length);
-			for (int i = 1; i < docs.length; i++) {
-				String kw = cp.parseKW(docs[i]);
-				String ti = cp.parseTitle(docs[i]);
-				String ab = cp.parseAbst(docs[i]);
-				if (kw.length() == 0 && ti.length() == 0 && ab.length() == 0) {
-					System.out.println("Empty Doc " + i);
+			boolean needIndex = false;
+			if (needIndex) {
+				String[] ids = new String[docs.length];
+				String[] kws = new String[docs.length];
+				String[] tis = new String[docs.length];
+				String[] abs = new String[docs.length];
+				for (int i = 1; i < docs.length; i++) {
+					String kw = cp.parseKW(docs[i]);
+					String ti = cp.parseTitle(docs[i]);
+					String ab = cp.parseAbst(docs[i]);
+					if (kw.length() == 0 && ti.length() == 0 && ab.length() == 0) {
+						System.out.println("Empty Doc " + i);
+					}
+					ids[i] = cp.parseID(docs[i]);
+					kws[i] = kw;
+					tis[i] = ti;
+					abs[i] = ab;
+					if (i % 320 == 0)
+						System.out.println(i / 32);
 				}
-				indexer.buildIndex(cp.parseID(docs[i]), kw, ti, ab);
-				if (i % 320 == 0)
-					System.out.println(i / 32);
+				indexer7.buildIndex(ids, kws, tis, abs);
 			}
-
 			String[] queries = cp.parseQueryInArray();
 			String[] no = { "1", "3", "4", "6", "11", "24", "46", "56" };
 			for (int i = 0; i < queries.length; i++) {
 				String id = cp.parseID(queries[i]);
 				if (Arrays.asList(no).contains(id)) {
-					searcher.searchIndex((cp.parseQueryText(queries[i]).trim()));
+					searcher7.searchIndex(cp.parseQueryText(queries[i]).trim());
 				}
 			}
 			break;

@@ -99,4 +99,9 @@ public class CacmParser {
 		return out.toString();
 	}
 
+	public String[] getStopwords() {
+		String sw = listToString(stopwords);
+		return sw.split("\n");
+	}
+
 }
