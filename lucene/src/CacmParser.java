@@ -15,6 +15,7 @@ public class CacmParser {
 	private String cacmContent;
 	private String queryContent;
 	private List<String> stopwords;
+	private String qrels;
 
 	final static Charset ENCODING = StandardCharsets.UTF_8;
 
@@ -25,6 +26,8 @@ public class CacmParser {
 		List<String> q = Files.readAllLines(Paths.get(cacmPath + "query.text"), ENCODING);
 		queryContent = listToString(q);
 		stopwords = Files.readAllLines(Paths.get(cacmPath + "common_words"), ENCODING);
+		List<String> qr = Files.readAllLines(Paths.get(cacmPath + "qrels.text"), ENCODING);
+		qrels = listToString(qr);
 	}
 
 	public String[] parseDocsInArray() {
@@ -102,6 +105,18 @@ public class CacmParser {
 	public String[] getStopwords() {
 		String sw = listToString(stopwords);
 		return sw.split("\n");
+	}
+
+	public String relDocsForID(String id) {
+		if (id.length() == 1)
+			id = "0" + id;
+		Pattern pattern = Pattern.compile(id + " \\d{4}");
+		Matcher matcher = pattern.matcher(qrels);
+		String s = "";
+		while (matcher.find()) {
+			s += matcher.group().replace(id + " ", "") + "\n";
+		}
+		return s;
 	}
 
 }

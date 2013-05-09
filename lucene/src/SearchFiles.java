@@ -6,6 +6,7 @@ import java.util.Comparator;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -19,15 +20,22 @@ public class SearchFiles {
 
 	private String indexPath = "D:\\lucene\\index";
 	private Analyzer analyzer;
+	private boolean multiField;
 
-	public SearchFiles(Analyzer a) {
+	public SearchFiles(Analyzer a, boolean multi) {
 		analyzer = a;
+		multiField = multi;
 	}
 
 	public void searchIndex(String queryString)
 			throws IOException, ParseException {
 		boolean cat_subcat = false;
-		QueryParser parser = new QueryParser(Version.LUCENE_36, "title", analyzer);
+		QueryParser parser;
+		if (multiField)
+			parser = new MultiFieldQueryParser(Version.LUCENE_36, new String[] { "title",
+					"keywords", "abstract" }, analyzer);
+		else
+			parser = new QueryParser(Version.LUCENE_36, "text", analyzer);
 		Directory indexDir = FSDirectory.open(new File(indexPath));
 		IndexReader reader = IndexReader.open(indexDir);
 		IndexSearcher searcher = new IndexSearcher(reader);
@@ -45,7 +53,7 @@ public class SearchFiles {
 				score[i][1] = doc.get("cat");
 				score[i][2] = doc.get("sub-cat");
 			}
-			score[i][3] = doc.get("id") + " " + doc.get("title").replace("\n", "");
+			score[i][3] = doc.get("id") + " " + doc.get("title").replace("\n", " ");
 		}
 		if (cat_subcat) {
 			System.out.println("\nSorted by score (desc)");
