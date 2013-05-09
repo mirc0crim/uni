@@ -8,7 +8,7 @@ import org.tartarus.snowball.ext.PorterStemmer;
 
 public class Main {
 
-	private static int TP = 8;
+	private static int TP = 7;
 
 	public static void main(String[] args) throws IOException, ParseException {
 
@@ -56,7 +56,7 @@ public class Main {
 			SearchFiles searcher7 = new SearchFiles(att.standardAnalyzer, true);
 			System.out.println("Total " + docs.length);
 			PorterStemmer stemmer = new PorterStemmer();
-			boolean needIndex = false;
+			boolean needIndex = true;
 			if (needIndex) {
 				String[] ids = new String[docs.length];
 				String[] kws = new String[docs.length];
@@ -91,6 +91,7 @@ public class Main {
 					if (Arrays.asList(no).contains(id)) {
 						String qt = cp.parseQueryText(queries[i]).replace("\n", " ").trim();
 						qt = remSW(qt.toLowerCase(), sw);
+						searcher7.setQueryRels(cp.relDocsForID(cp.parseID(queries[i])));
 						searcher7.searchIndex(qt);
 					}
 				}
@@ -99,8 +100,8 @@ public class Main {
 					String qt = cp.parseQueryText(queries[i]).replace("\n", " ").trim();
 					qt = remSW(qt.toLowerCase(), sw);
 					qt = stem(stemmer, qt);
+					searcher7.setQueryRels(cp.relDocsForID(cp.parseID(queries[i])));
 					searcher7.searchIndex(qt);
-					System.out.println(cp.relDocsForID(cp.parseID(queries[i])));
 				}
 			}
 		}

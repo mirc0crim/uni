@@ -107,7 +107,7 @@ public class CacmParser {
 		return sw.split("\n");
 	}
 
-	public String relDocsForID(String id) {
+	public String[] relDocsForID(String id) {
 		if (id.length() == 1)
 			id = "0" + id;
 		Pattern pattern = Pattern.compile(id + " \\d{4}");
@@ -116,7 +116,7 @@ public class CacmParser {
 		while (matcher.find()) {
 			s += matcher.group().replace(id + " ", "") + "\n";
 		}
-		return s;
+		return s.split("\n");
 	}
 
 }

@@ -21,6 +21,7 @@ public class SearchFiles {
 	private String indexPath = "D:\\lucene\\index";
 	private Analyzer analyzer;
 	private boolean multiField;
+	private String[] queryRel;
 
 	public SearchFiles(Analyzer a, boolean multi) {
 		analyzer = a;
@@ -44,6 +45,9 @@ public class SearchFiles {
 		System.out.println("total hits: " + results.totalHits);
 		int len = Math.min(10, results.totalHits);
 		String[][] score = new String[len][4];
+		int[] rel = new int[len];
+		float[] prec = new float[len];
+		int sum = 0;
 		for (int i = 0; i < len; i++) {
 			ScoreDoc hit = results.scoreDocs[i];
 			Document doc = searcher.doc(hit.doc);
@@ -53,7 +57,13 @@ public class SearchFiles {
 				score[i][1] = doc.get("cat");
 				score[i][2] = doc.get("sub-cat");
 			}
-			score[i][3] = doc.get("id") + " " + doc.get("title").replace("\n", " ");
+			score[i][3] = doc.get("id");
+			if (Arrays.asList(queryRel).contains(doc.get("id"))) {
+				rel[i] = 1;
+				sum++;
+			} else
+				rel[i] = 0;
+			prec[i] = sum / (float) (i + 1);
 		}
 		if (cat_subcat) {
 			System.out.println("\nSorted by score (desc)");
@@ -76,8 +86,10 @@ public class SearchFiles {
 						score[i][1], score[i][2], score[i][3]);
 		} else {
 			sortArray(score, 0, false);
+			System.out.println("Rank Score ID Rel Precision");
 			for (int i = 0; i < len; i++)
-				System.out.printf("%5.3f %s\n", Float.parseFloat(score[i][0]), score[i][3]);
+				System.out.printf("%2d %6.3f %4s %d %5.3f\n", i + 1,
+						Float.parseFloat(score[i][0]), score[i][3], rel[i], prec[i]);
 		}
 		searcher.close();
 		reader.close();
@@ -96,5 +108,9 @@ public class SearchFiles {
 					return s2.compareTo(s1);
 			}
 		});
+	}
+
+	public void setQueryRels(String[] rels) {
+		queryRel = rels;
 	}
 }
