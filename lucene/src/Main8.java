@@ -6,12 +6,12 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.util.Version;
 import org.tartarus.snowball.SnowballProgram;
-import org.tartarus.snowball.ext.LovinsStemmer;
+import org.tartarus.snowball.ext.GermanStemmer;
 import org.tartarus.snowball.ext.PorterStemmer;
 
 public class Main8 {
 
-	private static String TP = "8a";
+	private static String TP = "8c";
 	private static String indexPath = "D:\\lucene\\index";
 	private static String cacmPath = "D:\\lucene\\cacm\\";
 
@@ -31,8 +31,8 @@ public class Main8 {
 			stemmer = new PorterStemmer();
 			System.out.println("Porter Stemming");
 		} else {
-			stemmer = new LovinsStemmer();
-			System.out.println("Lovins Stemming");
+			stemmer = new GermanStemmer();
+			System.out.println("German Stemming");
 		}
 		for (final File f : new File(indexPath).listFiles())
 			if (!f.isDirectory())
