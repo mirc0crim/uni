@@ -10,6 +10,7 @@ import org.apache.lucene.util.Version;
  */
 public class Attributes {
 
+	String indexPath = "D:\\lucene\\index";
 	String docPath = "D:\\lucene\\corpus";
 	String cacmPath = "D:\\lucene\\cacm\\";
 
