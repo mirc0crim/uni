@@ -1,10 +1,11 @@
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.tartarus.snowball.SnowballProgram;
-import org.tartarus.snowball.ext.PorterStemmer;
+import org.tartarus.snowball.ext.LovinsStemmer;
 
 public class Main {
 
@@ -55,37 +56,42 @@ public class Main {
 			String[] docs = cp.parseDocsInArray();
 			SearchFiles searcher7 = new SearchFiles(att.standardAnalyzer, true);
 			System.out.println("Total " + docs.length);
-			PorterStemmer stemmer = new PorterStemmer();
-			boolean needIndex = true;
-			if (needIndex) {
-				String[] ids = new String[docs.length];
-				String[] kws = new String[docs.length];
-				String[] tis = new String[docs.length];
-				String[] abs = new String[docs.length];
-				for (int i = 1; i < docs.length; i++) {
-					String id = cp.parseID(docs[i]);
-					String kw = cp.parseKW(docs[i]).toLowerCase();
-					String ti = cp.parseTitle(docs[i]).toLowerCase();
-					String ab = cp.parseAbst(docs[i]).toLowerCase();
-					if (kw.length() == 0 && ti.length() == 0 && ab.length() == 0) {
-						System.out.println("Empty Doc " + i);
-					}
-					if (TP == 8) {
-						kw = stem(stemmer, kw);
-						ti = stem(stemmer, ti);
-						ab = stem(stemmer, ab);
-					}
-					ids[i] = id;
-					kws[i] = kw;
-					tis[i] = ti;
-					abs[i] = ab;
+			// PorterStemmer stemmer = new PorterStemmer();
+			LovinsStemmer stemmer = new LovinsStemmer();
+			String indexPath = "D:\\lucene\\index";
+			for (final File f : new File(indexPath).listFiles())
+				if (!f.isDirectory())
+					f.delete();
+
+			String[] ids = new String[docs.length];
+			String[] kws = new String[docs.length];
+			String[] tis = new String[docs.length];
+			String[] abs = new String[docs.length];
+			for (int i = 1; i < docs.length; i++) {
+				String id = cp.parseID(docs[i]);
+				String kw = cp.parseKW(docs[i]).toLowerCase();
+				String ti = cp.parseTitle(docs[i]).toLowerCase();
+				String ab = cp.parseAbst(docs[i]).toLowerCase();
+				if (kw.length() == 0 && ti.length() == 0 && ab.length() == 0) {
+					System.out.println("Empty Doc " + i);
 				}
-				indexer.buildIndex(ids, kws, tis, abs);
+				if (TP == 8) {
+					kw = stem(stemmer, kw);
+					ti = stem(stemmer, ti);
+					ab = stem(stemmer, ab);
+				}
+				ids[i] = id;
+				kws[i] = kw;
+				tis[i] = ti;
+				abs[i] = ab;
 			}
+			indexer.buildIndex(ids, kws, tis, abs);
+
 			String[] queries = cp.parseQueryInArray();
 			String[] sw = cp.getStopwords();
 			if (TP == 7) {
-				String[] no = { "1", "3", "4", "6", "11", "24", "46", "56" };
+				// String[] no = { "1", "3", "4", "6", "11", "24", "46", "56" };
+				String[] no = { "1", "3", "4", "5", "6", "7", "8", "9", "10", "11" };
 				for (int i = 0; i < queries.length; i++) {
 					String id = cp.parseID(queries[i]);
 					if (Arrays.asList(no).contains(id)) {

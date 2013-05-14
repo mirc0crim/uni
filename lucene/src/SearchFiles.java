@@ -86,9 +86,9 @@ public class SearchFiles {
 						score[i][1], score[i][2], score[i][3]);
 		} else {
 			sortArray(score, 0, false);
-			System.out.println("Rank Score ID Rel Precision");
+			System.out.println("Rank; Score; ID; Rel; Precision");
 			for (int i = 0; i < len; i++)
-				System.out.printf("%2d %6.3f %4s %d %5.3f\n", i + 1,
+				System.out.printf("%2d; %6.3f; %4s; %d; %5.3f\n", i + 1,
 						Float.parseFloat(score[i][0]), score[i][3], rel[i], prec[i]);
 		}
 		searcher.close();
