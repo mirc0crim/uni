@@ -12,6 +12,7 @@ public class Attributes {
 
 	String indexPath = "D:\\lucene\\index";
 	String docPath = "D:\\lucene\\corpus";
+	String docPathTP4 = "D:\\lucene\\corpus\\TP4";
 	String cacmPath = "D:\\lucene\\cacm\\";
 
 	Analyzer simpleAnalyzer = new SimpleAnalyzer(Version.LUCENE_36);
@@ -27,6 +28,8 @@ public class Attributes {
 
 	String[] stopWordList = new String[] { "the", "to", "of", "and", "or", "a", "in", "he", "it",
 			"for", "is", "this", "has", "his" };
+
+	String[] queryNo = new String[] { "1", "3", "4", "6", "11", "24", "46", "56" };
 
 	public Attributes() {
 

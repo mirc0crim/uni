@@ -5,11 +5,12 @@ import java.util.Arrays;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.tartarus.snowball.SnowballProgram;
-import org.tartarus.snowball.ext.LovinsStemmer;
+import org.tartarus.snowball.ext.GermanStemmer;
+import org.tartarus.snowball.ext.PorterStemmer;
 
 public class Main {
 
-	private static int TP = 7;
+	public static TPs runTP = TPs.TP_8a;
 
 	public static void main(String[] args) throws IOException, ParseException {
 
@@ -21,7 +22,7 @@ public class Main {
 		IndexFiles indexer = new IndexFiles(att.standardAnalyzer, false);
 		IndexFiles catIndexer = new IndexFiles(att.standardAnalyzer, true);
 
-		if (TP == 1){
+		if (runTP == TPs.TP_1) {
 			indexer.buildIndex(att.docPath);
 			searcher.searchIndex(att.query1);
 			searcher.searchIndex(att.query2);
@@ -29,7 +30,7 @@ public class Main {
 			for (String s : att.optional)
 				searcher.searchIndex(s);
 		}
-		if (TP == 2) {
+		if (runTP == TPs.TP_2) {
 			VectorSpaceModel.searchVSM(att.query1, att.docPath);
 			VectorSpaceModel.searchVSM(att.query2, att.docPath);
 
@@ -37,29 +38,37 @@ public class Main {
 
 			System.out.println("Stop Words:\n" + Arrays.toString(att.stopWordList) + "\n");
 		}
-		if (TP == 3)
+		if (runTP == TPs.TP_3)
 			VectorSpaceModel.searchVSM("language call book", "D:\\lucene\\corpus\\TP3");
-		if (TP == 4) {
+		if (runTP == TPs.TP_4) {
 			Analyzer[] analyzers = { att.standardAnalyzer, att.stopAnalyzer,
 					att.whitespaceAnalyzer, att.simpleAnalyzer };
-			indexer.buildIndex("D:\\lucene\\corpus\\TP4");
+			indexer.buildIndex(att.docPathTP4);
 			for (Analyzer analyzer : analyzers){
 				System.out.println("\n" + analyzer);
 				new SearchFiles(analyzer, false).searchIndex("1923");
 			}
 			searcher.searchIndex("Business");
-			catIndexer.buildIndex("D:\\lucene\\corpus\\TP4");
+			catIndexer.buildIndex(att.docPathTP4);
 			searcher.searchIndex("Business");
 		}
-		if (TP == 7 || TP == 8) {
+		if (runTP == TPs.TP_7 || runTP == TPs.TP_8a || runTP == TPs.TP_8b || runTP == TPs.TP_8c) {
 			CacmParser cp = new CacmParser(att.cacmPath);
 			String[] docs = cp.parseDocsInArray();
 			SearchFiles searcher7 = new SearchFiles(att.standardAnalyzer, true);
-			System.out.println("Total " + docs.length);
-			// PorterStemmer stemmer = new PorterStemmer();
-			LovinsStemmer stemmer = new LovinsStemmer();
-			String indexPath = "D:\\lucene\\index";
-			for (final File f : new File(indexPath).listFiles())
+			System.out.println("Total " + (docs.length - 1));
+			SnowballProgram stemmer;
+			if (runTP == TPs.TP_7 || runTP == TPs.TP_8a) {
+				stemmer = null;
+				System.out.println("No Stemming");
+			} else if (runTP == TPs.TP_8b) {
+				stemmer = new PorterStemmer();
+				System.out.println("Porter Stemming");
+			} else {
+				stemmer = new GermanStemmer();
+				System.out.println("German Stemming");
+			}
+			for (final File f : new File(att.indexPath).listFiles())
 				if (!f.isDirectory())
 					f.delete();
 
@@ -75,7 +84,7 @@ public class Main {
 				if (kw.length() == 0 && ti.length() == 0 && ab.length() == 0) {
 					System.out.println("Empty Doc " + i);
 				}
-				if (TP == 8) {
+				if (runTP == TPs.TP_8b || runTP == TPs.TP_8c) {
 					kw = stem(stemmer, kw);
 					ti = stem(stemmer, ti);
 					ab = stem(stemmer, ab);
@@ -89,23 +98,22 @@ public class Main {
 
 			String[] queries = cp.parseQueryInArray();
 			String[] sw = cp.getStopwords();
-			if (TP == 7) {
-				// String[] no = { "1", "3", "4", "6", "11", "24", "46", "56" };
-				String[] no = { "1", "3", "4", "5", "6", "7", "8", "9", "10", "11" };
+			if (runTP == TPs.TP_7) {
 				for (int i = 0; i < queries.length; i++) {
 					String id = cp.parseID(queries[i]);
-					if (Arrays.asList(no).contains(id)) {
+					if (Arrays.asList(att.queryNo).contains(id)) {
 						String qt = cp.parseQueryText(queries[i]).replace("\n", " ").trim();
 						qt = remSW(qt.toLowerCase(), sw);
 						searcher7.setQueryRels(cp.relDocsForID(cp.parseID(queries[i])));
 						searcher7.searchIndex(qt);
 					}
 				}
-			} else if (TP == 8) {
+			} else {
 				for (int i = 1; i < 11; i++) {
 					String qt = cp.parseQueryText(queries[i]).replace("\n", " ").trim();
 					qt = remSW(qt.toLowerCase(), sw);
-					qt = stem(stemmer, qt);
+					if (runTP != TPs.TP_8a)
+						qt = stem(stemmer, qt);
 					searcher7.setQueryRels(cp.relDocsForID(cp.parseID(queries[i])));
 					searcher7.searchIndex(qt);
 				}
@@ -113,6 +121,10 @@ public class Main {
 		}
 
 		System.out.print("done");
+	}
+	
+	public enum TPs {
+		TP_1, TP_2, TP_3, TP_4, TP_7, TP_8a, TP_8b, TP_8c
 	}
 
 	public static String remSW(String s, String[] sw) {
