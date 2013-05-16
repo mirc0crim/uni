@@ -22,10 +22,16 @@ public class SearchFiles {
 	private Analyzer analyzer;
 	private boolean multiField;
 	private String[] queryRel;
+	private float aprec;
+	private float arelprec;
+
+	private boolean output = false;
 
 	public SearchFiles(Analyzer a, boolean multi) {
 		analyzer = a;
 		multiField = multi;
+		aprec = 0;
+		arelprec = 0;
 	}
 
 	public void searchIndex(String queryString)
@@ -40,15 +46,18 @@ public class SearchFiles {
 		Directory indexDir = FSDirectory.open(new File(indexPath));
 		IndexReader reader = IndexReader.open(indexDir);
 		IndexSearcher searcher = new IndexSearcher(reader);
-		System.out.println("\nsearching for: " + queryString);
+		if (output)
+			System.out.println("\nsearching for: " + queryString);
 		TopDocs results = searcher.search(parser.parse(queryString), 100);
-		System.out.println("total hits: " + results.totalHits);
+		if (output)
+			System.out.println("total hits: " + results.totalHits);
 		int len = Math.min(10, results.totalHits);
 		String[][] score = new String[len][4];
 		int[] rel = new int[len];
 		float[] prec = new float[len];
 		int sum = 0;
 		float avgprec = 0;
+		float avgrelprec = 0;
 		for (int i = 0; i < len; i++) {
 			ScoreDoc hit = results.scoreDocs[i];
 			Document doc = searcher.doc(hit.doc);
@@ -59,17 +68,21 @@ public class SearchFiles {
 				score[i][2] = doc.get("sub-cat");
 			}
 			score[i][3] = doc.get("id");
-			if (Arrays.asList(queryRel).contains(doc.get("id"))) {
+			if (queryRel != null && Arrays.asList(queryRel).contains(doc.get("id"))) {
 				rel[i] = 1;
 				sum++;
 			} else
 				rel[i] = 0;
 			prec[i] = sum / (float) (i + 1);
+			avgprec += prec[i];
 			if (rel[i] == 1)
-				avgprec += prec[i];
+				avgrelprec += prec[i];
 		}
+		avgprec /= len;
 		if (sum > 0)
-			avgprec /= sum;
+			avgrelprec /= sum;
+		aprec = avgprec;
+		arelprec = avgrelprec;
 		if (cat_subcat) {
 			System.out.println("\nSorted by score (desc)");
 			sortArray(score, 0, false);
@@ -91,11 +104,14 @@ public class SearchFiles {
 						score[i][1], score[i][2], score[i][3]);
 		} else {
 			sortArray(score, 0, false);
-			System.out.println("Rank; Score; ID; Rel; Precision");
-			for (int i = 0; i < len; i++)
-				System.out.printf("%2d; %6.3f; %4s; %d; %5.3f\n", i + 1,
-						Float.parseFloat(score[i][0]), score[i][3], rel[i], prec[i]);
-			System.out.println("Avg Prec: " + avgprec);
+			if (output) {
+				System.out.println("Rank; Score; ID; Rel; Precision");
+				for (int i = 0; i < len; i++)
+					System.out.printf("%2d; %6.3f; %4s; %d; %5.3f\n", i + 1,
+							Float.parseFloat(score[i][0]), score[i][3], rel[i], prec[i]);
+				System.out.println("Avg Prec: " + avgprec);
+				System.out.println("Avg Rel Prec: " + avgrelprec);
+			}
 		}
 		searcher.close();
 		reader.close();
@@ -118,5 +134,13 @@ public class SearchFiles {
 
 	public void setQueryRels(String[] rels) {
 		queryRel = rels;
+	}
+
+	public float getAPrec() {
+		return aprec;
+	}
+
+	public float getARelPrec() {
+		return arelprec;
 	}
 }

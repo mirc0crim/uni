@@ -8,7 +8,7 @@ import org.tartarus.snowball.ext.PorterStemmer;
 
 public class Main {
 
-	public static TPs runTP = TPs.TP_8c;
+	public static TPs runTP = TPs.TP_8a;
 
 	public static void main(String[] args) throws IOException, ParseException {
 
@@ -63,6 +63,8 @@ public class Main {
 			String[] kws = new String[docs.length];
 			String[] tis = new String[docs.length];
 			String[] abs = new String[docs.length];
+			float map = 0;
+			float marp = 0;
 			for (int i = 1; i < docs.length; i++) {
 				String id = cp.parseID(docs[i]);
 				String kw = cp.parseKW(docs[i]).toLowerCase();
@@ -100,6 +102,7 @@ public class Main {
 					}
 				}
 			} else {
+				System.out.println("Avg Prec;Avg Rel Prec");
 				for (int i = 1; i < 11; i++) {
 					String qt = cp.parseQueryText(queries[i]).replace("\n", " ").trim();
 					qt = remSW(qt.toLowerCase(), sw);
@@ -109,7 +112,13 @@ public class Main {
 						qt = stemS(qt);
 					searcher7.setQueryRels(cp.relDocsForID(cp.parseID(queries[i])));
 					searcher7.searchIndex(qt);
+					map += searcher7.getAPrec();
+					marp += searcher7.getARelPrec();
+					System.out.println(searcher7.getAPrec() + ";" + searcher7.getARelPrec());
 				}
+				map /= 10;
+				marp /= 10;
+				System.out.println(map + ";" + marp);
 			}
 		}
 
