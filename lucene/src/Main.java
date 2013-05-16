@@ -4,8 +4,6 @@ import java.util.Arrays;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.ParseException;
-import org.tartarus.snowball.SnowballProgram;
-import org.tartarus.snowball.ext.GermanStemmer;
 import org.tartarus.snowball.ext.PorterStemmer;
 
 public class Main {
@@ -57,17 +55,6 @@ public class Main {
 			String[] docs = cp.parseDocsInArray();
 			SearchFiles searcher7 = new SearchFiles(att.standardAnalyzer, true);
 			System.out.println("Total " + (docs.length - 1));
-			SnowballProgram stemmer;
-			if (runTP == TPs.TP_7 || runTP == TPs.TP_8a) {
-				stemmer = null;
-				System.out.println("No Stemming");
-			} else if (runTP == TPs.TP_8b) {
-				stemmer = new PorterStemmer();
-				System.out.println("Porter Stemming");
-			} else {
-				stemmer = new GermanStemmer();
-				System.out.println("German Stemming");
-			}
 			for (final File f : new File(att.indexPath).listFiles())
 				if (!f.isDirectory())
 					f.delete();
@@ -84,10 +71,18 @@ public class Main {
 				if (kw.length() == 0 && ti.length() == 0 && ab.length() == 0) {
 					System.out.println("Empty Doc " + i);
 				}
-				if (runTP == TPs.TP_8b || runTP == TPs.TP_8c) {
-					kw = stem(stemmer, kw);
-					ti = stem(stemmer, ti);
-					ab = stem(stemmer, ab);
+				if (runTP == TPs.TP_8b) {
+					System.out.println("Porter Stemming");
+					kw = stemPorter(kw);
+					ti = stemPorter(ti);
+					ab = stemPorter(ab);
+				} else if (runTP == TPs.TP_8c) {
+					System.out.println("S Stemming");
+					kw = stemS(kw);
+					ti = stemS(ti);
+					ab = stemS(ab);
+				} else {
+					System.out.println("No Stemming");
 				}
 				ids[i] = id;
 				kws[i] = kw;
@@ -112,8 +107,10 @@ public class Main {
 				for (int i = 1; i < 11; i++) {
 					String qt = cp.parseQueryText(queries[i]).replace("\n", " ").trim();
 					qt = remSW(qt.toLowerCase(), sw);
-					if (runTP != TPs.TP_8a)
-						qt = stem(stemmer, qt);
+					if (runTP == TPs.TP_8b)
+						qt = stemPorter(qt);
+					if (runTP == TPs.TP_8c)
+						qt = stemS(qt);
 					searcher7.setQueryRels(cp.relDocsForID(cp.parseID(queries[i])));
 					searcher7.searchIndex(qt);
 				}
@@ -136,12 +133,48 @@ public class Main {
 		return s;
 	}
 
-	public static String stem(SnowballProgram stemmer, String s) {
+	public static String stemPorter(String s) {
 		String[] tokens = s.split(" ");
+		PorterStemmer stemmer = new PorterStemmer();
 		for (int i = 0; i < tokens.length; i++) {
 			stemmer.setCurrent(tokens[i]);
 			stemmer.stem();
 			tokens[i] = stemmer.getCurrent();
+		}
+		String out = "";
+		for (int j = 0; j < tokens.length; j++) {
+			out += tokens[j] + " ";
+		}
+		return out;
+	}
+
+	public static String stemS(String s) {
+		String[] tokens = s.split(" ");
+		for (int i = 0; i < tokens.length; i++) {
+			String input = tokens[i].trim();
+			if (input.length() < 5)
+				continue;
+			boolean iesEnd = input.substring(input.length() - 3, input.length()) == "ies";
+			boolean eiesEnd = input.substring(input.length() - 4, input.length()) == "eies";
+			boolean aiesEnd = input.substring(input.length() - 4, input.length()) == "aies";
+			if (iesEnd && !eiesEnd && !aiesEnd) {
+				tokens[i] = input.substring(input.length() - 3, input.length()) + "y";
+				continue;
+			}
+			boolean esEnd = input.substring(input.length() - 2, input.length()) == "es";
+			boolean aesEnd = input.substring(input.length() - 3, input.length()) == "aes";
+			boolean eesEnd = input.substring(input.length() - 3, input.length()) == "ees";
+			boolean oesEnd = input.substring(input.length() - 3, input.length()) == "oes";
+			if (esEnd && !aesEnd && !eesEnd && !oesEnd) {
+				tokens[i] = input.substring(input.length() - 2, input.length()) + "e";
+				continue;
+			}
+			boolean sEnd = input.substring(input.length() - 1, input.length()) == "s";
+			boolean usEnd = input.substring(input.length() - 2, input.length()) == "us";
+			boolean ssEnd = input.substring(input.length() - 2, input.length()) == "ss";
+			if (sEnd && !usEnd && !ssEnd) {
+				tokens[i] = input.substring(input.length() - 1, input.length());
+			}
 		}
 		String out = "";
 		for (int j = 0; j < tokens.length; j++) {
