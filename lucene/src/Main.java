@@ -8,7 +8,7 @@ import org.tartarus.snowball.ext.PorterStemmer;
 
 public class Main {
 
-	public static TPs runTP = TPs.TP_8a;
+	public static TPs runTP = TPs.TP_8c;
 
 	public static void main(String[] args) throws IOException, ParseException {
 
@@ -72,17 +72,13 @@ public class Main {
 					System.out.println("Empty Doc " + i);
 				}
 				if (runTP == TPs.TP_8b) {
-					System.out.println("Porter Stemming");
 					kw = stemPorter(kw);
 					ti = stemPorter(ti);
 					ab = stemPorter(ab);
 				} else if (runTP == TPs.TP_8c) {
-					System.out.println("S Stemming");
 					kw = stemS(kw);
 					ti = stemS(ti);
 					ab = stemS(ab);
-				} else {
-					System.out.println("No Stemming");
 				}
 				ids[i] = id;
 				kws[i] = kw;
@@ -154,26 +150,26 @@ public class Main {
 			String input = tokens[i].trim();
 			if (input.length() < 5)
 				continue;
-			boolean iesEnd = input.substring(input.length() - 3, input.length()) == "ies";
-			boolean eiesEnd = input.substring(input.length() - 4, input.length()) == "eies";
-			boolean aiesEnd = input.substring(input.length() - 4, input.length()) == "aies";
+			boolean iesEnd = input.substring(input.length() - 3, input.length()).equals("ies");
+			boolean eiesEnd = input.substring(input.length() - 4, input.length()).equals("eies");
+			boolean aiesEnd = input.substring(input.length() - 4, input.length()).equals("aies");
 			if (iesEnd && !eiesEnd && !aiesEnd) {
-				tokens[i] = input.substring(input.length() - 3, input.length()) + "y";
+				tokens[i] = input.substring(0, input.length() - 3) + "y";
 				continue;
 			}
-			boolean esEnd = input.substring(input.length() - 2, input.length()) == "es";
-			boolean aesEnd = input.substring(input.length() - 3, input.length()) == "aes";
-			boolean eesEnd = input.substring(input.length() - 3, input.length()) == "ees";
-			boolean oesEnd = input.substring(input.length() - 3, input.length()) == "oes";
+			boolean esEnd = input.substring(input.length() - 2, input.length()).equals("es");
+			boolean aesEnd = input.substring(input.length() - 3, input.length()).equals("aes");
+			boolean eesEnd = input.substring(input.length() - 3, input.length()).equals("ees");
+			boolean oesEnd = input.substring(input.length() - 3, input.length()).equals("oes");
 			if (esEnd && !aesEnd && !eesEnd && !oesEnd) {
-				tokens[i] = input.substring(input.length() - 2, input.length()) + "e";
+				tokens[i] = input.substring(0, input.length() - 2) + "e";
 				continue;
 			}
-			boolean sEnd = input.substring(input.length() - 1, input.length()) == "s";
-			boolean usEnd = input.substring(input.length() - 2, input.length()) == "us";
-			boolean ssEnd = input.substring(input.length() - 2, input.length()) == "ss";
+			boolean sEnd = input.substring(input.length() - 1, input.length()).equals("s");
+			boolean usEnd = input.substring(input.length() - 2, input.length()).equals("us");
+			boolean ssEnd = input.substring(input.length() - 2, input.length()).equals("ss");
 			if (sEnd && !usEnd && !ssEnd) {
-				tokens[i] = input.substring(input.length() - 1, input.length());
+				tokens[i] = input.substring(0, input.length() - 1);
 			}
 		}
 		String out = "";

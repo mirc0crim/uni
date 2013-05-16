@@ -48,6 +48,7 @@ public class SearchFiles {
 		int[] rel = new int[len];
 		float[] prec = new float[len];
 		int sum = 0;
+		float avgprec = 0;
 		for (int i = 0; i < len; i++) {
 			ScoreDoc hit = results.scoreDocs[i];
 			Document doc = searcher.doc(hit.doc);
@@ -64,7 +65,11 @@ public class SearchFiles {
 			} else
 				rel[i] = 0;
 			prec[i] = sum / (float) (i + 1);
+			if (rel[i] == 1)
+				avgprec += prec[i];
 		}
+		if (sum > 0)
+			avgprec /= sum;
 		if (cat_subcat) {
 			System.out.println("\nSorted by score (desc)");
 			sortArray(score, 0, false);
@@ -90,6 +95,7 @@ public class SearchFiles {
 			for (int i = 0; i < len; i++)
 				System.out.printf("%2d; %6.3f; %4s; %d; %5.3f\n", i + 1,
 						Float.parseFloat(score[i][0]), score[i][3], rel[i], prec[i]);
+			System.out.println("Avg Prec: " + avgprec);
 		}
 		searcher.close();
 		reader.close();
