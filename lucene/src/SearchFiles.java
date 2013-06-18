@@ -25,7 +25,7 @@ public class SearchFiles {
 	private float aprec;
 	private float arelprec;
 
-	private boolean output = false;
+	private boolean output = true;
 
 	public SearchFiles(Analyzer a, boolean multi) {
 		analyzer = a;

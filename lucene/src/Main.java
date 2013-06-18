@@ -102,7 +102,7 @@ public class Main {
 					}
 				}
 			} else {
-				System.out.println("Avg Prec;Avg Rel Prec");
+				// System.out.println("Avg Prec;Avg Rel Prec");
 				for (int i = 1; i < 11; i++) {
 					String qt = cp.parseQueryText(queries[i]).replace("\n", " ").trim();
 					qt = remSW(qt.toLowerCase(), sw);
@@ -114,11 +114,12 @@ public class Main {
 					searcher7.searchIndex(qt);
 					map += searcher7.getAPrec();
 					marp += searcher7.getARelPrec();
-					System.out.println(searcher7.getAPrec() + ";" + searcher7.getARelPrec());
+					// System.out.println(searcher7.getAPrec() + ";" + searcher7.getARelPrec());
 				}
 				map /= 10;
 				marp /= 10;
-				System.out.println(map + ";" + marp);
+				System.out.println("\nMean Avg Prec " + marp);
+				System.out.println("Mean Avg Rel Prec " + marp);
 			}
 		}
 
