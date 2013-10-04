@@ -1,5 +1,10 @@
 % Mirco Kocher
 % 09-113-739
+
+clear all;
+close all;
+clc;
+
 im = imread('colorful.jpg');
 imGray = rgb2gray(im);
 figure;
@@ -36,4 +41,4 @@ imRandGray(find(imRandGray > 255)) = 255;
 imRandGray(find(imRandGray < 0)) = 0;
 subplot(2,4,7);
 imshow(uint8(imRandGray));
-title(sprintf('Random Grayscale r = %i', r))
+title(sprintf('Grayscale %+i', r))
