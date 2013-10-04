@@ -2,7 +2,7 @@ clear all;
 close all;
 clc;
 format long;
-N = 100000;
+N = 10^6;
 t = 100;
 A = rand(N,2,t); % N points of (x,y) and t times
 C = A(:,1,:).*A(:,1,:) + A(:,2,:).*A(:,2,:); % x^2 + y^2
