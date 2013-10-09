@@ -1,0 +1,30 @@
+% The Restaurant Problem
+
+@RELATION restaurant
+
+@ATTRIBUTE Alternate	{T,F}
+@ATTRIBUTE Bar 	{T,F}
+@ATTRIBUTE FriSat 	{T,F}
+@ATTRIBUTE Hungry	{T,F}
+@ATTRIBUTE Patrons 	{Some, Full, None}
+@ATTRIBUTE Price 	NUMERIC
+@ATTRIBUTE Raining	{T,F}
+@ATTRIBUTE Reservation 	{T,F}
+@ATTRIBUTE Type 	{French, Thai, Burger, Italian}
+@ATTRIBUTE WaitEstimate	NUMERIC % where 0 = '0-10'; 10 = '10-30'; 30 = '30-60'; 60 = '>60'
+@ATTRIBUTE class 	{T,F}
+
+@DATA
+T,F,F,T,Some,3,F,T,French,10,T
+T,F,F,T,Full,1,F,F,Thai,30,F
+F,T,F,F,Some,1,F,F,Burger,0,T
+T,F,T,T,Full,1,F,F,Thai,10,T
+T,F,T,F,Full,3,F,T,French,60,F
+F,T,F,T,Some,2,T,T,Italian,0,T
+F,T,F,F,None,1,T,F,Burger,0,F
+F,F,F,T,Some,2,T,T,Thai,0,T
+F,T,T,F,Full,1,T,F,Burger,60,F
+T,T,T,T,Full,3,F,T,Italian,10,F
+F,F,F,F,None,1,F,F,Thai,0,F
+T,T,T,T,Full,1,F,F,Burger,30,T
+%
