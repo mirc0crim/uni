@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="stylesheet.css"/>
+		<title>My Page</title>
+	</head>
+	<body>
+		<div id="header">
+			<p id="name">Project Social Computing</p>
+			<a href="/useraccount.html"><p id="useraccount">User Account</p></a>
+		</div>
+		<div class="left">
+			<h4>Open Accepted Jobs:</h4>
+			<a href="/task.php?jobid=22"><p>Job 22</p></a>
+			<a href="/task.php?jobid=7"><p>Job 7</p></a>
+		</div>
+		<div class="right">
+			<h4>Jobs available:</h4>
+			<a href="/task.php?jobid=1"><div class="jobentry">
+				<p>Job 1</p>
+				<p>Description of first task</p>
+				<p>$4.00</p>
+			</div></a>
+			<a href="/task.php?jobid=25"><div class="jobentry">
+				<p>Job 25</p>
+				<p>Short description of another task</p>
+				<p>$2.50</p>
+			</div></a>
+			<a href="/task.php?jobid=43"><div class="jobentry">
+				<p>Job 43</p>
+				<p>Description of yet another task</p>
+				<p>$10.00</p>
+			</div></a>
+			<a href="/task.php?jobid=42"><div class="jobentry">
+				<p>Job 42</p>
+				<p>Answer to the Ultimate Question of Life, the Universe, and Everything</p>
+				<p>$1.00</p>
+			</div></a>
+			<a href="/task.php?jobid=7"><div class="jobentry">
+				<p>Job 5</p>
+				<p>Description of fifth task</p>
+				<p>$7.00</p>
+			</div></a>
+		</div>
+		<?php include('footer.php') ?>
+	</body>
+</html>
