@@ -1,0 +1,31 @@
+Fix problemset08 for next week
+
+You did implement the GUI which is okey and you did make good sketches and even a
+usability test (although you should rename the files to make clear where to find what^^)
+But you missed a part of the task: Then, choose your favorite design, and explain in a sentence, why you chose it.
+
+Please add a file and describe why you choose your favorite design
+
+	-> done, added the file favorite-design-description.txt
+
+And fix problemset09
+
+The following thins are missing:
+
+-You did not explain the overall architecture similar to the cook's tour's explanation
+	-> done, added the file primordialsoup-cooks-tour-pattern-density-group04-2011.pdf
+
+-You **must** have at least one test class per non-GUI class,
+	and there should be two to twelve test methods per class that exercise concrete examples of the unit's usage.
+	some of the tests throw assertion errors but you have enough classes
+	-> done, everything green now
+
+-External resources **must** be separated from actual code, such that code can be tested in isolation. -> ok
+	You **must** make sure that no class is hardwired to use an external resource. -> ok
+	You **can** use the "Guice" framework to isolate external resources such as time sources, console output, random generators, files etc
+	-> We don't need time sources or console output and the only test for random generators is enough abstracted and tests its range.
+		Don't thing it's a good idea to mock a random number and check if it is in the expected range :D
+
+-Non-private methods that are used by tests only **must** be marked as such. Use the `ForTestingOnly` annotation to mark such methods.
+	-> done, I only found 2 such methods
+

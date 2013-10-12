@@ -1,0 +1,2 @@
+Reason why we chose our favorite design:
+This design is clearly arranged especially whose leading and whose turn it is and what that player has to decide. The amoeba board isn't the clearest, but it's the easiest to implement, because it looks like our ASCII-Graphic.
