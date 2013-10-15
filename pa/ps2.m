@@ -15,4 +15,4 @@ for i = r
     end
 end
 C = [0,0,1;1,0,0;0,1,0;0,0,0];
-imshow(Z,C)
+imwrite(Z,C, 'ps2.png');
