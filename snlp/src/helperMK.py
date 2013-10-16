@@ -12,23 +12,20 @@ def readFile(fileName):
     return s.lower()
 
 def authorArray(text):
-    s1 = ""
-    s2 = ""
-    s3 = ""
-    s4 = ""
+    s = [[],[],[],[]]
     m = re.findall("<DOCNO>.*?PUBLIUS", text, di)
     for i in range(len(m)):
         if re.findall("<AUTHOR> Alexander Hamilton </", m[i], di):
-            s1 += m[i]
+            s[0].append(m[i])
         elif re.findall("<AUTHOR> James Madison </", m[i], di):
-            s2 += m[i]
+            s[1].append(m[i])
         elif re.findall("<AUTHOR> John Jay </", m[i], di):
-            s3 += m[i]
+            s[2].append(m[i])
         else:
-            s4 += m[i]
-    if len(s4) <> 0:
-        print s4
-    return [s1,s2,s3,s4]
+            s[3].append(m[i])
+    if len(s[3]) <> 0:
+        print s[3]
+    return s
 
 def extractText(text):
     rep = ["DOCNO", "DOCID", "AUTHOR", "TITLE", "SOURCE"]
