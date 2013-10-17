@@ -7,6 +7,8 @@ fedTrainPath = "D:\\uni\\snlp\\FederalistTraining.txt"
 fedTestPath = "D:\\uni\\snlp\\FederalistTestAll.txt"
 outputPath = "D:\\uni\\snlp\\output\\"
 names = ["Hamilton Train:", "Madison Train:", "Jay Train:"]
+punctMarks = ["?","!",".",";",":",","]
+fPersPron = ["i","me","my","mine","we","us","our","ours"]
 
 print "Path to Train Set", fedTrainPath
 print "Path to Test Set", fedTestPath
@@ -19,19 +21,28 @@ test = helperMK.readFile(fedTestPath)
 feature = [[[],[],[]], [[],[],[]], [[],[],[]]]
 for i in range(len(names)):
     print names[i]
-    n1 = 0.0
-    n2 = 0.0
-    d = helperMK.getAZDict(string.lowercase)
+    numToken = 0.0
+    numTypes = 0.0
+    punct = 0.0
+    pron = 0.0
+    dictCount = helperMK.getAZDict(string.lowercase)
     chars = 0.0
-    for j in range(len(train[i])):
+    docSize = len(train[i])
+    for j in range(docSize):
         train[i][j] = helperMK.extractText(train[i][j])
-        n1 += helperMK.getNumberOfToken(train[i][j])
-        n2 += helperMK.getNumberOfWordTypes(train[i][j])
+        numToken += helperMK.getNumberOfToken(train[i][j])
+        numTypes += helperMK.getNumberOfWordTypes(train[i][j])
         currDict = helperMK.getAZDict(train[i][j])
         for e in string.lowercase:
-            d[e] = d[e] + currDict[e]
-        chars += len(train[i][j])
+            dictCount[e] = dictCount[e] + currDict[e]
+        punct += sum([train[i][j].count(x) for x in punctMarks]) #make 6 dim vector
+        pron += sum([train[i][j].count(x) for x in fPersPron])
+        chars += sum(currDict.values())
     for e in string.lowercase:
-        d[e] = d[e] / chars * 26
-    feature[i] = [n1/len(train[i]), n2/len(train[i]), d.values()]
+        dictCount[e] /= chars / 26
+    numToken /= docSize
+    numTypes /= docSize
+    punct /= docSize
+    pron /= docSize * numToken
+    feature[i] = [numToken, numTypes, dictCount.values(), punct, pron]
     print feature[i]
