@@ -16,16 +16,34 @@ function [L] = fitChromeSphere(chromeDir, nDir, chatty)
     chatty = false;
   end
     
-  mask = ppmRead([chromeDir, 'chrome.mask.ppm']);
+  mask = imread([chromeDir, 'chrome.mask.png']);
   mask = mask(:,:,1) / 255.0;
 
   for n=1:nDir
-    fname = [chromeDir,'chrome.',num2str(n-1),'.ppm'];
-    im = ppmRead(fname);
-    imData(:,:,n) = im(:,:,1);           % red channel
+    fname = [chromeDir,'chrome.',num2str(n-1),'.png'];
+    img = imread(fname);
+    imData(:,:,n) = img(:,:,1);           % red channel
   end
 
   % YOU NEED TO COMPLETE THIS FUNCTION
-
+  
+  [circleRow circleCol] = find(mask == 1);
+  center = [(max(circleCol) + min(circleCol))/2, (max(circleRow) + min(circleRow))/2];
+  radius = (max(circleRow) - min(circleRow))/2;
+  
+  L = zeros(3, nDir);
+  r = [0,0,-1.0];
+  for i = 1:nDir
+      img = imData(:,:,i);
+      [pntsRow, pntsCol] = find(img == 255);
+      xPoint = sum(pntsCol)/double(size(pntsCol, 1));
+      yPoint = sum(pntsRow)/double(size(pntsRow, 1));
+      xNormal = xPoint - center(1);
+      yNormal = yPoint - center(2);
+      zNormal = -sqrt(radius^2 - xNormal^2 - yNormal^2);
+      n = [xNormal, yNormal, zNormal]/radius;
+      nr = n * r';
+      L(:,i) = 2*nr*n - r;
+  end
   return;
 
