@@ -11,7 +11,18 @@ function [n, albedo] = fitReflectance(im, L)
     
 
   % YOU NEED TO COMPLETE THIS
-
-  return;
-
-
+  
+  % a(x)(n(x)*L) = I(x)
+  [rows, cols, dirs] = size(im);
+  n = zeros(rows, cols, 3);
+  albedo = zeros(rows, cols);
+  ps = pinv(L)';
+  for i = 1:rows
+      for j = 1:cols
+          n_snake = ps*reshape(im(i,j,:), dirs, 1);
+          albedo(i,j,:) = norm(n_snake);
+          n(i,j,:) = n_snake/albedo(i,j,:);
+      end
+  end
+  albedo = albedo/max(max(albedo));
+return;
