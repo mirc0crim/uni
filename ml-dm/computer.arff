@@ -1,0 +1,26 @@
+% The Restaurant Problem
+
+@RELATION restaurant
+
+@ATTRIBUTE Age	{Youth,Middle-aged,Senior}
+@ATTRIBUTE Income 	{High,Medium,Low}
+@ATTRIBUTE Student 	{No,Yes}
+@ATTRIBUTE Credit_rating	{Fair,Excellent}
+@ATTRIBUTE Buys_computer 	{No,Yes}
+
+@DATA
+Youth,High,No,Fair,No
+Youth,High,No,Excellent,No
+Middle-aged,High,No,Fair,Yes
+Senior,Medium,No,Fair,Yes
+Senior,Low,Yes,Fair,Yes
+Senior,Low,Yes,Excellent,No
+Middle-aged,Low,Yes,Excellent,Yes
+Youth,Medium,No,Fair,No
+Youth,Low,Yes,Fair,Yes
+Senior,Medium,Yes,Fair,Yes
+Youth,Medium,Yes,Excellent,Yes
+Middle-aged,Medium,No,Excellent,Yes
+Middle-aged,High,Yes,Fair,Yes
+Senior,Medium,No,Excellent,No
+%

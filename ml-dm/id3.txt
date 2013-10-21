@@ -1,0 +1,53 @@
+=== Run information ===
+
+Scheme:weka.classifiers.trees.Id3 
+Relation:     restaurant
+Instances:    14
+Attributes:   5
+              Age
+              Income
+              Student
+              Credit_rating
+              Buys_computer
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+Id3
+
+
+Age = Youth
+|  Student = No: No
+|  Student = Yes: Yes
+Age = Middle-aged: Yes
+Age = Senior
+|  Credit_rating = Fair: Yes
+|  Credit_rating = Excellent: No
+
+Time taken to build model: 0 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances          12               85.7143 %
+Incorrectly Classified Instances         2               14.2857 %
+Kappa statistic                          0.6889
+Mean absolute error                      0.1429
+Root mean squared error                  0.378 
+Relative absolute error                 30      %
+Root relative squared error             76.6097 %
+Total Number of Instances               14     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.8       0.111      0.8       0.8       0.8        0.844    No
+                 0.889     0.2        0.889     0.889     0.889      0.844    Yes
+Weighted Avg.    0.857     0.168      0.857     0.857     0.857      0.844
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 4 1 | a = No
+ 1 8 | b = Yes
+
