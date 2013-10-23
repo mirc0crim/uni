@@ -11,7 +11,10 @@ function [depth] = getDepthFromNormals(n, mask)
   %          orthogonal to the normals n (in the least
   %          squares sense).
   %
-  imsize = size(mask);
+  [rows, cols] = size(mask);
   
-
   % YOU NEED TO COMPLETE THIS.
+  depth = [];
+  
+  
+return

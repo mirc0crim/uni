@@ -14,14 +14,12 @@ function [n, albedo] = fitReflectance(im, L)
   
   % a(x)(n(x)*L) = I(x)
   [rows, cols, dirs] = size(im);
-  n = zeros(rows, cols, 3);
-  albedo = zeros(rows, cols);
-  for i = 1:rows
-      for j = 1:cols %Vectorize this
-          n_snake = L'\reshape(im(i,j,:), dirs, 1);
-          albedo(i,j,:) = norm(n_snake);
-          n(i,j,:) = n_snake/albedo(i,j,:);
-      end
-  end
+  n_hat = L'\reshape(im,rows*cols,dirs)';
+  n_hat_sqr = n_hat.^2;
+  albedoVect = sqrt(n_hat_sqr(1,:)+n_hat_sqr(2,:)+n_hat_sqr(3,:));
+  nVect = n_hat./[albedoVect; albedoVect; albedoVect];
+  albedo = reshape(albedoVect, rows, cols);
   albedo = albedo/max(max(albedo));
+  n = reshape(nVect', rows, cols, 3);
+  
 return;
