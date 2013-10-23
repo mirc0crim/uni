@@ -16,10 +16,9 @@ function [n, albedo] = fitReflectance(im, L)
   [rows, cols, dirs] = size(im);
   n = zeros(rows, cols, 3);
   albedo = zeros(rows, cols);
-  ps = pinv(L)';
   for i = 1:rows
-      for j = 1:cols
-          n_snake = ps*reshape(im(i,j,:), dirs, 1);
+      for j = 1:cols %Vectorize this
+          n_snake = L'\reshape(im(i,j,:), dirs, 1);
           albedo(i,j,:) = norm(n_snake);
           n(i,j,:) = n_snake/albedo(i,j,:);
       end
