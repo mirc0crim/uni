@@ -35,6 +35,8 @@ for i=1:imgDim(1)
 end
 
 depthmap = getDepthFromNormals(n, mask);
+depthmap = depthmap + abs(min(min(depthmap)));
+depthmap = depthmap/max(max(depthmap));
 
 toc
 subplot(2,2,1);
@@ -44,4 +46,4 @@ imshow(albedoGray);
 subplot(2,2,3);
 imshow(albedoColor);
 subplot(2,2,4);
-imshow(depthmap);
+imshow(1-depthmap);
