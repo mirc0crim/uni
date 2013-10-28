@@ -1,9 +1,4 @@
 function [L, A, b] = simplex(L, A, b)
-    % TODO:
-    % Vectorize all of that
-    % keep track of interchanged index
-    % return correct values if d >= 0
-    % catch inf cycle
     arrayDim = size(A);
     ind = zeros(1,arrayDim(1)+arrayDim(2));
     for i = 1:arrayDim(1)+arrayDim(2)
@@ -38,8 +33,6 @@ function [L, A, b] = simplex(L, A, b)
         pos = simplexTable(1:arrayDim(1),s);
         pos(pos < 0) = 0;
         [~, r] = min(simplexTable(1:arrayDim(1),arrayDim(2)+1)./pos);
-        %disp(['s=',num2str(s)])
-        %disp(['r=',num2str(r)])
         tempTable = simplexTable;
         for i = 1:arrayDim(1)
             for j = 1:arrayDim(2)
@@ -57,23 +50,22 @@ function [L, A, b] = simplex(L, A, b)
                 end
             end
         end
-        for i = 1:arrayDim(1)
-            if i == r
-                tempTable(i,arrayDim(2)+1) = simplexTable(r,arrayDim(2)+1)/simplexTable(r,s);
-            end
-            if i ~= r
-                tempTable(i,arrayDim(2)+1) = simplexTable(i,arrayDim(2)+1) - simplexTable(r,arrayDim(2)+1)*simplexTable(i,s)/simplexTable(r,s);
-            end
-        end
-        for j = 1:arrayDim(2)
-            if j == s
-                tempTable(arrayDim(1)+1,j) = -simplexTable(arrayDim(1)+1,j)/simplexTable(r,s);
-            end
-            if j ~= s
-                tempTable(arrayDim(1)+1,j) = simplexTable(arrayDim(1)+1,j) - simplexTable(arrayDim(1)+1,s)*simplexTable(r,j)/simplexTable(r,s);
-            end
-        end
-        tempTable(arrayDim(1)+1,arrayDim(2)+1) = simplexTable(arrayDim(1)+1,arrayDim(2)+1) + simplexTable(arrayDim(1)+1,s)*simplexTable(r,arrayDim(2)+1)/simplexTable(r,s);
+        % update b
+        ais = simplexTable(:,s);
+        ars = simplexTable(r,s);
+        br = simplexTable(r,arrayDim(2)+1);
+        bi = simplexTable(:,arrayDim(2)+1);
+        tempTable(:,arrayDim(2)+1) = (bi - (br*ais)/ars)';
+        tempTable(r,arrayDim(2)+1) = br/ars;
+        % update d
+        arj = simplexTable(r,:);
+        ds = simplexTable(arrayDim(1)+1,s);
+        dj = simplexTable(arrayDim(1)+1,:);
+        tempTable(arrayDim(1)+1,:) = dj - (ds * arj)/ars;
+        tempTable(arrayDim(1)+1,s) = -ds/ars;
+        % update v
+        tempTable(arrayDim(1)+1,arrayDim(2)+1) = simplexTable(arrayDim(1)+1,arrayDim(2)+1) + ds*br/ars;
+        
         simplexTable = tempTable;
         L = simplexTable(arrayDim(1)+1,:);
         A = simplexTable(1:arrayDim(1),1:arrayDim(2));
