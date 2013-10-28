@@ -25,7 +25,7 @@ end
 
 albedoColor = zeros(imgDim(1),imgDim(2),imgDim(3));
 for i=1:imgDim(1)
-    for j=1:imgDim(2) %Vectorize this
+    for j=1:imgDim(2) %Vectorize this?
         if mask(i,j) == 1
             col = reshape(I(i,j,:,:), 3, []);
             nor = reshape(n(i,j,:), [], 3);
@@ -35,6 +35,7 @@ for i=1:imgDim(1)
 end
 
 depthmap = getDepthFromNormals(n, mask);
+
 toc
 subplot(2,2,1);
 imshow(abs(n));

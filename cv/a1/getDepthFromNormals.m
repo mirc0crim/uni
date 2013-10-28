@@ -15,6 +15,15 @@ function [depth] = getDepthFromNormals(n, mask)
   
   % YOU NEED TO COMPLETE THIS.
   depth = [];
-  
-  
+  v = [];
+  for x = 1:rows
+      for y = 1:cols
+          if mask(x,y)==1
+              % do stuff
+          end
+      end
+  end
+  A = sparse();
+  zVec = A\v;
+  depth = reshape(zVec, rows, cols);
 return
