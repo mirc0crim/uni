@@ -6,7 +6,7 @@ clc;
 tic
 % Put your code here
 nDir = 12;
-pic = 'cat';
+pic = 'horse';
 L = getLightDir(1, 'Images/chrome/', nDir, false);
 imgDim = size(imread(['Images/',pic,'/',pic,'.mask.png']));
 imgGray = zeros(imgDim(1),imgDim(2),nDir);
@@ -36,11 +36,7 @@ end
 
 depthmap = getDepthFromNormals(n, mask);
 toc
-subplot(2,2,1);
-imshow(abs(n));
-subplot(2,2,2);
-imshow(albedoGray);
-subplot(2,2,3);
-imshow(albedoColor);
-subplot(2,2,4);
-imshow(depthmap);
+imwrite(abs(n), ['output/',pic,'-normal.png']);
+imwrite(albedoGray, ['output/',pic,'-albedoGray.png']);
+imwrite(albedoColor, ['output/',pic,'-albedoColor.png']);
+imwrite(depthmap, ['output/',pic,'-depth.png']);

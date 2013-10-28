@@ -36,6 +36,7 @@ function [depth] = getDepthFromNormals(n, mask)
           end
       end
   end
+  warning('off','MATLAB:rankDeficientMatrix');
   zVec = A\v;
   depth = reshape(zVec, M, N);
   depth = depth + abs(min(min(depth)));
