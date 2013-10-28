@@ -36,12 +36,15 @@ function [L] = fitChromeSphere(chromeDir, nDir, chatty)
   for i = 1:nDir
       img = imData(:,:,i);
       [pntsRow, pntsCol] = find(img == 255);
+      % average refectance coordinates
       xPoint = sum(pntsCol)/double(size(pntsCol, 1));
       yPoint = sum(pntsRow)/double(size(pntsRow, 1));
       xNormal = xPoint - center(1);
       yNormal = yPoint - center(2); 
+      % r^2 = x^2 + y^2 + z^2
       zNormal = -sqrt(radius^2 - xNormal^2 - yNormal^2);
       n = [xNormal, yNormal, zNormal]/radius;
+      % perfect mirror reflectance
       nr = n * r';
       L(:,i) = 2*nr*n - r;
   end

@@ -25,10 +25,12 @@ function [depth] = getDepthFromNormals(n, mask)
               r = (j-1)*M+i;
               c = r;
               % horizontal
+              % -Nx = Nz(Zx+1y -Zxy)
               A(r,c) = -nz;
               A(r,c+M) = nz;
               v(r) = -nx;
               % vertical
+              % -Ny = Nz(Zxy+1 -Zxy)
               r = M*N + r;
               A(r,c) = -nz;
               A(r,c+1) = nz;
@@ -36,10 +38,14 @@ function [depth] = getDepthFromNormals(n, mask)
           end
       end
   end
+  % Az = v
+  % z = A^-1 v
   warning('off','MATLAB:rankDeficientMatrix');
   zVec = A\v;
   depth = reshape(zVec, M, N);
+  % no negative
   depth = depth + abs(min(min(depth)));
+  % range [0,1]
   depth = depth/max(max(depth));
   depth = 1-depth;
   depth(mask==0) = 0;
