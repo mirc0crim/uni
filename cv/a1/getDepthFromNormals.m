@@ -11,30 +11,35 @@ function [depth] = getDepthFromNormals(n, mask)
   %          orthogonal to the normals n (in the least
   %          squares sense).
   %
-  [rows, cols] = size(mask);
+  [M, N] = size(mask);
   
   % YOU NEED TO COMPLETE THIS.
-  depth = [];
-  A = sparse(2*rows*cols, rows*cols);
-  v = zeros(2*rows*cols, 1);
-  myIndex = 1;
-  for i = 1:rows
-      for j = 1:cols
+  A = sparse(2*M*N, M*N);
+  v = zeros(2*M*N, 1);
+  for j = 1:N
+      for i = 1:M
           if mask(i,j)==1
               nx = n(i,j,1);
               ny = n(i,j,2);
               nz = n(i,j,3);
-              A(myIndex, (i-1)*rows+j+1) = 1;
-              A(myIndex, (i-1)*rows+j) = 0;
-              v(myIndex) = nx/nz;
-              myIndex = myIndex + 1;
-              A(myIndex, (i-1)*rows+j) = 0;
-              A(myIndex, i*rows+j) = 1;
-              v(myIndex) = ny/nz;
-              myIndex = myIndex + 1;
+              r = (j-1)*M+i;
+              c = r;
+              % horizontal
+              A(r,c) = -nz;
+              A(r,c+M) = nz;
+              v(r) = -nx;
+              % vertical
+              r = M*N + r;
+              A(r,c) = -nz;
+              A(r,c+1) = nz;
+              v(r) = -ny;
           end
       end
   end
   zVec = A\v;
-  depth = reshape(zVec, rows, cols);
+  depth = reshape(zVec, M, N);
+  depth = depth + abs(min(min(depth)));
+  depth = depth/max(max(depth));
+  depth = 1-depth;
+  depth(mask==0) = 0;
 return

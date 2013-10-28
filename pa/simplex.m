@@ -34,6 +34,7 @@ function [L, A, b] = simplex(L, A, b)
         pos(pos < 0) = 0;
         [~, r] = min(simplexTable(1:arrayDim(1),arrayDim(2)+1)./pos);
         tempTable = simplexTable;
+        % update A
         for i = 1:arrayDim(1)
             for j = 1:arrayDim(2)
                 if i ~= r && j ~= s
