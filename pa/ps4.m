@@ -3,16 +3,25 @@ function opt = ps4()
     close All;
     clc;
     % Step 0 initialization
-    theta = [1,2;3,2;0.25,0.5]
+    p = 4;
+    theta = zeros(p+1, p);
+    for i = 1:p+1
+        t = zeros(p,1);
+        for j = 1:p
+            t(j) = rand(1)*10;
+        end
+        theta(i,:) = t;
+    end
+    theta
     counter = 1;
-    while counter < 20
+    while counter < 1000
         counter = counter + 1;
         results = zeros(length(theta),1);
         for i = 1:length(theta)
             results(i) = L(theta(i,:));
         end
         [theta, thetaNoMax, thetaCent, thetaRefl, tmaxindex, tminindex, improved] = step1(theta, results);
-        if norm(theta(tmaxindex,:) - theta(tminindex,:)) < 1
+        if L(theta(tminindex,:)) < 1
             break;
         end
         if improved == false
