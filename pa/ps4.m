@@ -15,19 +15,56 @@ function opt = ps4()
     % Step 1 Reflection
     [thetaMax, tmaxindex] = max(results);
     if length(find(results==thetaMax)) > 1
-        thetaMax2 = thetaMax;
         tmax2index = tmaxindex;
     else
-        [thetaMax2, tmax2index] = max(results(results ~= thetaMax));
+        [~, tmax2index] = max(results(results ~= thetaMax));
     end
-    [thetaMin, tminindex] = min(results);
+    [~, tminindex] = min(results);
     thetaNoMax = [theta(1:tmaxindex-1,:); theta(tmaxindex+1:end,:)];
     thetaCent = sum(thetaNoMax)/length(thetaNoMax);
-    thetaRefl = (1+alpha)*thetaCent - alpha*theta(tmaxindex);
+    thetaRefl = (1+alpha)*thetaCent - alpha*theta(tmaxindex,:);
     % Step 1a Accept Reflection
     if L(theta(tminindex,:)) <= L(thetaRefl) && L(thetaRefl) <= L(theta(tmax2index,:))
-        disp('accepted')
+        theta = [thetaNoMax; thetaRefl];
+        %goto step 5
     end
+    % Step 2 Expansion
+    if L(thetaRefl) < L(theta(tminindex,:))
+        thetaExp = gamma*thetaRefl + (1-gamma)*thetaCent;
+        % Step 2a Check expansion
+        if L(thetaExp) < L(thetaRefl)
+            theta = [thetaNoMax; thetaExp];
+            % goto step 5
+        else
+            theta = [thetaNoMax; thetaRefl];
+        end
+    end
+    % Step 3 Contraction
+    if L(thetaRefl) < L(theta(tmaxindex,:))
+        % outside
+        thetaCont = beta*thetaRefl + (1-beta)*thetaCent;
+        if L(thetaCont) < L(thetaRefl)
+            theta = [thetaNoMax; thetaCont];
+            % goto step 5
+        end
+    end
+    if L(thetaRefl) >= L(theta(tmaxindex,:))
+        % inside
+        thetaCont = beta*theta(tmaxindex,:) + (1-beta)*thetaCent;
+        if L(thetaCont) < L(theta(tmaxindex,:))
+            theta = [thetaNoMax; thetaCont];
+            % goto step 5
+        end
+    end
+    % Step 4 Shrink
+    for i = 1:length(theta)
+        if i ~= tminindex
+            theta(i,:) = delta*theta(i,:) + (1-delta)*theta(tminindex,:);
+        end
+    end
+    % Step 5
+    % stop if conv criterion met or max func call met
+    % else go to step 1
 end
 
 function r = L(theta)
