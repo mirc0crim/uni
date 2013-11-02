@@ -3,16 +3,35 @@ function opt = ps4()
     close All;
     clc;
     % Step 0 initialization
-    theta = [1,2;3,2;0.25,0.5];
-    results = zeros(length(theta),1);
-    for i = 1:length(theta)
-        results(i) = L(theta(i,:));
+    theta = [1,2;3,2;0.25,0.5]
+    counter = 1;
+    while counter < 20
+        counter = counter + 1;
+        results = zeros(length(theta),1);
+        for i = 1:length(theta)
+            results(i) = L(theta(i,:));
+        end
+        [theta, thetaNoMax, thetaCent, thetaRefl, tmaxindex, tminindex, improved] = step1(theta, results);
+        if norm(theta(tmaxindex,:) - theta(tminindex,:)) < 1
+            break;
+        end
+        if improved == false
+            [theta, improved] = step2(theta, thetaNoMax, thetaRefl, thetaCent, tminindex);
+        end
+        if improved == false
+            [theta, improved] = step3(theta, thetaNoMax, thetaRefl, thetaCent, tmaxindex);
+        end
+        if improved == false
+            theta = step4(theta, tminindex);
+        end
     end
-    alpha = 1.0;
-    beta = 0.5;
-    gamma = 2.0;
-    delta = 0.5;
+	theta
+end
+
+function [theta, thetaNoMax, thetaCent, thetaRefl, tmaxindex, tminindex, step5] = step1(theta, results)
     % Step 1 Reflection
+    alpha = 1.0;
+	step5 = false;
     [thetaMax, tmaxindex] = max(results);
     if length(find(results==thetaMax)) > 1
         tmax2index = tmaxindex;
@@ -26,26 +45,36 @@ function opt = ps4()
     % Step 1a Accept Reflection
     if L(theta(tminindex,:)) <= L(thetaRefl) && L(thetaRefl) <= L(theta(tmax2index,:))
         theta = [thetaNoMax; thetaRefl];
-        %goto step 5
+        step5 = true;
     end
+end
+
+function [theta, step5] = step2(theta, thetaNoMax, thetaRefl, thetaCent, tminindex)
     % Step 2 Expansion
+    gamma = 2.0;
+    step5 = false;
     if L(thetaRefl) < L(theta(tminindex,:))
         thetaExp = gamma*thetaRefl + (1-gamma)*thetaCent;
         % Step 2a Check expansion
         if L(thetaExp) < L(thetaRefl)
             theta = [thetaNoMax; thetaExp];
-            % goto step 5
+            step5 = true;
         else
             theta = [thetaNoMax; thetaRefl];
         end
     end
+end
+
+function [theta, step5] = step3(theta, thetaNoMax, thetaRefl, thetaCent, tmaxindex)
     % Step 3 Contraction
+    beta = 0.5;
+    step5 = false;
     if L(thetaRefl) < L(theta(tmaxindex,:))
         % outside
         thetaCont = beta*thetaRefl + (1-beta)*thetaCent;
         if L(thetaCont) < L(thetaRefl)
             theta = [thetaNoMax; thetaCont];
-            % goto step 5
+            step5 = true;
         end
     end
     if L(thetaRefl) >= L(theta(tmaxindex,:))
@@ -53,18 +82,19 @@ function opt = ps4()
         thetaCont = beta*theta(tmaxindex,:) + (1-beta)*thetaCent;
         if L(thetaCont) < L(theta(tmaxindex,:))
             theta = [thetaNoMax; thetaCont];
-            % goto step 5
+            step5 = true;
         end
     end
+end
+
+function theta = step4(theta, tminindex)
     % Step 4 Shrink
+    delta = 0.5;
     for i = 1:length(theta)
         if i ~= tminindex
             theta(i,:) = delta*theta(i,:) + (1-delta)*theta(tminindex,:);
         end
     end
-    % Step 5
-    % stop if conv criterion met or max func call met
-    % else go to step 1
 end
 
 function r = L(theta)
