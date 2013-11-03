@@ -104,6 +104,9 @@ end
 
 function r = L(theta)
     if mod(length(theta),2) ~= 0
+        disp('******************************');
+        disp('* p has to be an even number *');
+        disp('******************************');
         assert(false)
     end
     B = ones(length(theta), length(theta))/2 + eye(length(theta))/2;
