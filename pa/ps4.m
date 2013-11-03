@@ -1,21 +1,16 @@
-function opt = ps4()
+function ps4()
     clear All;
     close All;
     clc;
+    
     % Step 0 initialization
     p = 4;
-    theta = zeros(p+1, p);
-    for i = 1:p+1
-        t = zeros(p,1);
-        for j = 1:p
-            t(j) = rand(1)*10;
-        end
-        theta(i,:) = t;
-    end
-    theta
+    theta = 20*rand(p+1, p)-10;
+    disp('initial theta');
+    disp(theta);
     counter = 1;
-    while counter < 1000
-        counter = counter + 1;
+    while counter < 10000
+        counter = counter+1;
         results = zeros(length(theta),1);
         for i = 1:length(theta)
             results(i) = L(theta(i,:));
@@ -34,19 +29,19 @@ function opt = ps4()
             theta = step4(theta, tminindex);
         end
     end
-	theta
+    disp('final theta');
+    disp(theta);
+    disp(['min loss of ', num2str(L(theta(tminindex,:))), ' in line ', num2str(tminindex)]);
 end
 
 function [theta, thetaNoMax, thetaCent, thetaRefl, tmaxindex, tminindex, step5] = step1(theta, results)
     % Step 1 Reflection
     alpha = 1.0;
 	step5 = false;
-    [thetaMax, tmaxindex] = max(results);
-    if length(find(results==thetaMax)) > 1
-        tmax2index = tmaxindex;
-    else
-        [~, tmax2index] = max(results(results ~= thetaMax));
-    end
+    [~, tmaxindex] = max(results);
+    r = results;
+    r(tmaxindex) = -Inf;
+    [~, tmax2index] = max(r);
     [~, tminindex] = min(results);
     thetaNoMax = [theta(1:tmaxindex-1,:); theta(tmaxindex+1:end,:)];
     thetaCent = sum(thetaNoMax)/length(thetaNoMax);
@@ -70,6 +65,7 @@ function [theta, step5] = step2(theta, thetaNoMax, thetaRefl, thetaCent, tminind
             step5 = true;
         else
             theta = [thetaNoMax; thetaRefl];
+            step5 = true;
         end
     end
 end
@@ -81,7 +77,7 @@ function [theta, step5] = step3(theta, thetaNoMax, thetaRefl, thetaCent, tmaxind
     if L(thetaRefl) < L(theta(tmaxindex,:))
         % outside
         thetaCont = beta*thetaRefl + (1-beta)*thetaCent;
-        if L(thetaCont) < L(thetaRefl)
+        if L(thetaCont) <= L(thetaRefl)
             theta = [thetaNoMax; thetaCont];
             step5 = true;
         end
@@ -113,5 +109,4 @@ function r = L(theta)
     B = ones(length(theta), length(theta))/2 + eye(length(theta))/2;
     t4 = sum(reshape(theta.^4, length(theta)/2, 2));
     r = t4(1) + theta*B*theta';
-
 end
