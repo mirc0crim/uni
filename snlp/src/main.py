@@ -1,5 +1,6 @@
 #!C:/Python27/python.exe -u
 # -*- coding: ascii -*-
+import numpy
 import string
 import helperMK
 
@@ -19,37 +20,42 @@ print
 train = helperMK.authorArray(helperMK.readFile(fedTrainPath))
 test = helperMK.readFile(fedTestPath)
 
-feature = [[],[],[]]
+featureMean = [[],[],[]]
+featureStd = [[],[],[]]
 for author in range(len(names)):
     print names[author]
-    numToken = 0.0
-    numTypes = 0.0
+    numToken = []
+    numTypes = []
+    lexDiv = []
     punct = [0,0,0,0,0,0]
     psum = 0.0
-    pron = 0.0
+    pron = []
     dictCount = helperMK.getAZDict(string.lowercase)
-    chars = 0.0
+    chars = []
+    wordLen = []
     for currDoc in range(len(train[author])):
         train[author][currDoc] = helperMK.extractText(train[author][currDoc])
-        numToken += helperMK.getNumberOfToken(train[author][currDoc])
-        numTypes += helperMK.getNumberOfWordTypes(train[author][currDoc])
+        numToken.append(helperMK.getNumberOfToken(train[author][currDoc]))
+        numTypes.append(helperMK.getNumberOfWordTypes(train[author][currDoc]))
         currDict = helperMK.getAZDict(train[author][currDoc])
         for e in string.lowercase:
             dictCount[e] += currDict[e]
         for k, e in enumerate([train[author][currDoc].count(x) for x in punctMarks]):
             punct[k] += e
         psum += sum([train[author][currDoc].count(x) for x in punctMarks])
-        pron += sum([train[author][currDoc].count(x) for x in fPersPron])
-        chars += sum(currDict.values())
+        pron.append(sum([train[author][currDoc].count(x) for x in fPersPron]))
+        chars.append(sum(currDict.values()))
+        wordLen.append(chars[-1]/float(numToken[-1]))
+        lexDiv.append(numToken[-1]/float(numTypes[-1]))
     for e in string.lowercase:
         dictCount[e] -= 1
-        dictCount[e] /= chars / 26
+        dictCount[e] /= sum(chars) / 26.0
     charList = []
     for e in sorted(dictCount):
         charList.append(dictCount[e])
     for currDoc in range(6):
         punct[currDoc] /= psum
-    pron /= numToken
-    wordLen = chars / numToken
-    feature[author] = [numToken/numTypes, charList, punct, pron, wordLen]
-    print feature[author]
+    featureMean[author] = [numpy.mean(lexDiv), numpy.mean(pron), numpy.mean(wordLen)]
+    featureStd[author] = [numpy.std(lexDiv), numpy.std(pron), numpy.std(wordLen)]
+    print "mean", featureMean[author]
+    print "std", featureStd[author]

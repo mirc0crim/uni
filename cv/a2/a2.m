@@ -17,5 +17,6 @@ function a2()
     nonvalid = find(x > imgDim(2) | y > imgDim(1) | x < 0 | y < 0);
     x(nonvalid) = NaN;
     y(nonvalid) = NaN;
-    
+    x
+    y
 end
