@@ -4,7 +4,7 @@ function ps4()
     clc;
     
     % Step 0 initialization
-    p = 4;
+    p = 2;
     theta = 20*rand(p+1, p)-10;
     disp('initial theta');
     disp(theta);
@@ -112,4 +112,16 @@ function r = L(theta)
     B = ones(length(theta), length(theta))/2 + eye(length(theta))/2;
     t4 = sum(reshape(theta.^4, length(theta)/2, 2));
     r = t4(1) + theta*B*theta';
+end
+
+function r = L2(theta)
+    if length(theta) ~= 2
+        disp('*****************');
+        disp('* p has to be 2 *');
+        disp('*****************');
+        assert(false)
+    end
+    t1 = theta(1);
+    t2 = theta(2);
+    r = 0.5*((t1^4 - 16*(t1^2) + 5*t1)+(t2^4-16*(t2^2)+5*t2));
 end
