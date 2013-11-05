@@ -17,4 +17,15 @@ while ischar(tline)
 end
 fclose(fid);
 
-scatter(coordinates(:,1),coordinates(:,2));
+%scatter(coordinates(:,1),coordinates(:,2));
+
+xdist = repmat(coordinates(:,1),1,131) - repmat(coordinates(:,1)',131,1);
+ydist = repmat(coordinates(:,2),1,131) - repmat(coordinates(:,2)',131,1);
+distances = sqrt(xdist.^2 + ydist.^2);
+distances(find(triu(ones(131,131)))) = Inf;
+
+index = min(find(distances == min(min(distances))));
+x = mod(index,131)-1;
+y = index - (x-1)*131;
+disp(['shortest distance from ', num2str(x), ' to ', num2str(y)]);
+distances(y,x) = Inf;
