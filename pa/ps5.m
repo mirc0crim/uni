@@ -17,15 +17,45 @@ while ischar(tline)
 end
 fclose(fid);
 
-%scatter(coordinates(:,1),coordinates(:,2));
-
 xdist = repmat(coordinates(:,1),1,131) - repmat(coordinates(:,1)',131,1);
 ydist = repmat(coordinates(:,2),1,131) - repmat(coordinates(:,2)',131,1);
 distances = sqrt(xdist.^2 + ydist.^2);
 distances(find(triu(ones(131,131)))) = Inf;
+route = zeros(131,131);
+myroute = zeros(262,2);
+c = 1;
+while c < 125
+    index = find(distances == min(min(distances)), 1);
+    [y,x] = ind2sub([131,131], index);
+    distances(y,x) = Inf;
+    valid = true;
+    testRoute = route;
+    testRoute(y,x) = 1;
+    incomming = sum(testRoute,1);
+    outgoing = sum(testRoute,2);
+    if max(incomming + outgoing') > 2
+        %disp('degree exeeded');
+        valid = false;
+    end
+    for n = 1:131
+        if trace(testRoute^n) ~= 0
+            %disp('cycle detected');
+            valid = false;
+            break;
+        end
+    end
+    if valid
+        %disp(['shortest distance from ', num2str(x), ' to ', num2str(y)]);
+        myroute(2*x-1,:) = coordinates(x,:);
+        myroute(2*x,:) = coordinates(y,:);
+        route(y,x) = 1;
+        c = c + 1;
+        disp(c)
+    end
+end
 
-index = min(find(distances == min(min(distances))));
-x = mod(index,131)-1;
-y = index - (x-1)*131;
-disp(['shortest distance from ', num2str(x), ' to ', num2str(y)]);
-distances(y,x) = Inf;
+subplot(1,2,1);
+scatter(coordinates(:,1),coordinates(:,2));
+subplot(1,2,2);
+
+plot(myroute(:,1),myroute(:,2));
