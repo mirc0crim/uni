@@ -27,8 +27,8 @@ for author in range(len(names)):
     numToken = []
     numTypes = []
     lexDiv = []
-    punct = [0,0,0,0,0,0]
-    psum = 0.0
+    punct = [[],[],[],[],[],[]]
+    psum = []
     pron = []
     dictCount = helperMK.getAZDict(string.lowercase)
     chars = []
@@ -41,8 +41,8 @@ for author in range(len(names)):
         for e in string.lowercase:
             dictCount[e] += currDict[e]
         for k, e in enumerate([train[author][currDoc].count(x) for x in punctMarks]):
-            punct[k] += e
-        psum += sum([train[author][currDoc].count(x) for x in punctMarks])
+            punct[k].append(e)
+        psum.append(sum([train[author][currDoc].count(x) for x in punctMarks]))
         pron.append(sum([train[author][currDoc].count(x) for x in fPersPron]))
         chars.append(sum(currDict.values()))
         wordLen.append(chars[-1]/float(numToken[-1]))
@@ -53,9 +53,14 @@ for author in range(len(names)):
     charList = []
     for e in sorted(dictCount):
         charList.append(dictCount[e])
-    for currDoc in range(6):
-        punct[currDoc] /= psum
-    featureMean[author] = [numpy.mean(lexDiv), numpy.mean(pron), numpy.mean(wordLen)]
-    featureStd[author] = [numpy.std(lexDiv), numpy.std(pron), numpy.std(wordLen)]
+    mpunct = []
+    spunct = []
+    for i in range(len(punct)):
+        for j in range(len(punct[i])):
+            punct[i][j] /= float(psum[j])
+        mpunct.append(numpy.mean(punct[i]))
+        spunct.append(numpy.std(punct[i]))
+    featureMean[author] = [numpy.mean(lexDiv), numpy.mean(pron), numpy.mean(wordLen), mpunct]
+    featureStd[author] = [numpy.std(lexDiv), numpy.std(pron), numpy.std(wordLen), spunct]
     print "mean", featureMean[author]
     print "std", featureStd[author]
