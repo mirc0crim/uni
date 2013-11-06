@@ -22,9 +22,9 @@ ydist = repmat(coordinates(:,2),1,131) - repmat(coordinates(:,2)',131,1);
 distances = sqrt(xdist.^2 + ydist.^2);
 distances(find(triu(ones(131,131)))) = Inf;
 route = zeros(131,131);
-myroute = zeros(262,2);
+myroute = ones(262,2);
 c = 1;
-while c < 125
+while c < 132
     index = find(distances == min(min(distances)), 1);
     [y,x] = ind2sub([131,131], index);
     distances(y,x) = Inf;
@@ -36,12 +36,13 @@ while c < 125
     if max(incomming + outgoing') > 2
         %disp('degree exeeded');
         valid = false;
-    end
-    for n = 1:131
-        if trace(testRoute^n) ~= 0
-            %disp('cycle detected');
-            valid = false;
-            break;
+    else
+        for n = 1:c
+            if trace(testRoute^n) ~= 0
+                %disp('cycle detected');
+                valid = false;
+                break;
+            end
         end
     end
     if valid
