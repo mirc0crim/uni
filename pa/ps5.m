@@ -20,14 +20,15 @@ fclose(fid);
 xdist = repmat(coordinates(:,1),1,131) - repmat(coordinates(:,1)',131,1);
 ydist = repmat(coordinates(:,2),1,131) - repmat(coordinates(:,2)',131,1);
 distances = sqrt(xdist.^2 + ydist.^2);
-distances(find(triu(ones(131,131)))) = Inf;
+distances(find(eye(131))) = Inf;
 route = zeros(131,131);
 myroute = ones(262,2);
 c = 1;
-while c < 132
+while c < 131
     index = find(distances == min(min(distances)), 1);
     [y,x] = ind2sub([131,131], index);
     distances(y,x) = Inf;
+    distances(x,y) = Inf;
     valid = true;
     testRoute = route;
     testRoute(y,x) = 1;
@@ -50,10 +51,14 @@ while c < 132
         myroute(2*x-1,:) = coordinates(x,:);
         myroute(2*x,:) = coordinates(y,:);
         route(y,x) = 1;
+        distances(:,x) = Inf;
+        distances(y,:) = Inf;
         c = c + 1;
         disp(c)
     end
 end
+myroute(261,:) = myroute(260,:);
+myroute(262,:) = myroute(1,:);
 
 subplot(1,2,1);
 scatter(coordinates(:,1),coordinates(:,2));
