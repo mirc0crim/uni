@@ -18,7 +18,7 @@ print
 
 # [[hamiltonDocs][madisonDocs][JayDocs]]
 train = helperMK.authorArray(helperMK.readFile(fedTrainPath))
-test = helperMK.readFile(fedTestPath)
+test = helperMK.testArray(helperMK.readFile(fedTestPath))
 
 featureMean = [[],[],[]]
 featureStd = [[],[],[]]
@@ -64,3 +64,24 @@ for author in range(len(names)):
     featureStd[author] = [numpy.std(lexDiv), numpy.std(pron), numpy.std(wordLen), spunct]
     print "mean", featureMean[author]
     print "std", featureStd[author]
+
+for doc in range(len(test)):    
+    text = helperMK.extractText(test[doc])
+    lDiv = helperMK.getNumberOfToken(text)/float(helperMK.getNumberOfWordTypes(text))
+    currDict = helperMK.getAZDict(text)
+    chars = sum(currDict.values())
+    wLen = chars/float(helperMK.getNumberOfToken(text))
+    print
+    print
+    mode = 1
+    if mode == 1:
+        pdf1 = helperMK.evalPDF(featureMean[0][0], featureStd[0][0], lDiv)
+        pdf2 = helperMK.evalPDF(featureMean[1][0], featureStd[1][0], lDiv)
+        pdf3 = helperMK.evalPDF(featureMean[2][0], featureStd[2][0], lDiv)
+    else:
+        pdf1 = helperMK.evalPDF(featureMean[0][2], featureStd[0][2], wLen)
+        pdf2 = helperMK.evalPDF(featureMean[1][2], featureStd[1][2], wLen)
+        pdf3 = helperMK.evalPDF(featureMean[2][2], featureStd[2][2], wLen)
+    print 100*pdf1 / (pdf1+pdf2+pdf3)
+    print 100*pdf2 / (pdf1+pdf2+pdf3)
+    print 100*pdf3 / (pdf1+pdf2+pdf3)

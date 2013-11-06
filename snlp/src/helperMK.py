@@ -1,4 +1,5 @@
 # -*- coding: ascii -*-
+import math
 import re
 import string
 from collections import Counter
@@ -27,6 +28,10 @@ def authorArray(text):
         print s[3]
     return s
 
+def testArray(text):
+    m = re.findall("<DOCNO>.*?PUBLIUS", text, di)
+    return m
+
 def extractText(text):
     rep = ["DOCNO", "DOCID", "AUTHOR", "TITLE", "SOURCE"]
     for i in range(len(rep)):
@@ -35,6 +40,12 @@ def extractText(text):
     text = re.sub("To the People of the State of New York:\n", "", text, 0, di)
     text = re.sub("PUBLIUS\n", "", text, 0, di)
     return text
+
+def evalPDF(mean, std, val):
+    # Probability density function  
+    div = 1/(std * math.sqrt(2 * math.pi))
+    pot = -((val - mean)**2 / (2 * std**2))
+    return div * math.e**(pot)
 
 def getMostFrequentNWords(t, n):
     return Counter(t.split()).most_common(n)
