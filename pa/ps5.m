@@ -19,7 +19,13 @@ fclose(fid);
 
 xdist = repmat(coordinates(:,1),1,131) - repmat(coordinates(:,1)',131,1);
 ydist = repmat(coordinates(:,2),1,131) - repmat(coordinates(:,2)',131,1);
+
+% Euclidean Distance
 distances = sqrt(xdist.^2 + ydist.^2);
+
+% Manhattan Distance
+%distances = abs(xdist) + abs(ydist);
+
 distances(find(eye(131))) = Inf;
 
 route = zeros(131,131);
