@@ -24,29 +24,31 @@ function ps5()
     scatter(coordinates(:,1),coordinates(:,2));
     title('Location of the Cities')
     axis([-3 110 -3 50])
-    
+
     xdist = repmat(coordinates(:,1),1,131) - repmat(coordinates(:,1)',131,1);
     ydist = repmat(coordinates(:,2),1,131) - repmat(coordinates(:,2)',131,1);
 
     % Euclidean Distance
     distancesEuclidean = sqrt(xdist.^2 + ydist.^2);
     distancesEuclidean(find(eye(131))) = Inf;
-    routeEuclidean = useShortestEdge(distancesEuclidean);
+    [routeEuclidean, distEuclidean] = useShortestEdge(distancesEuclidean);
     euclideanGraph = createGraph(coordinates, routeEuclidean);
     subplot(2,2,3);
     plot(euclideanGraph(:,1),euclideanGraph(:,2));
     title('Route with Euclidean Distance')
     axis([-3 110 -3 50])
+    text(115,25,['l=',num2str(round(distEuclidean))])
     
     % Manhattan Distance
     distancesManhattan = abs(xdist) + abs(ydist);
     distancesManhattan(find(eye(131))) = Inf;
-    routeManhattan = useShortestEdge(distancesManhattan);
+    [routeManhattan, distManhattan] = useShortestEdge(distancesManhattan);
     manhattanGraph = createGraph(coordinates, routeManhattan);
     subplot(2,2,4);
     plot(manhattanGraph(:,1),manhattanGraph(:,2));
     title('Route with Manhattan Distance')
     axis([-3 110 -3 50])
+    text(115,25,['l=',num2str(distManhattan)])
 end
 
 function graph = createGraph(coordinates, route)
@@ -61,14 +63,13 @@ function graph = createGraph(coordinates, route)
     graph(i,:) = coordinates(1,:); %close graph
 end
 
-function route = useShortestEdge(distances)
+function [route, dist] = useShortestEdge(distances)
     route = zeros(131,131);
     c = 1;
+    dist = 0;
     while c < 132
         index = find(distances == min(min(distances)), 1);
         [y,x] = ind2sub([131,131], index);
-        distances(y,x) = Inf;
-        distances(x,y) = Inf;
         valid = true;
         testRoute = route;
         testRoute(y,x) = 1;
@@ -87,10 +88,13 @@ function route = useShortestEdge(distances)
         if valid || c == 131
             % shortest distance from x to y
             route(y,x) = 1;
+            dist = dist + distances(y,x);
             distances(:,x) = Inf; % no more incoming edges allowed
             distances(y,:) = Inf; % no more outgoing edges allowed
             c = c + 1;
             disp(c) % for visual progress
         end
+        distances(y,x) = Inf;
+        distances(x,y) = Inf;
     end
 end
