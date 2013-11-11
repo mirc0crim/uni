@@ -1,6 +1,7 @@
 #!C:/Python27/python.exe -u
 # -*- coding: ascii -*-
 import numpy
+import re
 import string
 import helperMK
 
@@ -45,7 +46,7 @@ for author in range(len(names)):
         for k, e in enumerate([train[author][currDoc].count(x) for x in punctMarks]):
             punct[k].append(e)
         psum.append(sum([train[author][currDoc].count(x) for x in punctMarks]))
-        pron.append(sum([train[author][currDoc].count(x) for x in fPersPron]))
+        pron.append(sum([train[author][currDoc].count(x) for x in fPersPron])/float(numToken[-1]))
         chars.append(sum(currDict.values()))
         wordLen.append(chars[-1]/float(numToken[-1]))
         lexDiv.append(numToken[-1]/float(numTypes[-1]))
@@ -70,24 +71,30 @@ for author in range(len(names)):
 
 for doc in range(len(test)):
     text = helperMK.extractText(test[doc])
-    lDiv = helperMK.getNumberOfToken(text)/float(helperMK.getNumberOfWordTypes(text))
+    noOfToken = helperMK.getNumberOfToken(text)
+    lDiv = noOfToken/float(helperMK.getNumberOfWordTypes(text))
     currDict = helperMK.getAZDict(text)
     chars = sum(currDict.values())
-    wLen = chars/float(helperMK.getNumberOfToken(text))
-    print
+    wLen = chars/float(noOfToken)
+    prons = sum([text.count(x) for x in fPersPron])/float(noOfToken)
     print
     pdfLD = []
     pdfLD.append(helperMK.evalPDF(featureMean[0][0], featureStd[0][0], lDiv))
     pdfLD.append(helperMK.evalPDF(featureMean[1][0], featureStd[1][0], lDiv))
     pdfLD.append(helperMK.evalPDF(featureMean[2][0], featureStd[2][0], lDiv))
+    pdfP = []
+    pdfP.append(helperMK.evalPDF(featureMean[0][1], featureStd[0][1], prons))
+    pdfP.append(helperMK.evalPDF(featureMean[1][1], featureStd[1][1], prons))
+    pdfP.append(helperMK.evalPDF(featureMean[2][1], featureStd[2][1], prons))
     pdfWL = []
     pdfWL.append(helperMK.evalPDF(featureMean[0][2], featureStd[0][2], wLen))
     pdfWL.append(helperMK.evalPDF(featureMean[1][2], featureStd[1][2], wLen))
     pdfWL.append(helperMK.evalPDF(featureMean[2][2], featureStd[2][2], wLen))
     probs = []
-    probs.append(pdfLD[0] * pdfWL[0] * prior[0]/sum(prior))
-    probs.append(pdfLD[1] * pdfWL[1] * prior[1]/sum(prior))
-    probs.append(pdfLD[2] * pdfWL[2] * prior[2]/sum(prior))
-    print 100*probs[0]/sum(probs)
-    print 100*probs[1]/sum(probs)
-    print 100*probs[2]/sum(probs)
+    probs.append(pdfLD[0] * pdfP[0] * pdfWL[0] * prior[0]/sum(prior))
+    probs.append(pdfLD[1] * pdfP[1] * pdfWL[1] * prior[1]/sum(prior))
+    probs.append(pdfLD[2] * pdfP[2] * pdfWL[2] * prior[2]/sum(prior))
+    print "Document Number", re.search("(?<=docno>).*?(?=</docno>)", test[doc]).group()
+    print "H", int(1000*probs[0]/sum(probs))/10.0, "%"
+    print "M", int(1000*probs[1]/sum(probs))/10.0, "%"
+    print "J", int(1000*probs[2]/sum(probs))/10.0, "%"
