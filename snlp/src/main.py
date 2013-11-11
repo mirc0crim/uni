@@ -20,6 +20,7 @@ print
 train = helperMK.authorArray(helperMK.readFile(fedTrainPath))
 test = helperMK.testArray(helperMK.readFile(fedTestPath))
 
+prior = []
 featureMean = [[],[],[]]
 featureStd = [[],[],[]]
 for author in range(len(names)):
@@ -33,6 +34,7 @@ for author in range(len(names)):
     dictCount = helperMK.getAZDict(string.lowercase)
     chars = []
     wordLen = []
+    prior.append(len(train[author]))
     for currDoc in range(len(train[author])):
         train[author][currDoc] = helperMK.extractText(train[author][currDoc])
         numToken.append(helperMK.getNumberOfToken(train[author][currDoc]))
@@ -64,8 +66,9 @@ for author in range(len(names)):
     featureStd[author] = [numpy.std(lexDiv), numpy.std(pron), numpy.std(wordLen), spunct]
     print "mean", featureMean[author]
     print "std", featureStd[author]
+    print "prior", prior[author]
 
-for doc in range(len(test)):    
+for doc in range(len(test)):
     text = helperMK.extractText(test[doc])
     lDiv = helperMK.getNumberOfToken(text)/float(helperMK.getNumberOfWordTypes(text))
     currDict = helperMK.getAZDict(text)
@@ -73,15 +76,18 @@ for doc in range(len(test)):
     wLen = chars/float(helperMK.getNumberOfToken(text))
     print
     print
-    mode = 1
-    if mode == 1:
-        pdf1 = helperMK.evalPDF(featureMean[0][0], featureStd[0][0], lDiv)
-        pdf2 = helperMK.evalPDF(featureMean[1][0], featureStd[1][0], lDiv)
-        pdf3 = helperMK.evalPDF(featureMean[2][0], featureStd[2][0], lDiv)
-    else:
-        pdf1 = helperMK.evalPDF(featureMean[0][2], featureStd[0][2], wLen)
-        pdf2 = helperMK.evalPDF(featureMean[1][2], featureStd[1][2], wLen)
-        pdf3 = helperMK.evalPDF(featureMean[2][2], featureStd[2][2], wLen)
-    print 100*pdf1 / (pdf1+pdf2+pdf3)
-    print 100*pdf2 / (pdf1+pdf2+pdf3)
-    print 100*pdf3 / (pdf1+pdf2+pdf3)
+    pdfLD = []
+    pdfLD.append(helperMK.evalPDF(featureMean[0][0], featureStd[0][0], lDiv))
+    pdfLD.append(helperMK.evalPDF(featureMean[1][0], featureStd[1][0], lDiv))
+    pdfLD.append(helperMK.evalPDF(featureMean[2][0], featureStd[2][0], lDiv))
+    pdfWL = []
+    pdfWL.append(helperMK.evalPDF(featureMean[0][2], featureStd[0][2], wLen))
+    pdfWL.append(helperMK.evalPDF(featureMean[1][2], featureStd[1][2], wLen))
+    pdfWL.append(helperMK.evalPDF(featureMean[2][2], featureStd[2][2], wLen))
+    probs = []
+    probs.append(pdfLD[0] * pdfWL[0] * prior[0]/sum(prior))
+    probs.append(pdfLD[1] * pdfWL[1] * prior[1]/sum(prior))
+    probs.append(pdfLD[2] * pdfWL[2] * prior[2]/sum(prior))
+    print 100*probs[0]/sum(probs)
+    print 100*probs[1]/sum(probs)
+    print 100*probs[2]/sum(probs)
