@@ -3,6 +3,7 @@ import math
 import re
 import string
 from collections import Counter
+from scipy.stats import norm
 
 di = re.DOTALL|re.IGNORECASE
 
@@ -42,9 +43,19 @@ def extractText(text):
     return text
 
 def evalPDF(mean, std, val):
-    # Probability density function  
+    # Probability density function 
     div = 1/(std * math.sqrt(2 * math.pi))
     pot = -((val - mean)**2 / (2 * std**2))
+    # use mean, std and val to calc value
+    # maybe just val-mean / std
+    value = 1.96
+    # is this o good value?
+    epsilon = 0.05
+    # better use this cumulative normal distribution
+    norm.cdf(value+epsilon)
+    norm.cdf(value-epsilon)
+    # difference might be the value we are looking for
+    # always use log in the end (small values mult by small value)
     return div * math.e**(pot)
 
 def getMostFrequentNWords(t, n):
