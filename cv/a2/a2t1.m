@@ -1,4 +1,4 @@
-function a2()
+function a2t1()
     clear All;
     close All;
     clc;
