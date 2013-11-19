@@ -1,4 +1,6 @@
 function a2t1()
+	% Takes a pair of images and lets user select pertinent matching points.
+	% The epipole and epipoar line is calculated from a user specified point.
     clear All;
     close All;
     clc;
@@ -18,6 +20,7 @@ function a2t1()
 end
 
 function epipoleEpipolar(im1, im2, f, dir1, dir2)
+	% Calculates the epipole and epipolar line from two images with fundamental matrix f.
     imDim = size(im1);
     figure(1);
     imshow(im1);

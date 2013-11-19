@@ -1,3 +1,5 @@
+% Get the rotation and translation of the camera and do a 3D reconstruction
+
 clear All;
 close All;
 clc;

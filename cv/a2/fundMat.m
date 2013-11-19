@@ -1,5 +1,5 @@
 function f = fundMat(left, right)
-
+	% get the fundamental matrix from two sets of matching points (at least 8)
     l = [left, ones(length(left), 1)]';
     r = [right, ones(length(right), 1)]';
     left_normed = normMat(l)*l;
