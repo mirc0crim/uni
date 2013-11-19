@@ -13,9 +13,10 @@ deletions(deletions >= 0.8) = 1;
 left = double(left(deletions==1,:));
 right = double(right(deletions==1,:));
 
-f = fundMat(left, right);
-disp(['Funamental Matrix has rank ', int2str(rank(f))]);
-disp(f);
+fundamentalMatrix = fundMat(left, right);
+disp(['Funamental Matrix has rank ', int2str(rank(fundamentalMatrix))]);
+disp(fundamentalMatrix);
 
 %from the intrinsic parameter file
 K = [-83.33333, 0.0, 250.0; 0.0, -83.33333, 250.0; 0.0, 0.0, 1.0];
+EssentialMatrix = K'*fundamentalMatrix*K

@@ -9,12 +9,12 @@ function a2t1()
     %[left, right] = cpselect(im_left, im_right, 'Wait', true)
     left = [174,172; 178,156; 194,142; 194,132; 80,256; 47,81; 244,60; 311,222];
     right = [163,171; 168,155; 187,143; 186,132; 68,256; 41,81; 240,60; 303,221];
-    f = fundMat(left, right)
+    fundamentalMatrix = fundMat(left, right)
 
-    epipoleEpipolar(imLeft, imRight, f, 'left', 'right')
+    epipoleEpipolar(imLeft, imRight, fundamentalMatrix, 'left', 'right')
     xlabel('(click to continue)')
     waitforbuttonpress;
-    epipoleEpipolar(imRight, imLeft, f', 'right', 'left')
+    epipoleEpipolar(imRight, imLeft, fundamentalMatrix', 'right', 'left')
 end
 
 function epipoleEpipolar(im1, im2, f, dir1, dir2)
