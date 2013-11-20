@@ -8,9 +8,9 @@ function a2t1()
     name = 'tsukuba';
     imLeft = imread(['Images/', name, '-l.tiff']);
     imRight = imread(['Images/', name, '-r.tiff']);
-    %[left, right] = cpselect(im_left, im_right, 'Wait', true)
-    left = [174,172; 178,156; 194,142; 194,132; 80,256; 47,81; 244,60; 311,222];
-    right = [163,171; 168,155; 187,143; 186,132; 68,256; 41,81; 240,60; 303,221];
+    [left, right] = cpselect(im_left, im_right, 'Wait', true)
+    %left = [174,172; 178,156; 194,142; 194,132; 80,256; 47,81; 244,60; 311,222];
+    %right = [163,171; 168,155; 187,143; 186,132; 68,256; 41,81; 240,60; 303,221];
     fundamentalMatrix = fundMat(left, right)
 
     epipoleEpipolar(imLeft, imRight, fundamentalMatrix, 'left', 'right')
