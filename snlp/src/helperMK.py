@@ -49,7 +49,7 @@ def evalProb(mean, std, val):
     
     # better use this cumulative normal distribution
     value = (val-mean)/std
-    epsilon = 0.1
+    epsilon = 0.05
     diff = norm.cdf(value+epsilon) - norm.cdf(value-epsilon) 
     return diff
 

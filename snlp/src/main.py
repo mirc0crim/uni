@@ -25,6 +25,7 @@ prior = []
 featureMean = [[] for x in range(3)]
 featureStd = [[] for x in range(3)]
 for author in range(len(names)):
+    # TRAINING
     print names[author]
     numToken = []
     numTypes = []
@@ -59,8 +60,8 @@ for author in range(len(names)):
     mpunct = []
     spunct = []
     for punctSign in range(len(punct)):
-        for punctAuthor in range(len(punct[punctSign])):
-            punct[punctSign][punctAuthor] /= float(psum[punctAuthor])
+        for punctDoc in range(len(punct[punctSign])):
+            punct[punctSign][punctDoc] /= float(psum[punctDoc])
         mpunct.append(numpy.mean(punct[punctSign]))
         spunct.append(numpy.std(punct[punctSign]))
     featureMean[author] = [numpy.mean(lexDiv), numpy.mean(pron), numpy.mean(wordLen)]
@@ -72,6 +73,7 @@ for author in range(len(names)):
     print "prior", prior[author]
 
 for doc in range(len(test)):
+    # TESTING
     text = helperMK.extractText(test[doc])
     noOfToken = helperMK.getNumberOfToken(text)
     lDiv = noOfToken/helperMK.getNumberOfWordTypes(text)
@@ -83,8 +85,8 @@ for doc in range(len(test)):
     for k, punctSign in enumerate([text.count(x) for x in punctMarks]):
         punct[k] = punctSign
     psum = sum(punct)
-    for i in range(len(punct)):
-        punct[i] /= float(psum)
+    for punctSign in range(len(punct)):
+        punct[punctSign] /= float(psum)
     print
     pLD = []
     for author in range(3):
@@ -95,18 +97,17 @@ for doc in range(len(test)):
     pWL = []
     for author in range(3):
         pWL.append(helperMK.evalProb(featureMean[author][2], featureStd[author][2], wLen))
-    pPunct = [[] for x in range(6)]
-    for i in range(3,9):
-        for author in range(3):
-            pPunct[i-3].append(helperMK.evalProb(featureMean[author][i], featureStd[author][i], punct[i-3]))
-    probs = []
+    pPunct = []
     for author in range(3):
-        punc = 1;
-        for punctSign in range(6):
-            punc *= pPunct[punctSign][author]
-        probs.append(pLD[author] * pPron[author] * pWL[author] * punc * prior[author]/float(sum(prior)))
+        product = 1
+        for punctSign in range(3,9):
+            product *= helperMK.evalProb(featureMean[author][punctSign], featureStd[author][punctSign], punct[punctSign-3])
+        pPunct.append(product)
+    probabilities = []
+    for author in range(3):
+        probabilities.append(pLD[author] * pPron[author] * pWL[author] * pPunct[author] * prior[author]/float(sum(prior)))
     print "Document Number", re.search("(?<=docno>).*?(?=</docno>)", test[doc]).group()
-    print "H", int(1000*probs[0]/sum(probs))/10.0, "%"
-    print "M", int(1000*probs[1]/sum(probs))/10.0, "%"
-    print "J", int(1000*probs[2]/sum(probs))/10.0, "%"
+    print "H", int(1000*probabilities[0]/sum(probabilities))/10.0, "%"
+    print "M", int(1000*probabilities[1]/sum(probabilities))/10.0, "%"
+    print "J", int(1000*probabilities[2]/sum(probabilities))/10.0, "%"
     
