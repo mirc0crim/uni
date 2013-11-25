@@ -1,5 +1,4 @@
 # -*- coding: ascii -*-
-import math
 import re
 import string
 from collections import Counter
@@ -42,30 +41,23 @@ def extractText(text):
     text = re.sub("PUBLIUS\n", "", text, 0, di)
     return text
 
-def evalPDF(mean, std, val):
+def evalProb(mean, std, val):
     # Probability density function 
-    div = 1/(std * math.sqrt(2 * math.pi))
-    pot = -((val - mean)**2 / (2 * std**2))
-    # use mean, std and val to calc value
-    # maybe just val-mean / std
-    value = 1.96
-    # is this o good value?
-    epsilon = 0.05
+    # div = 1/(std * math.sqrt(2 * math.pi))
+    # pot = -((val - mean)**2 / (2 * std**2))
+    # pdf = div * math.e**(pot)
+    
     # better use this cumulative normal distribution
-    norm.cdf(value+epsilon)
-    norm.cdf(value-epsilon)
-    # difference might be the value we are looking for
-    # always use log in the end (small values mult by small value)
-    return div * math.e**(pot)
-
-def getMostFrequentNWords(t, n):
-    return Counter(t.split()).most_common(n)
+    value = (val-mean)/std
+    epsilon = 0.1
+    diff = norm.cdf(value+epsilon) - norm.cdf(value-epsilon) 
+    return diff
 
 def getNumberOfWordTypes(t):
-    return len(Counter(t.split()))
+    return float(len(Counter(t.split())))
 
 def getNumberOfToken(t):
-    return len(t.split())
+    return float(len(t.split()))
 
 def getAZDict(text):
     d = {}

@@ -22,14 +22,14 @@ train = helperMK.authorArray(helperMK.readFile(fedTrainPath))
 test = helperMK.testArray(helperMK.readFile(fedTestPath))
 
 prior = []
-featureMean = [[],[],[]]
-featureStd = [[],[],[]]
+featureMean = [[] for x in range(3)]
+featureStd = [[] for x in range(3)]
 for author in range(len(names)):
     print names[author]
     numToken = []
     numTypes = []
     lexDiv = []
-    punct = [[],[],[],[],[],[]]
+    punct = [[] for x in range(6)]
     psum = []
     pron = []
     dictCount = helperMK.getAZDict(string.lowercase)
@@ -37,34 +37,36 @@ for author in range(len(names)):
     wordLen = []
     prior.append(len(train[author]))
     for currDoc in range(len(train[author])):
-        train[author][currDoc] = helperMK.extractText(train[author][currDoc])
-        numToken.append(helperMK.getNumberOfToken(train[author][currDoc]))
-        numTypes.append(helperMK.getNumberOfWordTypes(train[author][currDoc]))
-        currDict = helperMK.getAZDict(train[author][currDoc])
-        for e in string.lowercase:
-            dictCount[e] += currDict[e]
-        for k, e in enumerate([train[author][currDoc].count(x) for x in punctMarks]):
-            punct[k].append(e)
-        psum.append(sum([train[author][currDoc].count(x) for x in punctMarks]))
-        pron.append(sum([train[author][currDoc].count(x) for x in fPersPron])/float(numToken[-1]))
+        text = helperMK.extractText(train[author][currDoc])
+        numToken.append(helperMK.getNumberOfToken(text))
+        numTypes.append(helperMK.getNumberOfWordTypes(text))
+        currDict = helperMK.getAZDict(text)
+        for letter in string.lowercase:
+            dictCount[letter] += currDict[letter]
+        for k, punctSign in enumerate([text.count(x) for x in punctMarks]):
+            punct[k].append(punctSign)
+        psum.append(sum([text.count(punctSign) for punctSign in punctMarks]))
+        pron.append(sum([text.count(pronoun) for pronoun in fPersPron])/numToken[-1])
         chars.append(sum(currDict.values()))
-        wordLen.append(chars[-1]/float(numToken[-1]))
-        lexDiv.append(numToken[-1]/float(numTypes[-1]))
-    for e in string.lowercase:
-        dictCount[e] -= 1
-        dictCount[e] /= sum(chars) / 26.0
+        wordLen.append(chars[-1]/numToken[-1])
+        lexDiv.append(numToken[-1]/numTypes[-1])
+    for letter in string.lowercase:
+        dictCount[letter] -= 1
+        dictCount[letter] /= sum(chars) / 26.0
     charList = []
-    for e in sorted(dictCount):
-        charList.append(dictCount[e])
+    for letter in sorted(dictCount):
+        charList.append(dictCount[letter])
     mpunct = []
     spunct = []
-    for i in range(len(punct)):
-        for j in range(len(punct[i])):
-            punct[i][j] /= float(psum[j])
-        mpunct.append(numpy.mean(punct[i]))
-        spunct.append(numpy.std(punct[i]))
-    featureMean[author] = [numpy.mean(lexDiv), numpy.mean(pron), numpy.mean(wordLen), mpunct]
-    featureStd[author] = [numpy.std(lexDiv), numpy.std(pron), numpy.std(wordLen), spunct]
+    for punctSign in range(len(punct)):
+        for punctAuthor in range(len(punct[punctSign])):
+            punct[punctSign][punctAuthor] /= float(psum[punctAuthor])
+        mpunct.append(numpy.mean(punct[punctSign]))
+        spunct.append(numpy.std(punct[punctSign]))
+    featureMean[author] = [numpy.mean(lexDiv), numpy.mean(pron), numpy.mean(wordLen)]
+    featureMean[author].extend(mpunct)
+    featureStd[author] = [numpy.std(lexDiv), numpy.std(pron), numpy.std(wordLen)]
+    featureStd[author].extend(spunct)
     print "mean", featureMean[author]
     print "std", featureStd[author]
     print "prior", prior[author]
@@ -72,29 +74,39 @@ for author in range(len(names)):
 for doc in range(len(test)):
     text = helperMK.extractText(test[doc])
     noOfToken = helperMK.getNumberOfToken(text)
-    lDiv = noOfToken/float(helperMK.getNumberOfWordTypes(text))
+    lDiv = noOfToken/helperMK.getNumberOfWordTypes(text)
     currDict = helperMK.getAZDict(text)
     chars = sum(currDict.values())
-    wLen = chars/float(noOfToken)
-    prons = sum([text.count(x) for x in fPersPron])/float(noOfToken)
+    wLen = chars/noOfToken
+    prons = sum([text.count(x) for x in fPersPron])/noOfToken
+    punct = [[] for x in range(6)]
+    for k, punctSign in enumerate([text.count(x) for x in punctMarks]):
+        punct[k] = punctSign
+    psum = sum(punct)
+    for i in range(len(punct)):
+        punct[i] /= float(psum)
     print
-    pdfLD = []
-    pdfLD.append(helperMK.evalPDF(featureMean[0][0], featureStd[0][0], lDiv))
-    pdfLD.append(helperMK.evalPDF(featureMean[1][0], featureStd[1][0], lDiv))
-    pdfLD.append(helperMK.evalPDF(featureMean[2][0], featureStd[2][0], lDiv))
-    pdfP = []
-    pdfP.append(helperMK.evalPDF(featureMean[0][1], featureStd[0][1], prons))
-    pdfP.append(helperMK.evalPDF(featureMean[1][1], featureStd[1][1], prons))
-    pdfP.append(helperMK.evalPDF(featureMean[2][1], featureStd[2][1], prons))
-    pdfWL = []
-    pdfWL.append(helperMK.evalPDF(featureMean[0][2], featureStd[0][2], wLen))
-    pdfWL.append(helperMK.evalPDF(featureMean[1][2], featureStd[1][2], wLen))
-    pdfWL.append(helperMK.evalPDF(featureMean[2][2], featureStd[2][2], wLen))
+    pLD = []
+    for author in range(3):
+        pLD.append(helperMK.evalProb(featureMean[author][0], featureStd[author][0], lDiv))
+    pPron = []
+    for author in range(3):
+        pPron.append(helperMK.evalProb(featureMean[author][1], featureStd[author][1], prons))
+    pWL = []
+    for author in range(3):
+        pWL.append(helperMK.evalProb(featureMean[author][2], featureStd[author][2], wLen))
+    pPunct = [[] for x in range(6)]
+    for i in range(3,9):
+        for author in range(3):
+            pPunct[i-3].append(helperMK.evalProb(featureMean[author][i], featureStd[author][i], punct[i-3]))
     probs = []
-    probs.append(pdfLD[0] * pdfP[0] * pdfWL[0] * prior[0]/sum(prior))
-    probs.append(pdfLD[1] * pdfP[1] * pdfWL[1] * prior[1]/sum(prior))
-    probs.append(pdfLD[2] * pdfP[2] * pdfWL[2] * prior[2]/sum(prior))
+    for author in range(3):
+        punc = 1;
+        for punctSign in range(6):
+            punc *= pPunct[punctSign][author]
+        probs.append(pLD[author] * pPron[author] * pWL[author] * punc * prior[author]/float(sum(prior)))
     print "Document Number", re.search("(?<=docno>).*?(?=</docno>)", test[doc]).group()
     print "H", int(1000*probs[0]/sum(probs))/10.0, "%"
     print "M", int(1000*probs[1]/sum(probs))/10.0, "%"
     print "J", int(1000*probs[2]/sum(probs))/10.0, "%"
+    
