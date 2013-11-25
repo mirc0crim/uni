@@ -1,0 +1,23 @@
+% The Credit Card Problem
+
+@RELATION cc
+
+@ATTRIBUTE Magazine	{Y,N}
+@ATTRIBUTE Watch 	{Y,N}
+@ATTRIBUTE Life 	{Y,N}
+@ATTRIBUTE Credit	{Y,N}
+@ATTRIBUTE Age 	NUMERIC
+@ATTRIBUTE Sex	{M,F}
+
+@DATA
+Y,N,N,N,45,M
+Y,Y,Y,Y,40,F
+N,N,N,N,42,M
+Y,Y,Y,Y,30,M
+Y,Y,Y,N,38,F
+N,N,N,N,55,F
+Y,Y,Y,Y,35,M
+N,N,N,N,27,M
+Y,N,N,N,43,M
+Y,Y,Y,N,41,F
+%
