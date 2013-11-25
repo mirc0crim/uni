@@ -1,6 +1,5 @@
 # -*- coding: ascii -*-
 import re
-import string
 from collections import Counter
 from scipy.stats import norm
 
@@ -58,13 +57,3 @@ def getNumberOfWordTypes(t):
 
 def getNumberOfToken(t):
     return float(len(t.split()))
-
-def getAZDict(text):
-    d = {}
-    c = Counter(text)
-    for e in string.lowercase:
-        if c.get(e):
-            d[e] = c.get(e)
-        else:
-            d[e] = 0
-    return d
