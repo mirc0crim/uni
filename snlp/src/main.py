@@ -96,34 +96,54 @@ for doc in range(len(test)):
     wLen = charsum/noOfToken
     print
     pLD = []
+    dLD = []
     for author in range(3):
         pLD.append(helperMK.evalProb(featureMean[author][0], featureStd[author][0], lDiv))
+        dLD.append(abs(featureMean[author][0] - lDiv))
     pPron = []
+    dPron = []
     for author in range(3):
         pPron.append(helperMK.evalProb(featureMean[author][1], featureStd[author][1], prons))
+        dPron.append(abs(featureMean[author][1] - prons))
     pWL = []
+    dWL = []
     for author in range(3):
         pWL.append(helperMK.evalProb(featureMean[author][2], featureStd[author][2], wLen))
+        dWL.append(abs(featureMean[author][2] - wLen))
     pPunct = []
+    dPunct = []
     for author in range(3):
         product = 1
+        su = 0
         for punctSign in range(3,9):
             product *= helperMK.evalProb(featureMean[author][punctSign], featureStd[author][punctSign], punct[punctSign-3])
+            su += abs(featureMean[author][punctSign] - punct[punctSign-3])
         pPunct.append(product)
+        dPunct.append(su)
     pChar = []
+    dChar = []
     for author in range(3):
         product = 1
+        su = 0
         for letter in range(9,35):
             product *= helperMK.evalProb(featureMean[author][letter], featureStd[author][letter], characters[letter-9])
+            su += abs(featureMean[author][letter] - characters[letter-9])
         pChar.append(product)
+        dChar.append(su)
     pPrior = []
     for author in range(3):
         pPrior.append(prior[author]/float(sum(prior)))
     probabilities = []
+    difference = []
     for author in range(3):
         probabilities.append(pLD[author] * pPron[author] * pWL[author] * pPunct[author] * pChar[author] * pPrior[author])
+        difference.append(dLD[author] + dPron[author] + dWL[author] + dPunct[author] + dChar[author])
     print "Document Number", re.search("(?<=docno>).*?(?=</docno>)", test[doc]).group()
     print "H", int(1000*probabilities[0]/sum(probabilities))/10.0, "%"
     print "M", int(1000*probabilities[1]/sum(probabilities))/10.0, "%"
     print "J", int(1000*probabilities[2]/sum(probabilities))/10.0, "%"
+    print
+    print "H", difference[0]
+    print "M", difference[1]
+    print "J", difference[2]
     
