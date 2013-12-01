@@ -1,5 +1,6 @@
 #!C:/Python27/python.exe -u
 # -*- coding: ascii -*-
+import math
 import numpy
 import re
 import string
@@ -136,12 +137,15 @@ for doc in range(len(test)):
     probabilities = []
     difference = []
     for author in range(3):
-        probabilities.append(pLD[author] * pPron[author] * pWL[author] * pPunct[author] * pChar[author] * pPrior[author])
+        probabilities.append(helperMK.logSum([pLD, pPron, pWL, pPunct, pChar, pPrior], author))
         difference.append(dLD[author] + dPron[author] + dWL[author] + dPunct[author] + dChar[author])
     print "Document Number", re.search("(?<=docno>).*?(?=</docno>)", test[doc]).group()
-    print "H", int(1000*probabilities[0]/sum(probabilities))/10.0, "%"
-    print "M", int(1000*probabilities[1]/sum(probabilities))/10.0, "%"
-    print "J", int(1000*probabilities[2]/sum(probabilities))/10.0, "%"
+    eProbabilities = []
+    for el in probabilities:
+        eProbabilities.append(math.e**el) #recover probabilities
+    print "H", int(1000*eProbabilities[0]/sum(eProbabilities))/10.0, "%"
+    print "M", int(1000*eProbabilities[1]/sum(eProbabilities))/10.0, "%"
+    print "J", int(1000*eProbabilities[2]/sum(eProbabilities))/10.0, "%"
     print
     print "H", difference[0]
     print "M", difference[1]

@@ -1,4 +1,5 @@
 # -*- coding: ascii -*-
+import math
 import re
 from collections import Counter
 from scipy.stats import norm
@@ -42,15 +43,17 @@ def extractText(text):
 
 def evalProb(mean, std, val):
     # Probability density function 
-    # div = 1/(std * math.sqrt(2 * math.pi))
-    # pot = -((val - mean)**2 / (2 * std**2))
-    # pdf = div * math.e**(pot)
-    
-    # better use this cumulative normal distribution
-    value = (val-mean)/std
-    epsilon = 0.05
-    diff = norm.cdf(value+epsilon) - norm.cdf(value-epsilon) 
-    return diff
+    div = 1/(std * math.sqrt(2 * math.pi))
+    pot = -((val - mean)**2 / (2 * std**2))
+    pdf = div * math.e**(pot)
+     
+    return pdf
+
+def logSum(array, i):
+    s = 0
+    for el in array:
+        s += math.log(el[i])
+    return s
 
 def getNumberOfWordTypes(t):
     return float(len(Counter(t.split())))
