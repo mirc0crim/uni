@@ -38,9 +38,10 @@ for author in range(len(names)):
     characters = [[] for x in range(26)]
     charsum = []
     wordLen = []
+    sentLen = []
     prior.append(len(train[author]))
     for currDoc in range(len(train[author])):
-        text = helperMK.extractText(train[author][currDoc])
+        text = train[author][currDoc]
         numToken.append(helperMK.getNumberOfToken(text))
         numTypes.append(helperMK.getNumberOfWordTypes(text))
         for k, letter in enumerate([text.count(x) for x in alphabet]):
@@ -51,6 +52,7 @@ for author in range(len(names)):
         psum.append(sum([text.count(punctSign) for punctSign in punctMarks]))
         pron.append(sum([text.count(pronoun) for pronoun in fPersPron])/numToken[-1])
         wordLen.append(charsum[-1]/numToken[-1])
+        sentLen.append(charsum[-1]/float(sum([text.count(x) for x in [".", "!", "?"]]))/wordLen[-1])
         lexDiv.append(numToken[-1]/numTypes[-1])
     meanChar = []
     stdChar = []
@@ -69,16 +71,18 @@ for author in range(len(names)):
     featureMean[author] = [numpy.mean(lexDiv), numpy.mean(pron), numpy.mean(wordLen)]
     featureMean[author].extend(meanPunct)
     featureMean[author].extend(meanChar)
+    featureMean[author].append(numpy.mean(sentLen))
     featureStd[author] = [numpy.std(lexDiv), numpy.std(pron), numpy.std(wordLen)]
     featureStd[author].extend(stdPunct)
     featureStd[author].extend(stdChar)
+    featureStd[author].append(numpy.std(sentLen))
     print "mean", featureMean[author]
     print "std", featureStd[author]
     print "prior", prior[author]
 
 for doc in range(len(test)):
     # TESTING
-    text = helperMK.extractText(test[doc])
+    text = test[doc]
     noOfToken = helperMK.getNumberOfToken(text)
     lDiv = noOfToken/helperMK.getNumberOfWordTypes(text)
     prons = sum([text.count(x) for x in fPersPron])/noOfToken
@@ -95,6 +99,7 @@ for doc in range(len(test)):
     for letter in range(len(characters)):
         characters[letter] /= float(charsum)
     wLen = charsum/noOfToken
+    sLen = charsum/float(sum([text.count(x) for x in [".", "!", "?"]]))/wLen
     print
     pLD = []
     dLD = []
@@ -114,31 +119,36 @@ for doc in range(len(test)):
     pPunct = []
     dPunct = []
     for author in range(3):
-        product = 1
+        product = 0
         su = 0
         for punctSign in range(3,9):
-            product *= helperMK.evalProb(featureMean[author][punctSign], featureStd[author][punctSign], punct[punctSign-3])
+            product += math.log(helperMK.evalProb(featureMean[author][punctSign], featureStd[author][punctSign], punct[punctSign-3]))
             su += abs(featureMean[author][punctSign] - punct[punctSign-3])
-        pPunct.append(product)
+        pPunct.append(math.e**product)
         dPunct.append(su)
     pChar = []
     dChar = []
     for author in range(3):
-        product = 1
+        product = 0
         su = 0
         for letter in range(9,35):
-            product *= helperMK.evalProb(featureMean[author][letter], featureStd[author][letter], characters[letter-9])
+            product += math.log(helperMK.evalProb(featureMean[author][letter], featureStd[author][letter], characters[letter-9]))
             su += abs(featureMean[author][letter] - characters[letter-9])
-        pChar.append(product)
+        pChar.append(math.e**product)
         dChar.append(su)
+    pSL = []
+    dSL = []
+    for author in range(3):
+        pSL.append(helperMK.evalProb(featureMean[author][35], featureStd[author][35], sLen))
+        dSL.append(abs(featureMean[author][35] - sLen))
     pPrior = []
     for author in range(3):
         pPrior.append(prior[author]/float(sum(prior)))
     probabilities = []
     difference = []
     for author in range(3):
-        probabilities.append(helperMK.logSum([pLD, pPron, pWL, pPunct, pChar, pPrior], author))
-        difference.append(dLD[author] + dPron[author] + dWL[author] + dPunct[author] + dChar[author])
+        probabilities.append(helperMK.logSum([pLD, pPron, pWL, pPunct, pChar, pSL, pPrior], author))
+        difference.append(dLD[author] + dPron[author] + dWL[author] + dPunct[author] + dChar[author] + dSL[author])
     print "Document Number", re.search("(?<=docno>).*?(?=</docno>)", test[doc]).group()
     eProbabilities = []
     for el in probabilities:
@@ -146,8 +156,8 @@ for doc in range(len(test)):
     print "H", int(1000*eProbabilities[0]/sum(eProbabilities))/10.0, "%"
     print "M", int(1000*eProbabilities[1]/sum(eProbabilities))/10.0, "%"
     print "J", int(1000*eProbabilities[2]/sum(eProbabilities))/10.0, "%"
-    print
-    print "H", difference[0]
-    print "M", difference[1]
-    print "J", difference[2]
+#     print
+#     print "H", difference[0]
+#     print "M", difference[1]
+#     print "J", difference[2]
     

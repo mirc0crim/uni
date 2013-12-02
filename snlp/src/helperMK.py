@@ -32,15 +32,6 @@ def testArray(text):
     m = re.findall("<DOCNO>.*?PUBLIUS", text, di)
     return m
 
-def extractText(text):
-    rep = ["DOCNO", "DOCID", "AUTHOR", "TITLE", "SOURCE"]
-    for i in range(len(rep)):
-        text = re.sub("<" + rep[i] + ">.*?</" + rep[i] + ">", "", text, 0, di)
-        text = re.sub("\n\n","\n", text)
-    text = re.sub("To the People of the State of New York:\n", "", text, 0, di)
-    text = re.sub("PUBLIUS\n", "", text, 0, di)
-    return text
-
 def evalProb(mean, std, val):
     # Probability density function 
     div = 1/(std * math.sqrt(2 * math.pi))
