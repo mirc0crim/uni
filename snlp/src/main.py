@@ -2,6 +2,7 @@
 # -*- coding: ascii -*-
 import math
 import numpy
+import random
 import re
 import string
 import helperMK
@@ -12,6 +13,12 @@ outputPath = "D:\\uni\\snlp\\output\\"
 names = ["Hamilton Train:", "Madison Train:", "Jay Train:"]
 punctMarks = ["?","!",".",";",":",","]
 alphabet = [character for character in string.lowercase[:26]]
+randInt = sorted(set([random.randint(0,25) for x in range(20)]), reverse=True)
+print alphabet
+print randInt
+for i in range(len(randInt)):
+    del alphabet[randInt[i]]
+print alphabet
 fPersPron = ["i","me","my","mine","we","us","our","ours"]
 
 print "Path to Train Set", fedTrainPath
@@ -35,7 +42,7 @@ for author in range(len(names)):
     punct = [[] for x in range(6)]
     psum = []
     pron = []
-    characters = [[] for x in range(26)]
+    characters = [[] for x in range(len(alphabet))]
     charsum = []
     wordLen = []
     sentLen = []
@@ -92,7 +99,7 @@ for doc in range(len(test)):
     psum = sum(punct)
     for punctSign in range(len(punct)):
         punct[punctSign] /= float(psum)
-    characters = [[] for x in range(26)]
+    characters = [[] for x in range(len(alphabet))]
     for k, letter in enumerate([text.count(x) for x in alphabet]):
         characters[k] = letter
     charsum = sum(characters)
@@ -131,7 +138,7 @@ for doc in range(len(test)):
     for author in range(3):
         product = 0
         su = 0
-        for letter in range(9,35):
+        for letter in range(9,9+len(alphabet)):
             product += math.log(helperMK.evalProb(featureMean[author][letter], featureStd[author][letter], characters[letter-9]))
             su += abs(featureMean[author][letter] - characters[letter-9])
         pChar.append(math.e**product)
@@ -139,8 +146,8 @@ for doc in range(len(test)):
     pSL = []
     dSL = []
     for author in range(3):
-        pSL.append(helperMK.evalProb(featureMean[author][35], featureStd[author][35], sLen))
-        dSL.append(abs(featureMean[author][35] - sLen))
+        pSL.append(helperMK.evalProb(featureMean[author][9+len(alphabet)], featureStd[author][9+len(alphabet)], sLen))
+        dSL.append(abs(featureMean[author][9+len(alphabet)] - sLen))
     pPrior = []
     for author in range(3):
         pPrior.append(prior[author]/float(sum(prior)))
