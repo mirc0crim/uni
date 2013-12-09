@@ -37,7 +37,6 @@ def evalProb(mean, std, val):
     div = 1/(std * math.sqrt(2 * math.pi))
     pot = -((val - mean)**2 / (2 * std**2))
     pdf = div * math.e**(pot)
-     
     return pdf
 
 def logSum(array, i):
@@ -45,6 +44,13 @@ def logSum(array, i):
     for el in array:
         s += math.log(el[i])
     return s
+
+def normalize(array):
+    minVal = min(array)
+    maxVal = max(array)
+    for i in range(len(array)):
+        array[i] = (array[i]-minVal)/(maxVal-minVal)
+    return array
 
 def getNumberOfWordTypes(t):
     return float(len(Counter(t.split())))
