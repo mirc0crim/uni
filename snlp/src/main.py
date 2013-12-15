@@ -5,7 +5,10 @@ import numpy
 import random
 import re
 import string
+import time
 import helperMK
+
+startTime = time.time()
 
 fedTrainPath = "D:\\uni\\snlp\\FederalistTraining.txt"
 fedTestPath = "D:\\uni\\snlp\\FederalistTestAll.txt"
@@ -14,7 +17,7 @@ names = ["Hamilton Train:", "Madison Train:", "Jay Train:"]
 punctMarks = ["?","!",".",";",":",","]
 alphabet = [character for character in string.lowercase[:26]]
 completeAlphabet = [character for character in string.lowercase[:26]]
-probabilistic = False
+probabilistic = True
 vowels = False
 if probabilistic and not vowels:
     randInt = list(set([random.randint(0,25) for x in range(5)]))
@@ -191,3 +194,6 @@ for doc in range(len(test)):
     print "M", difference[1]
     print "J", difference[2]
     
+print
+print
+print "Runtime:", time.time()-startTime
