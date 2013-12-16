@@ -7,7 +7,7 @@ siftDir = 'D:\uni\cv\sift\';
 
 images = dir([imgDir, '*.png']);
 tic
-for i=1:10
+for i=1:length(images)
     imgName = images(i).name;
     I = single(rgb2gray(imread([imgDir, imgName])));
     [F,D] = vl_sift(I);
