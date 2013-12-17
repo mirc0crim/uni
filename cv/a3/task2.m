@@ -22,6 +22,9 @@ end
 k = 1000;
 % this takes over 13 minutes :/
 %[centers, assignments] = vl_kmeans(single(myDescriptors), k);
+% faster method as proposed in the forum
+% this takes 4-5 minutes :|
+%[centers, assignments] = vl_kmeans(single(myDescriptors), k, 'Algorithm', 'ANN', 'MaxNumComparisons', ceil(k / 50));
 
 for i=randsample(1:k, 2)
     figure('name', num2str(i));

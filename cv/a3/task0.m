@@ -17,9 +17,10 @@ for i=1:length(images)
     orientation = F(4,:);
     save([siftDir, imgName(1:(end-4)), '.mat'], 'imgName', 'D', 'numFeats', 'center', 'scale', 'orientation');
 end
-toc % each pic takes about 1s
+toc % each pic can take about 1s (154 pics)
 
 % plot last sift over image
+% code taken from the vlfeat documentation homepage
 image(imread([imgDir, imgName]));
 perm = randperm(size(F,2));
 sel = perm(1:50);
