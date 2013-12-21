@@ -29,16 +29,32 @@ function tsp()
     ydist = repmat(coordinates(:,2),1,noOfCities) - repmat(coordinates(:,2)',noOfCities,1);
     distances = sqrt(xdist.^2 + ydist.^2);
     distances(find(eye(noOfCities))) = Inf;
-    [route, len, startCityNN] = useNearestNeighbor(distances);
-    graphNN = createGraph(coordinates, route);
+    
+    % Nearest Neighbor Construction Heuristics
+    [routeNN, lenNN, startCityNN] = useNearestNeighbor(distances);
+    graphNN = createGraph(coordinates, routeNN);
     subplot(2,2,3);
     plot(graphNN(:,1),graphNN(:,2));    
     title('Route with Nearest Neighbor');
-    axis([-3 125 -3 100])
+    axis([-3 125 -3 100]);
     hold on;
     plot(coordinates(startCityNN,1), coordinates(startCityNN,2), 'r*');
     hold off;
-    text(130,25,['l=',num2str(round(len))]);
+    text(130,25,['l=',num2str(round(lenNN))]);
+    
+    % Best Insertion Construction Heuristics
+    [routeBI, lenBI, startSelecteBI] = useBestInsertion(distances);
+    graphBI = createGraph(coordinates, routeBI);
+    subplot(2,2,4);
+    plot(graphBI(:,1),graphBI(:,2));    
+    title('Route with Best Insertion');
+    axis([-3 125 -3 100]);
+    hold on;
+    plot(coordinates(startSelecteBI(1),1), coordinates(startSelecteBI(1),2), 'r*');
+    plot(coordinates(startSelecteBI(2),1), coordinates(startSelecteBI(2),2), 'r*');
+    plot(coordinates(startSelecteBI(3),1), coordinates(startSelecteBI(3),2), 'r*');
+    hold off;
+    text(130,25,['l=',num2str(round(lenBI))]);
 end
 
 function graph = createGraph(coordinates, route)
