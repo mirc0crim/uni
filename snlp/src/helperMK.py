@@ -15,9 +15,13 @@ def readFile(fileName):
 def authorArray(text):
     s = [[],[],[],[]]
     m = re.findall("<DOCNO>.*?PUBLIUS", text, di)
+    respectPrior = False;
+    c = 0
     for i in range(len(m)):
         if re.findall("<AUTHOR> Alexander Hamilton </", m[i], di):
-            s[0].append(m[i])
+            if c < 14 or respectPrior:
+                s[0].append(m[i])
+                c += 1;
         elif re.findall("<AUTHOR> James Madison </", m[i], di):
             s[1].append(m[i])
         elif re.findall("<AUTHOR> John Jay </", m[i], di):
