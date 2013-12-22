@@ -3,18 +3,19 @@ function tsp()
     clear All;
     clc;
 
-    noOfCities = 411;
-    
+    noOfCities = 131;
     coordinates = zeros(noOfCities,2);
     
     % Read coordinates from text file
-    fid = fopen('TSP_411.txt', 'r');
+    fid = fopen('data131.txt', 'r');
     tline = fgets(fid);
     i = 1;
     while ischar(tline)
-        m = regexp(tline, '\d+'); % returns [node_number, x, y]
-        coordinates(i,:) = [str2double(tline(m(2):m(3)-2)), str2double(tline(m(3):end))];
-        i = i + 1;
+        if tline(1) ~= 'N'
+            m = regexp(tline, '\d+'); % returns [node_number, x, y]
+            coordinates(i,:) = [str2double(tline(m(2):m(3)-2)), str2double(tline(m(3):end))];
+            i = i + 1;
+        end
         tline = fgets(fid);
     end
     fclose(fid);
@@ -33,7 +34,7 @@ function tsp()
     % Nearest Neighbor Construction Heuristics
     [routeNN, lenNN, startCityNN] = useNearestNeighbor(distances);
     graphNN = createGraph(coordinates, routeNN);
-    subplot(2,2,3);
+    subplot(2,2,2);
     plot(graphNN(:,1),graphNN(:,2));    
     title('Route with Nearest Neighbor');
     axis([-3 125 -3 100]);
@@ -45,7 +46,7 @@ function tsp()
     % Best Insertion Construction Heuristics
     [routeBI, lenBI, startSelecteBI] = useBestInsertion(distances);
     graphBI = createGraph(coordinates, routeBI);
-    subplot(2,2,4);
+    subplot(2,2,3);
     plot(graphBI(:,1),graphBI(:,2));    
     title('Route with Best Insertion');
     axis([-3 125 -3 100]);
@@ -55,6 +56,18 @@ function tsp()
     plot(coordinates(startSelecteBI(3),1), coordinates(startSelecteBI(3),2), 'r*');
     hold off;
     text(130,25,['l=',num2str(round(lenBI))]);
+    
+    % Cheapest Insertion Construction Heuristics
+    [routeCI, lenCI, startSelecteCI] = useCheapestInsertion(distances);
+    graphCI = createGraph(coordinates, routeCI);
+    subplot(2,2,4);
+    plot(graphCI(:,1),graphCI(:,2));    
+    title('Route with Cheapest Insertion');
+    axis([-3 125 -3 100]);
+    hold on;
+    plot(coordinates(startSelecteCI,1), coordinates(startSelecteCI,2), 'r*');
+    hold off;
+    text(130,25,['l=',num2str(round(lenCI))]);
 end
 
 function graph = createGraph(coordinates, route)
