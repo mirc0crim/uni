@@ -7,6 +7,7 @@ function tsp()
     coordinates = zeros(noOfCities,2);
     
     % Read coordinates from text file
+    % fid = fopen('TSP_411.txt', 'r');
     fid = fopen('data131.txt', 'r');
     tline = fgets(fid);
     i = 1;
@@ -21,7 +22,7 @@ function tsp()
     fclose(fid);
     
     % Initial locations
-    subplot(2,2,1);
+    figure;
     scatter(coordinates(:,1),coordinates(:,2));
     title('Location of the Cities')
     axis([-3 125 -3 100])
@@ -32,9 +33,10 @@ function tsp()
     distances(find(eye(noOfCities))) = Inf;
     
     % Nearest Neighbor Construction Heuristics
+    tic;
     [routeNN, lenNN, startCityNN] = useNearestNeighbor(distances);
     graphNN = createGraph(coordinates, routeNN);
-    subplot(2,2,2);
+    figure;
     plot(graphNN(:,1),graphNN(:,2));    
     title('Route with Nearest Neighbor');
     axis([-3 125 -3 100]);
@@ -42,11 +44,13 @@ function tsp()
     plot(coordinates(startCityNN,1), coordinates(startCityNN,2), 'r*');
     hold off;
     text(130,25,['l=',num2str(round(lenNN))]);
+    toc;
     
     % Best Insertion Construction Heuristics
+    tic;
     [routeBI, lenBI, startSelecteBI] = useBestInsertion(distances);
     graphBI = createGraph(coordinates, routeBI);
-    subplot(2,2,3);
+    figure;
     plot(graphBI(:,1),graphBI(:,2));    
     title('Route with Best Insertion');
     axis([-3 125 -3 100]);
@@ -56,11 +60,13 @@ function tsp()
     plot(coordinates(startSelecteBI(3),1), coordinates(startSelecteBI(3),2), 'r*');
     hold off;
     text(130,25,['l=',num2str(round(lenBI))]);
+    toc;
     
     % Cheapest Insertion Construction Heuristics
+    tic;
     [routeCI, lenCI, startSelecteCI] = useCheapestInsertion(distances);
     graphCI = createGraph(coordinates, routeCI);
-    subplot(2,2,4);
+    figure;
     plot(graphCI(:,1),graphCI(:,2));    
     title('Route with Cheapest Insertion');
     axis([-3 125 -3 100]);
@@ -68,6 +74,52 @@ function tsp()
     plot(coordinates(startSelecteCI,1), coordinates(startSelecteCI,2), 'r*');
     hold off;
     text(130,25,['l=',num2str(round(lenCI))]);
+    toc;
+    
+    % Local Search Improvement Heuristics using Swap only
+    tic;
+    [routeLSS, lenLSS] = useLocalSearch(distances, 1);
+    graphLSS = createGraph(coordinates, routeLSS);
+    figure;
+    subplot(2,2,1);
+    plot(graphLSS(:,1),graphLSS(:,2));    
+    title('Route with Local Search (Swap)');
+    axis([-3 125 -3 100]);
+    text(130,25,['l=',num2str(round(lenLSS))]);
+    toc;
+    
+    % Local Search Improvement Heuristics using Translation only
+    tic;
+    [routeLST, lenLST] = useLocalSearch(distances, 2);
+    graphLST = createGraph(coordinates, routeLST);
+    subplot(2,2,2);
+    plot(graphLST(:,1),graphLST(:,2));    
+    title('Route with Local Search (Translation)');
+    axis([-3 125 -3 100]);
+    text(130,25,['l=',num2str(round(lenLST))]);
+    toc;
+    
+    % Local Search Improvement Heuristics using Inversion only
+    tic;
+    [routeLSI, lenLSI] = useLocalSearch(distances, 3);
+    graphLSI = createGraph(coordinates, routeLSI);
+    subplot(2,2,3);
+    plot(graphLSI(:,1),graphLSI(:,2));
+    title('Route with Local Search (Inversion)');
+    axis([-3 125 -3 100]);
+    text(130,25,['l=',num2str(round(lenLSI))]);
+    toc;
+    
+    % Local Search Improvement Heuristics using Swap, Translation & Inversion
+    tic;
+    [routeLSSTI, lenLSSTI] = useLocalSearch(distances, 4);
+    graphLSSTI = createGraph(coordinates, routeLSSTI);
+    subplot(2,2,4);
+    plot(graphLSSTI(:,1),graphLSSTI(:,2));
+    title('Route with Local Search (Swap, Translation, Inversion)');
+    axis([-3 125 -3 100]);
+    text(130,25,['l=',num2str(round(lenLSSTI))]);
+    toc;
 end
 
 function graph = createGraph(coordinates, route)

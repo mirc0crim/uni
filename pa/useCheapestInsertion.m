@@ -33,8 +33,10 @@ function [route, dist, startSelected] = useCheapestInsertion(distances)
         end
         isUsed(used) = 1;
         selected = minSelectedHat;
-        disp(c);
         c = c + 1;
+        if mod(c, 20) == 0
+            disp(c); % print out every 20th iteration
+        end
     end
     dist = calcLen(distances, selected);
     for i=1:noOfCities-1
