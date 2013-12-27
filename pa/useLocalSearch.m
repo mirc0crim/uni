@@ -9,30 +9,18 @@ function [route, dist] = useLocalSearch(distances, mode)
     r = randperm(noOfCities);
     calcLen(distances, r);
     c = 0;
-    while c < 5*noOfCities^2
+    lenBefore = calcLen(distances, r);
+    while c < 50*noOfCities^2
         if mode == 1
-            lenBefore = calcLen(distances, r);
             newR = swap(r);
-            if calcLen(distances, newR) <= lenBefore
-                r = newR;
-            end
         end
         if mode == 2
-            lenBefore = calcLen(distances, r);
             newR = translation(r);
-            if calcLen(distances, newR) <= lenBefore
-                r = newR;
-            end
         end
         if mode == 3
-            lenBefore = calcLen(distances, r);
             newR = inversion(r);
-            if calcLen(distances, newR) <= lenBefore
-                r = newR;
-            end
         end
         if mode == 4
-            lenBefore = calcLen(distances, r);
             selector = rand(1);
             if selector < 1/3
                 newR = swap(r);
@@ -41,13 +29,15 @@ function [route, dist] = useLocalSearch(distances, mode)
             else
                 newR = inversion(r);
             end
-            if calcLen(distances, newR) <= lenBefore
-                r = newR;
-            end
+        end
+        lenAfter = calcLen(distances, newR);
+        if lenAfter <= lenBefore
+            r = newR;
+            lenBefore = lenAfter;
         end
         c = c + 1;
-        if mod(c, 50000) == 0
-            disp(c); % print out every 20th iteration
+        if mod(c, 500000) == 0
+            disp(c); % print out every M/2 iteration
         end
     end
     dist = calcLen(distances, r);

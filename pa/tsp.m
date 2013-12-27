@@ -23,6 +23,7 @@ function tsp()
     
     % Initial locations
     figure;
+    subplot(2,2,1);
     scatter(coordinates(:,1),coordinates(:,2));
     title('Location of the Cities')
     axis([-3 125 -3 100])
@@ -36,7 +37,7 @@ function tsp()
     tic;
     [routeNN, lenNN, startCityNN] = useNearestNeighbor(distances);
     graphNN = createGraph(coordinates, routeNN);
-    figure;
+    subplot(2,2,2);
     plot(graphNN(:,1),graphNN(:,2));    
     title('Route with Nearest Neighbor');
     axis([-3 125 -3 100]);
@@ -50,7 +51,7 @@ function tsp()
     tic;
     [routeBI, lenBI, startSelecteBI] = useBestInsertion(distances);
     graphBI = createGraph(coordinates, routeBI);
-    figure;
+    subplot(2,2,3);
     plot(graphBI(:,1),graphBI(:,2));    
     title('Route with Best Insertion');
     axis([-3 125 -3 100]);
@@ -66,7 +67,7 @@ function tsp()
     tic;
     [routeCI, lenCI, startSelecteCI] = useCheapestInsertion(distances);
     graphCI = createGraph(coordinates, routeCI);
-    figure;
+    subplot(2,2,4);
     plot(graphCI(:,1),graphCI(:,2));    
     title('Route with Cheapest Insertion');
     axis([-3 125 -3 100]);
@@ -78,9 +79,9 @@ function tsp()
     
     % Local Search Improvement Heuristics using Swap only
     tic;
+    figure;
     [routeLSS, lenLSS] = useLocalSearch(distances, 1);
     graphLSS = createGraph(coordinates, routeLSS);
-    figure;
     subplot(2,2,1);
     plot(graphLSS(:,1),graphLSS(:,2));    
     title('Route with Local Search (Swap)');
