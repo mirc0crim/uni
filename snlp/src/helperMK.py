@@ -2,7 +2,6 @@
 import math
 import re
 from collections import Counter
-from scipy.stats import norm
 
 di = re.DOTALL|re.IGNORECASE
 
@@ -15,7 +14,9 @@ def readFile(fileName):
 def authorArray(text):
     s = [[],[],[],[]]
     m = re.findall("<DOCNO>.*?PUBLIUS", text, di)
-    respectPrior = False;
+    # -------------------------
+    respectPrior = True;
+    # -------------------------
     c = 0
     for i in range(len(m)):
         if re.findall("<AUTHOR> Alexander Hamilton </", m[i], di):

@@ -10,15 +10,18 @@ import helperMK
 
 startTime = time.time()
 
+# -------------------------
+probabilistic = False
+# -------------------------
+vowels = False
+# -------------------------
+
 fedTrainPath = "D:\\uni\\snlp\\FederalistTraining.txt"
 fedTestPath = "D:\\uni\\snlp\\FederalistTestAll.txt"
-outputPath = "D:\\uni\\snlp\\output\\"
 names = ["Hamilton Train:", "Madison Train:", "Jay Train:"]
 punctMarks = ["?","!",".",";",":",","]
 alphabet = [character for character in string.lowercase[:26]]
 completeAlphabet = [character for character in string.lowercase[:26]]
-probabilistic = True
-vowels = False
 if probabilistic and not vowels:
     randInt = list(set([random.randint(0,25) for x in range(5)]))
     a = []
@@ -29,11 +32,11 @@ if probabilistic and not vowels:
     print alphabet
 if vowels and not probabilistic:
     alphabet = ["a","e","i","o","u"]
+    print alphabet
 fPersPron = ["i","me","my","mine","we","us","our","ours"]
 
 print "Path to Train Set", fedTrainPath
 print "Path to Test Set", fedTestPath
-print "Path for Output", outputPath
 print
 
 # [[hamiltonDocs][madisonDocs][JayDocs]]
@@ -189,10 +192,10 @@ for doc in range(len(test)):
     print "H", int(1000*eProbabilities[0]/sum(eProbabilities))/10.0, "%"
     print "M", int(1000*eProbabilities[1]/sum(eProbabilities))/10.0, "%"
     print "J", int(1000*eProbabilities[2]/sum(eProbabilities))/10.0, "%"
-    print
-    print "H", difference[0]
-    print "M", difference[1]
-    print "J", difference[2]
+#     print
+#     print "H", difference[0]
+#     print "M", difference[1]
+#     print "J", difference[2]
     
 print
 print
