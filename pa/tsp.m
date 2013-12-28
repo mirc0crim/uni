@@ -23,7 +23,6 @@ function tsp()
     
     % Initial locations
     figure;
-    subplot(2,2,1);
     scatter(coordinates(:,1),coordinates(:,2));
     title('Location of the Cities')
     axis([-3 125 -3 100])
@@ -37,7 +36,8 @@ function tsp()
     tic;
     [routeNN, lenNN, startCityNN] = useNearestNeighbor(distances);
     graphNN = createGraph(coordinates, routeNN);
-    subplot(2,2,2);
+    figure;
+    subplot(2,2,1);
     plot(graphNN(:,1),graphNN(:,2));    
     title('Route with Nearest Neighbor');
     axis([-3 125 -3 100]);
@@ -51,7 +51,7 @@ function tsp()
     tic;
     [routeBI, lenBI, startSelecteBI] = useBestInsertion(distances);
     graphBI = createGraph(coordinates, routeBI);
-    subplot(2,2,3);
+    subplot(2,2,2);
     plot(graphBI(:,1),graphBI(:,2));    
     title('Route with Best Insertion');
     axis([-3 125 -3 100]);
@@ -67,7 +67,7 @@ function tsp()
     tic;
     [routeCI, lenCI, startSelecteCI] = useCheapestInsertion(distances);
     graphCI = createGraph(coordinates, routeCI);
-    subplot(2,2,4);
+    subplot(2,2,3);
     plot(graphCI(:,1),graphCI(:,2));    
     title('Route with Cheapest Insertion');
     axis([-3 125 -3 100]);
@@ -76,6 +76,22 @@ function tsp()
     hold off;
     text(130,25,['l=',num2str(round(lenCI))]);
     toc;
+    
+    % Saving Construction Heuristics
+    tic;
+    [routeS, lenS, startSelecteS] = useSaving(distances);
+    graphS = createGraph(coordinates, routeS);
+    subplot(2,2,4);
+    plot(graphS(:,1),graphS(:,2));    
+    title('Route with Saving');
+    axis([-3 125 -3 100]);
+    hold on;
+    plot(coordinates(startSelecteS,1), coordinates(startSelecteS,2), 'r*');
+    hold off;
+    text(130,25,['l=',num2str(round(lenS))]);
+    toc;
+    
+    assert False;
     
     % Local Search Improvement Heuristics using Swap only
     tic;
