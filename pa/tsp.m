@@ -91,8 +91,6 @@ function tsp()
     text(130,25,['l=',num2str(round(lenS))]);
     toc;
     
-    assert False;
-    
     % Local Search Improvement Heuristics using Swap only
     tic;
     figure;
@@ -136,6 +134,29 @@ function tsp()
     title('Route with Local Search (Swap, Translation, Inversion)');
     axis([-3 125 -3 100]);
     text(130,25,['l=',num2str(round(lenLSSTI))]);
+    toc;
+    
+    % Simulated Annealing Improvement Heuristics using Metropolis
+    tic;
+    [routeSAM, lenSAM] = useSimulatedAnnealing(distances, 1);
+    graphSAM = createGraph(coordinates, routeSAM);
+    figure;
+    subplot(2,2,1);
+    plot(graphSAM(:,1),graphSAM(:,2));
+    title('Route with Simulated Annealing (Metropolis)');
+    axis([-3 125 -3 100]);
+    text(130,25,['l=',num2str(round(lenSAM))]);
+    toc;
+    
+    % Simulated Annealing Improvement Heuristics using Heat bath
+    tic;
+    [routeSAHB, lenSAHB] = useSimulatedAnnealing(distances, 2);
+    graphSAHB = createGraph(coordinates, routeSAHB);
+    subplot(2,2,2);
+    plot(graphSAHB(:,1),graphSAHB(:,2));
+    title('Route with Simulated Annealing (Heat bath)');
+    axis([-3 125 -3 100]);
+    text(130,25,['l=',num2str(round(lenSAHB))]);
     toc;
 end
 

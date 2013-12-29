@@ -1,26 +1,15 @@
-function [route, dist] = useLocalSearch(distances, mode)
+function [route, dist] = useSimulatedAnnealing(distances, mode)
     % mode
-    % 1 = swap
-    % 2 = translation
-    % 3 = inversion
-    % 4 = all
+    % 1 = Metropolis
+    % 2 = Heat bath
     noOfCities = length(distances);
     route = zeros(noOfCities,noOfCities);
     r = randperm(noOfCities);
     calcLen(distances, r);
-    c = 0;
     lenBefore = calcLen(distances, r);
-    while c < noOfCities^2 %*50
-        if mode == 1
-            newR = swap(r);
-        end
-        if mode == 2
-            newR = translation(r);
-        end
-        if mode == 3
-            newR = inversion(r);
-        end
-        if mode == 4
+    T = 10000;
+    while T > 0.01
+        for i=1:1000 %*10
             selector = rand(1);
             if selector < 1/3
                 newR = swap(r);
@@ -29,16 +18,29 @@ function [route, dist] = useLocalSearch(distances, mode)
             else
                 newR = inversion(r);
             end
+            lenAfter = calcLen(distances, newR);
+            deltaH = lenAfter - lenBefore;
+            if mode == 1
+                if deltaH <= 0
+                    r = newR;
+                    lenBefore = lenAfter;
+                else
+                    prob = exp(-deltaH/T);
+                    if rand(1) < prob
+                        r = newR;
+                        lenBefore = lenAfter;
+                    end
+                end
+            end
+            if mode == 2
+                prob = 1/(1+exp(deltaH/T));
+                if rand(1) < prob
+                    r = newR;
+                    lenBefore = lenAfter;
+                end
+            end
         end
-        lenAfter = calcLen(distances, newR);
-        if lenAfter <= lenBefore
-            r = newR;
-            lenBefore = lenAfter;
-        end
-        c = c + 1;
-        if mod(c, 500000) == 0
-            disp(c); % print out every M/2 iteration
-        end
+        T = 0.95 * T;
     end
     dist = calcLen(distances, r);
     for i=1:noOfCities-1
