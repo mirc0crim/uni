@@ -63,6 +63,8 @@ function tsp()
     text(130,25,['l=',num2str(round(lenBI))]);
     toc;
     
+    %{
+    
     % Cheapest Insertion Construction Heuristics
     tic;
     [routeCI, lenCI, startSelecteCI] = useCheapestInsertion(distances);
@@ -77,6 +79,8 @@ function tsp()
     text(130,25,['l=',num2str(round(lenCI))]);
     toc;
     
+    %}
+    
     % Saving Construction Heuristics
     tic;
     [routeS, lenS, startSelecteS] = useSaving(distances);
@@ -90,6 +94,8 @@ function tsp()
     hold off;
     text(130,25,['l=',num2str(round(lenS))]);
     toc;
+    
+    %{
     
     % Local Search Improvement Heuristics using Swap only
     tic;
@@ -158,6 +164,8 @@ function tsp()
     axis([-3 125 -3 100]);
     text(130,25,['l=',num2str(round(lenSAHB))]);
     toc;
+    
+    %}
 end
 
 function graph = createGraph(coordinates, route)
