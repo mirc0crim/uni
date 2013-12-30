@@ -9,8 +9,8 @@ function [route, dist, startSelected] = useSaving(distances)
     methodsMat = zeros(noOfCities, noOfCities);
     savingsMat = zeros(noOfCities, noOfCities);
     for i=1:noOfCities
-        for j=1:noOfCities
-            [V,I] = getSaving(i, j, tours, distances);
+        for j=i:noOfCities
+            [V,I] = getSaving(i, j, tours, distances, startSelected);
             methodsMat(i,j) = I;
             methodsMat(j,i) = I;
             savingsMat(i,j) = V;
@@ -46,7 +46,7 @@ function [route, dist, startSelected] = useSaving(distances)
         
         if method < 3
            for i=1:noOfCities
-               [V,I] = getSaving(a, i, tours, distances);
+               [V,I] = getSaving(a, i, tours, distances, startSelected);
                methodsMat(a,i) = I;
                methodsMat(i,a) = I;
                savingsMat(a,i) = V;
@@ -58,7 +58,7 @@ function [route, dist, startSelected] = useSaving(distances)
            savingsMat(:,b) = 0;
         elseif method > 2
            for i=1:noOfCities
-               [V,I] = getSaving(b, i, tours, distances);
+               [V,I] = getSaving(b, i, tours, distances, startSelected);
                methodsMat(b,i) = I;
                methodsMat(i,b) = I;
                savingsMat(b,i) = V;
@@ -78,7 +78,7 @@ function [route, dist, startSelected] = useSaving(distances)
     route(tours(row,end), tours(row,1)) = 1;
 end
 
-function [V, I] = getSaving(a, b, tours, distances)
+function [V, I] = getSaving(a, b, tours, distances, startSelected)
     if a == 0 || b == 0 || a == b
         V = 0;
         I = 0;
@@ -93,7 +93,6 @@ function [V, I] = getSaving(a, b, tours, distances)
     end
     Na = tours(a, indNa);
     Nb = tours(b, indNb);
-    startSelected = max(tours(:,1));
     s1 = distances(Na, startSelected) + distances(startSelected, tours(b, 2)) ...
         - distances(Na, tours(b, 2));
     s2 = distances(tours(a, 2), startSelected) + distances(startSelected, tours(b, 2)) ...

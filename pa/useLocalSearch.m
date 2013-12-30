@@ -10,7 +10,7 @@ function [route, dist] = useLocalSearch(distances, mode)
     calcLen(distances, r);
     c = 0;
     lenBefore = calcLen(distances, r);
-    while c < noOfCities^2 *25 %*2
+    while c < noOfCities^2 *10 %*5
         if mode == 1
             newR = swap(r);
         end

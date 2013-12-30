@@ -5,7 +5,7 @@ function tsp()
 
     profile on;
     
-    bigFile = false;
+    bigFile = true;
     
     if bigFile
         noOfCities = 411;

@@ -21,19 +21,17 @@ function [route, dist, startSelected] = useCheapestInsertion(distances)
                 insertCost = distances(selected(j), unused(i)) ...
                     + distances(unused(i), selected(j+1))...
                     - distances(selected(j), selected(j+1));
-                testSelected = [selected(1:j), unused(i), selected(j+1:end)];
                 if insertCost < minCost
                     minCost = insertCost;
-                    minSelected = testSelected;
+                    minSelected = [selected(1:j), unused(i), selected(j+1:end)];
                 end
             end
             insertCost = distances(selected(c), unused(i)) ...
                 + distances(unused(i), selected(1))...
                 - distances(selected(c), selected(1));
-            testSelected = [selected(1:c), unused(i), selected(j+1:end)];
             if insertCost < minCost
                 minCostHat = insertCost;
-                minSelectedHat = testSelected;
+                minSelectedHat = [selected(1:c), unused(i), selected(c+1:end)];
                 used = unused(i);
             elseif minCost < minCostHat
                 minCostHat = minCost;

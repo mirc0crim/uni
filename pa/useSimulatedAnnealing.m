@@ -8,7 +8,7 @@ function [route, dist] = useSimulatedAnnealing(distances, mode)
     lenBefore = calcLen(distances, r);
     T = 10000;
     while T > 0.01
-        for i=1:1000 %*10
+        for i=1:1000 * 3
             selector = rand(1);
             if selector < 1/3
                 newR = swap(r);
