@@ -10,23 +10,33 @@ function [route, dist, startSelected] = useCheapestInsertion(distances)
     isUsed(secondSelected) = 1;
     selected = [startSelected, secondSelected];
     while c < noOfCities
-        minLenHat = Inf;
+        minCostHat = Inf;
         minSelectedHat = [];
         unused = find(isUsed==0);
         used = Inf;
         for i=1:length(unused)
-            minLen = Inf;
+            minCost = Inf;
             minSelected = [];
-            for j=1:c
+            for j=1:c-1
+                insertCost = distances(selected(j), unused(i)) ...
+                    + distances(unused(i), selected(j+1))...
+                    - distances(selected(j), selected(j+1));
                 testSelected = [selected(1:j), unused(i), selected(j+1:end)];
-                d = calcLen(distances, testSelected);
-                if d < minLen
-                    minLen = d;
+                if insertCost < minCost
+                    minCost = insertCost;
                     minSelected = testSelected;
                 end
             end
-            if minLen < minLenHat
-                minLenHat = minLen;
+            insertCost = distances(selected(c), unused(i)) ...
+                + distances(unused(i), selected(1))...
+                - distances(selected(c), selected(1));
+            testSelected = [selected(1:c), unused(i), selected(j+1:end)];
+            if insertCost < minCost
+                minCostHat = insertCost;
+                minSelectedHat = testSelected;
+                used = unused(i);
+            elseif minCost < minCostHat
+                minCostHat = minCost;
                 minSelectedHat = minSelected;
                 used = unused(i);
             end
