@@ -5,17 +5,23 @@ function tsp()
 
     profile on;
     
-    noOfCities = 131;
-    % noOfCities = 411;
-    ax = [-3 110 -3 50];
-    textX = 115;
-    % ax = [-3 125 -3 100];
-    % textX = 130;
+    bigFile = true;
+    
+    if bigFile
+        noOfCities = 411;
+        ax = [-3 125 -3 100];
+        textX = 130;
+        fid = fopen('TSP_411.txt', 'r');
+    else
+        noOfCities = 131;
+        ax = [-3 110 -3 50];
+        textX = 115;
+        fid = fopen('data131.txt', 'r');
+    end
+
     coordinates = zeros(noOfCities,2);
     
     % Read coordinates from text file
-    % fid = fopen('TSP_411.txt', 'r');
-    fid = fopen('data131.txt', 'r');
     tline = fgets(fid);
     i = 1;
     while ischar(tline)
@@ -46,7 +52,7 @@ function tsp()
     graphNN = createGraph(coordinates, routeNN);
     subplot(4,4,3);
     plot(graphNN(:,1),graphNN(:,2));    
-    title('Route with Nearest Neighbor');
+    title('Route Nearest Neighbor');
     axis(ax)
     hold on;
     plot(coordinates(startCityNN,1), coordinates(startCityNN,2), 'r*');
@@ -60,7 +66,7 @@ function tsp()
     graphBI = createGraph(coordinates, routeBI);
     subplot(4,4,4);
     plot(graphBI(:,1),graphBI(:,2));    
-    title('Route with Best Insertion');
+    title('Route Best Insertion');
     axis(ax)
     hold on;
     plot(coordinates(startSelecteBI(1),1), coordinates(startSelecteBI(1),2), 'r*');
@@ -76,7 +82,7 @@ function tsp()
     graphCI = createGraph(coordinates, routeCI);
     subplot(4,4,5);
     plot(graphCI(:,1),graphCI(:,2));    
-    title('Route with Cheapest Insertion');
+    title('Route Cheapest Insertion');
     axis(ax)
     hold on;
     plot(coordinates(startSelecteCI,1), coordinates(startSelecteCI,2), 'r*');
@@ -90,7 +96,7 @@ function tsp()
     graphS = createGraph(coordinates, routeS);
     subplot(4,4,6);
     plot(graphS(:,1),graphS(:,2));    
-    title('Route with Saving');
+    title('Route Saving');
     axis(ax)
     hold on;
     plot(coordinates(startSelecteS,1), coordinates(startSelecteS,2), 'r*');
@@ -104,7 +110,7 @@ function tsp()
     graphLSS = createGraph(coordinates, routeLSS);
     subplot(4,4,7);
     plot(graphLSS(:,1),graphLSS(:,2));    
-    title('Route with Local Search (Swap)');
+    title('Route Local Search (Swap)');
     axis(ax)
     text(textX,25,['l=',num2str(round(lenLSS))]);
     toc;
@@ -115,7 +121,7 @@ function tsp()
     graphLST = createGraph(coordinates, routeLST);
     subplot(4,4,8);
     plot(graphLST(:,1),graphLST(:,2));    
-    title('Route with Local Search (Translation)');
+    title('Route Local Search (Translation)');
     axis(ax)
     text(textX,25,['l=',num2str(round(lenLST))]);
     toc;
@@ -126,7 +132,7 @@ function tsp()
     graphLSI = createGraph(coordinates, routeLSI);
     subplot(4,4,9);
     plot(graphLSI(:,1),graphLSI(:,2));
-    title('Route with Local Search (Inversion)');
+    title('Route Local Search (Inversion)');
     axis(ax)
     text(textX,25,['l=',num2str(round(lenLSI))]);
     toc;
@@ -137,7 +143,7 @@ function tsp()
     graphLSSTI = createGraph(coordinates, routeLSSTI);
     subplot(4,4,10);
     plot(graphLSSTI(:,1),graphLSSTI(:,2));
-    title('Route with Local Search (Swap, Translation, Inversion)');
+    title('Route Local Search (Swap, Translation, Inversion)');
     axis(ax)
     text(textX,25,['l=',num2str(round(lenLSSTI))]);
     toc;
@@ -148,7 +154,7 @@ function tsp()
     graphSAM = createGraph(coordinates, routeSAM);
     subplot(4,4,11);
     plot(graphSAM(:,1),graphSAM(:,2));
-    title('Route with Simulated Annealing (Metropolis)');
+    title('Route Simulated Annealing (Metropolis)');
     axis(ax)
     text(textX,25,['l=',num2str(round(lenSAM))]);
     toc;
@@ -159,7 +165,7 @@ function tsp()
     graphSAHB = createGraph(coordinates, routeSAHB);
     subplot(4,4,12);
     plot(graphSAHB(:,1),graphSAHB(:,2));
-    title('Route with Simulated Annealing (Heat bath)');
+    title('Route Simulated Annealing (Heat bath)');
     axis(ax)
     text(textX,25,['l=',num2str(round(lenSAHB))]);
     toc;
@@ -170,7 +176,7 @@ function tsp()
     graphGAC = createGraph(coordinates, routeGAC);
     subplot(4,4,13);
     plot(graphGAC(:,1),graphGAC(:,2));
-    title('Route with Genetic Algorithm (Crossover)');
+    title('Route Genetic Algorithm (Crossover)');
     axis(ax)
     text(textX,25,['l=',num2str(round(lenGAC))]);
     toc;
@@ -181,7 +187,7 @@ function tsp()
     graphGASM = createGraph(coordinates, routeGASM);
     subplot(4,4,14);
     plot(graphGASM(:,1),graphGASM(:,2));
-    title('Route with Genetic Algorithm (Swap Mutation)');
+    title('Route Genetic Algorithm (Swap Mutation)');
     axis(ax)
     text(textX,25,['l=',num2str(round(lenGASM))]);
     toc;
@@ -192,7 +198,7 @@ function tsp()
     graphGATM = createGraph(coordinates, routeGATM);
     subplot(4,4,15);
     plot(graphGATM(:,1),graphGATM(:,2));
-    title('Route with Genetic Algorithm (Translation Mutation)');
+    title('Route Genetic Algorithm (Translation Mutation)');
     axis(ax)
     text(textX,25,['l=',num2str(round(lenGATM))]);
     toc;
@@ -203,7 +209,7 @@ function tsp()
     graphGAIM = createGraph(coordinates, routeGAIM);
     subplot(4,4,16);
     plot(graphGAIM(:,1),graphGAIM(:,2));
-    title('Route with Genetic Algorithm (Inversion Mutation)');
+    title('Route Genetic Algorithm (Inversion Mutation)');
     axis(ax)
     text(textX,25,['l=',num2str(round(lenGAIM))]);
     toc;
