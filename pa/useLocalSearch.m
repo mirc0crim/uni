@@ -79,12 +79,3 @@ function out = inversion(order)
         out = [order(1:r2), order(r1:-1:r2+1), order(r1+1:end)];
     end
 end
-
-function d = calcLen(distances, selected)
-    noOfCities = length(selected);
-    d = 0;
-    for i=1:noOfCities-1
-        d = d + distances(selected(i), selected(i+1));
-    end
-    d = d + distances(selected(end), selected(1));
-end

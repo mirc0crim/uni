@@ -69,8 +69,6 @@ function [route, dist, startSelected] = useSaving(distances)
            savingsMat(a,:) = 0;
            savingsMat(:,a) = 0;
         end
-        
-        disp(length(find(max(tours)==0)));
     end
     row = find(tours(:,1) ~= 0);
     dist = calcLen(distances, tours(row,:));
@@ -105,13 +103,4 @@ function [V, I] = getSaving(a, b, tours, distances)
     s4 = distances(Na, startSelected) + distances(startSelected, Nb) ...
         - distances(Na, Nb);
     [V, I] = max([s1,s2,s3,s4]);
-end
-
-function d = calcLen(distances, selected)
-    noOfCities = length(selected);
-    d = 0;
-    for i=1:noOfCities-1
-        d = d + distances(selected(i), selected(i+1));
-    end
-    d = d + distances(selected(end), selected(1));
 end

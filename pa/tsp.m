@@ -3,6 +3,8 @@ function tsp()
     clear All;
     clc;
 
+    profile on;
+    
     noOfCities = 131;
     coordinates = zeros(noOfCities,2);
     
@@ -34,9 +36,9 @@ function tsp()
     
     % Nearest Neighbor Construction Heuristics
     tic;
+    figure;
     [routeNN, lenNN, startCityNN] = useNearestNeighbor(distances);
     graphNN = createGraph(coordinates, routeNN);
-    figure;
     subplot(2,2,1);
     plot(graphNN(:,1),graphNN(:,2));    
     title('Route with Nearest Neighbor');
@@ -63,8 +65,6 @@ function tsp()
     text(130,25,['l=',num2str(round(lenBI))]);
     toc;
     
-    %{
-    
     % Cheapest Insertion Construction Heuristics
     tic;
     [routeCI, lenCI, startSelecteCI] = useCheapestInsertion(distances);
@@ -79,8 +79,6 @@ function tsp()
     text(130,25,['l=',num2str(round(lenCI))]);
     toc;
     
-    %}
-    
     % Saving Construction Heuristics
     tic;
     [routeS, lenS, startSelecteS] = useSaving(distances);
@@ -94,8 +92,6 @@ function tsp()
     hold off;
     text(130,25,['l=',num2str(round(lenS))]);
     toc;
-    
-    %{
     
     % Local Search Improvement Heuristics using Swap only
     tic;
@@ -144,9 +140,9 @@ function tsp()
     
     % Simulated Annealing Improvement Heuristics using Metropolis
     tic;
+    figure;
     [routeSAM, lenSAM] = useSimulatedAnnealing(distances, 1);
     graphSAM = createGraph(coordinates, routeSAM);
-    figure;
     subplot(2,2,1);
     plot(graphSAM(:,1),graphSAM(:,2));
     title('Route with Simulated Annealing (Metropolis)');
@@ -165,7 +161,8 @@ function tsp()
     text(130,25,['l=',num2str(round(lenSAHB))]);
     toc;
     
-    %}
+    profile off;
+    profile viewer;
 end
 
 function graph = createGraph(coordinates, route)
