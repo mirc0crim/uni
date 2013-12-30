@@ -12,7 +12,7 @@ function [route, dist] = useGeneticAlgorithm(distances, mode)
         genes(i,:) = randperm(noOfCities);
         lenBefore(i) = calcLen(distances, genes(i,:));
     end
-    for j=1:1000 % generations
+    for j=1:2000 % generations
         for i=1:100
             if mode == 1
                 newR = crossover(genes(i,:));
