@@ -143,7 +143,7 @@ function tsp()
     figure;
     [routeSAM, lenSAM] = useSimulatedAnnealing(distances, 1);
     graphSAM = createGraph(coordinates, routeSAM);
-    subplot(2,2,1);
+    subplot(1,2,1);
     plot(graphSAM(:,1),graphSAM(:,2));
     title('Route with Simulated Annealing (Metropolis)');
     axis([-3 125 -3 100]);
@@ -154,11 +154,56 @@ function tsp()
     tic;
     [routeSAHB, lenSAHB] = useSimulatedAnnealing(distances, 2);
     graphSAHB = createGraph(coordinates, routeSAHB);
-    subplot(2,2,2);
+    subplot(1,2,2);
     plot(graphSAHB(:,1),graphSAHB(:,2));
     title('Route with Simulated Annealing (Heat bath)');
     axis([-3 125 -3 100]);
     text(130,25,['l=',num2str(round(lenSAHB))]);
+    toc;
+    
+    % Genetic Algorithm Improvement Heuristics using Crossover
+    tic;
+    figure;
+    [routeGAC, lenGAC] = useGeneticAlgorithm(distances, 1);
+    graphGAC = createGraph(coordinates, routeGAC);
+    subplot(2,2,1);
+    plot(graphGAC(:,1),graphGAC(:,2));
+    title('Route with Genetic Algorithm (Crossover)');
+    axis([-3 125 -3 100]);
+    text(130,25,['l=',num2str(round(lenGAC))]);
+    toc;
+    
+    % Genetic Algorithm Improvement Heuristics using Swap Mutation
+    tic;
+    [routeGASM, lenGASM] = useGeneticAlgorithm(distances, 2);
+    graphGASM = createGraph(coordinates, routeGASM);
+    subplot(2,2,2);
+    plot(graphGASM(:,1),graphGASM(:,2));
+    title('Route with Genetic Algorithm (Swap Mutation)');
+    axis([-3 125 -3 100]);
+    text(130,25,['l=',num2str(round(lenGASM))]);
+    toc;
+    
+    % Genetic Algorithm Improvement Heuristics using Translation Mutation
+    tic;
+    [routeGATM, lenGATM] = useGeneticAlgorithm(distances, 3);
+    graphGATM = createGraph(coordinates, routeGATM);
+    subplot(2,2,3);
+    plot(graphGATM(:,1),graphGATM(:,2));
+    title('Route with Genetic Algorithm (Translation Mutation)');
+    axis([-3 125 -3 100]);
+    text(130,25,['l=',num2str(round(lenGATM))]);
+    toc;
+    
+    % Genetic Algorithm Improvement Heuristics using Inversion Mutation
+    tic;
+    [routeGAIM, lenGAIM] = useGeneticAlgorithm(distances, 4);
+    graphGAIM = createGraph(coordinates, routeGAIM);
+    subplot(2,2,4);
+    plot(graphGAIM(:,1),graphGAIM(:,2));
+    title('Route with Genetic Algorithm (Inversion Mutation)');
+    axis([-3 125 -3 100]);
+    text(130,25,['l=',num2str(round(lenGAIM))]);
     toc;
     
     profile off;
