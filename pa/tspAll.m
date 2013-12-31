@@ -156,7 +156,7 @@ function tspAll()
     % Simulated Annealing Improvement Heuristics using Metropolis
     disp('SA');
     tic;
-    [routeSAM, lenSAM] = useSimulatedAnnealing(distances, 1);
+    [routeSAM, lenSAM, ~] = useSimulatedAnnealing(distances, 1);
     graphSAM = createGraph(coordinates, routeSAM);
     subplot(4,4,11);
     plot(graphSAM(:,1),graphSAM(:,2));
@@ -167,7 +167,7 @@ function tspAll()
     
     % Simulated Annealing Improvement Heuristics using Heat bath
     tic;
-    [routeSAHB, lenSAHB] = useSimulatedAnnealing(distances, 2);
+    [routeSAHB, lenSAHB, ~] = useSimulatedAnnealing(distances, 2);
     graphSAHB = createGraph(coordinates, routeSAHB);
     subplot(4,4,12);
     plot(graphSAHB(:,1),graphSAHB(:,2));

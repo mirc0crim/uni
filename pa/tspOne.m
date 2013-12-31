@@ -6,7 +6,7 @@ function tspOne()
     tic;
     
     %----------------
-    heuristic = 14;
+    heuristic = 9;
     % 1-4   Construction NN, BI, CI, S
     % 5-8   Local Search S, T, I, STI
     % 9,10  Simulated Annealing M, HB
@@ -39,9 +39,14 @@ function tspOne()
     lenFound = zeros(runs,1);
     routeFound = zeros(runs,noOfCities+1,2);
     startChosen = zeros(runs,3);
-    bestLs = zeros(40,1000);
-    worstLs = zeros(40,1000);
-    meanLs = zeros(40,1000);
+    if heuristic > 10
+        k = 1000;
+    elseif heuristic > 8
+        k = 405;
+    end
+    bestLs = zeros(40,k);
+    worstLs = zeros(40,k);
+    meanLs = zeros(40,k);
     
     for i=1:runs
         if heuristic == 1
@@ -61,9 +66,9 @@ function tspOne()
         elseif heuristic == 8
             [route, len] = useLocalSearch(distances, 4);
         elseif heuristic == 9
-            [route, len] = useSimulatedAnnealing(distances, 1); % ~7.5min
+            [route, len, bestL, worstL, meanL] = useSimulatedAnnealing(distances, 1); % ~8min
         elseif heuristic == 10
-            [route, len] = useSimulatedAnnealing(distances, 2); % ~9min
+            [route, len, bestL, worstL, meanL] = useSimulatedAnnealing(distances, 2); % ~9min
         elseif heuristic == 11
             [route, len, bestL, worstL, meanL] = useGeneticAlgorithm(distances, 1); % ~2min
         elseif heuristic == 12
@@ -79,7 +84,7 @@ function tspOne()
         if heuristic < 5
             startChosen(i,:) = start;
         end
-        if heuristic > 10
+        if heuristic > 8
             bestLs(i,:) = bestL;
             worstLs(i,:) = worstL;
             meanLs(i,:) = meanL;
@@ -103,22 +108,36 @@ function tspOne()
     
     figure;
     hold on;
-    if heuristic > 10
+    if heuristic > 8
+        if heuristic < 11
+            set(gca,'XDir','Reverse')
+            T = 10000;
+            k = zeros(405,1);
+            c = 1;
+            while T > 0.00001
+                k(c) = log10(T);
+                c = c + 1;
+                T = T * 0.95;
+            end
+        else
+            k = 1:1000;
+        end
         for i=1:runs
-            plot(1:1000, bestLs(i,:), 'g');
-            plot(1:1000, worstLs(i,:), 'r');
-            plot(1:1000, meanLs(i,:), 'b');
+            plot(k, bestLs(i,:), 'g');
+            plot(k, worstLs(i,:), 'r');
+            plot(k, meanLs(i,:), 'b');
         end
     end
     hold off;
     
     figure;
-    best = lenFound(I(1))
-    worst = lenFound(I(runs))
-    averageLength = mean(lenFound)
+    disp(['best ', num2str(min(lenFound))]);
+    disp(['worst ', num2str(max(lenFound))]);
+    disp(['average ', num2str(mean(lenFound))]);
+    averageLength = mean(lenFound);
     stdDev = std(lenFound);
-    upper = averageLength+1.96*stdDev
-    lower = averageLength-1.96*stdDev
+    upper = averageLength+1.96*stdDev;
+    lower = averageLength-1.96*stdDev;
     plot(1:runs,upper,'r.',1:runs,lower,'r.',1:runs,lenFound,'bo');
     
     toc;
