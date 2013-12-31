@@ -179,7 +179,7 @@ function tspAll()
     % Genetic Algorithm Improvement Heuristics using Crossover
     disp('GA');
     tic;
-    [routeGAC, lenGAC] = useGeneticAlgorithm(distances, 1);
+    [routeGAC, lenGAC, ~] = useGeneticAlgorithm(distances, 1);
     graphGAC = createGraph(coordinates, routeGAC);
     subplot(4,4,13);
     plot(graphGAC(:,1),graphGAC(:,2));
@@ -190,7 +190,7 @@ function tspAll()
     
     % Genetic Algorithm Improvement Heuristics using Swap Mutation
     tic;
-    [routeGASM, lenGASM] = useGeneticAlgorithm(distances, 2);
+    [routeGASM, lenGASM, ~] = useGeneticAlgorithm(distances, 2);
     graphGASM = createGraph(coordinates, routeGASM);
     subplot(4,4,14);
     plot(graphGASM(:,1),graphGASM(:,2));
@@ -201,7 +201,7 @@ function tspAll()
     
     % Genetic Algorithm Improvement Heuristics using Translation Mutation
     tic;
-    [routeGATM, lenGATM] = useGeneticAlgorithm(distances, 3);
+    [routeGATM, lenGATM, ~] = useGeneticAlgorithm(distances, 3);
     graphGATM = createGraph(coordinates, routeGATM);
     subplot(4,4,15);
     plot(graphGATM(:,1),graphGATM(:,2));
@@ -212,7 +212,7 @@ function tspAll()
     
     % Genetic Algorithm Improvement Heuristics using Inversion Mutation
     tic;
-    [routeGAIM, lenGAIM] = useGeneticAlgorithm(distances, 4);
+    [routeGAIM, lenGAIM, ~] = useGeneticAlgorithm(distances, 4);
     graphGAIM = createGraph(coordinates, routeGAIM);
     subplot(4,4,16);
     plot(graphGAIM(:,1),graphGAIM(:,2));
