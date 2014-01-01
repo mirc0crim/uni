@@ -14,16 +14,11 @@ def t(ma,mb,va,vb):
 	t=top/math.sqrt(bottom)
 	return t
 
-mode = input("1=m,2=t\n")
-if mode == 1:
-        a = input("ma=?\n")
-        b = input("mb=?\n")
-        print "m=", m(a,b)
-if mode == 2:
-        ma = input("ma=?\n")
-        mb = input("mb=?\n")
-        va = input("va=?\n")
-        vb = input("vb=?\n")
-        print "t=", t(ma,mb,va,vb)
+ma = input("ma=?\n")
+mb = input("mb=?\n")
+va = input("va=?\n")
+vb = input("vb=?\n")
+print "m=", m(va,vb)
+print "t=", t(ma,mb,va,vb)
 
 raw_input("")

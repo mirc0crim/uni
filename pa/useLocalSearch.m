@@ -8,20 +8,17 @@ function [route, dist, currL] = useLocalSearch(distances, mode)
     route = zeros(noOfCities,noOfCities);
     r = randperm(noOfCities);
     calcLen(distances, r);
-    currL = zeros(noOfCities^2 *50, 1);
+    currL = zeros(noOfCities^2*5, 1);
     c = 0;
     lenBefore = calcLen(distances, r);
-    while c < noOfCities^2 *50
+    while c < noOfCities^2*5
         if mode == 1
             newR = swap(r);
-        end
-        if mode == 2
+        elseif mode == 2
             newR = translation(r);
-        end
-        if mode == 3
+        elseif mode == 3
             newR = inversion(r);
-        end
-        if mode == 4
+        elseif mode == 4
             selector = rand(1);
             if selector < 1/3
                 newR = swap(r);
