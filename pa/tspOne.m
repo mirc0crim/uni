@@ -6,7 +6,7 @@ function tspOne()
     tic;
     
     %----------------
-    heuristic = 9;
+    heuristic = 5;
     % 1-4   Construction NN, BI, CI, S
     % 5-8   Local Search S, T, I, STI
     % 9,10  Simulated Annealing M, HB
@@ -44,7 +44,7 @@ function tspOne()
     elseif heuristic > 8
         k = 405;
     elseif heuristic > 4
-        k = noOfCities^2;
+        k = noOfCities^2 *50;
     else
         k = 1;
     end
@@ -130,7 +130,7 @@ function tspOne()
                 T = T * 0.95;
             end
         else
-            k = log10(1:noOfCities^2);
+            k = log10(1:noOfCities^2 *50);
         end
         if heuristic > 8
             for i=1:runs
