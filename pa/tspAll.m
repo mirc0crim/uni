@@ -111,7 +111,7 @@ function tspAll()
     % Local Search Improvement Heuristics using Swap only
     disp('LS');
     tic;
-    [routeLSS, lenLSS] = useLocalSearch(distances, 1);
+    [routeLSS, lenLSS, ~] = useLocalSearch(distances, 1);
     graphLSS = createGraph(coordinates, routeLSS);
     subplot(4,4,7);
     plot(graphLSS(:,1),graphLSS(:,2));    
@@ -122,7 +122,7 @@ function tspAll()
     
     % Local Search Improvement Heuristics using Translation only
     tic;
-    [routeLST, lenLST] = useLocalSearch(distances, 2);
+    [routeLST, lenLST, ~] = useLocalSearch(distances, 2);
     graphLST = createGraph(coordinates, routeLST);
     subplot(4,4,8);
     plot(graphLST(:,1),graphLST(:,2));    
@@ -133,7 +133,7 @@ function tspAll()
     
     % Local Search Improvement Heuristics using Inversion only
     tic;
-    [routeLSI, lenLSI] = useLocalSearch(distances, 3);
+    [routeLSI, lenLSI, ~] = useLocalSearch(distances, 3);
     graphLSI = createGraph(coordinates, routeLSI);
     subplot(4,4,9);
     plot(graphLSI(:,1),graphLSI(:,2));
@@ -144,7 +144,7 @@ function tspAll()
     
     % Local Search Improvement Heuristics using Swap, Translation & Inversion
     tic;
-    [routeLSSTI, lenLSSTI] = useLocalSearch(distances, 4);
+    [routeLSSTI, lenLSSTI, ~] = useLocalSearch(distances, 4);
     graphLSSTI = createGraph(coordinates, routeLSSTI);
     subplot(4,4,10);
     plot(graphLSSTI(:,1),graphLSSTI(:,2));

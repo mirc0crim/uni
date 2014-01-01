@@ -43,7 +43,12 @@ function tspOne()
         k = 1000;
     elseif heuristic > 8
         k = 405;
+    elseif heuristic > 4
+        k = noOfCities^2;
+    else
+        k = 1;
     end
+    currLs = zeros(40,k);
     bestLs = zeros(40,k);
     worstLs = zeros(40,k);
     meanLs = zeros(40,k);
@@ -58,13 +63,13 @@ function tspOne()
         elseif heuristic == 4
             [route, len, start] = useSaving(distances); % ~3.5min
         elseif heuristic == 5
-            [route, len] = useLocalSearch(distances, 1);
+            [route, len, currL] = useLocalSearch(distances, 1);
         elseif heuristic == 6
-            [route, len] = useLocalSearch(distances, 2);
+            [route, len, currL] = useLocalSearch(distances, 2);
         elseif heuristic == 7
-            [route, len] = useLocalSearch(distances, 3);
+            [route, len, currL] = useLocalSearch(distances, 3);
         elseif heuristic == 8
-            [route, len] = useLocalSearch(distances, 4);
+            [route, len, currL] = useLocalSearch(distances, 4);
         elseif heuristic == 9
             [route, len, bestL, worstL, meanL] = useSimulatedAnnealing(distances, 1); % ~8min
         elseif heuristic == 10
@@ -89,6 +94,9 @@ function tspOne()
             worstLs(i,:) = worstL;
             meanLs(i,:) = meanL;
         end
+        if heuristic > 4 && heuristic < 9
+            currLs(i,:) = currL;
+        end
         disp(i);
     end
     
@@ -106,10 +114,12 @@ function tspOne()
     axis([-3 125 -3 100]);
     text(130,25,['l=', num2str(round(lenFound(I(1))))]);
     
-    figure;
-    hold on;
-    if heuristic > 8
-        if heuristic < 11
+    if heuristic > 4
+        figure;
+        hold on;
+        if heuristic > 10
+            k = 1:1000;
+        elseif heuristic > 8
             set(gca,'XDir','Reverse')
             T = 10000;
             k = zeros(405,1);
@@ -120,15 +130,23 @@ function tspOne()
                 T = T * 0.95;
             end
         else
-            k = 1:1000;
+            k = log10(1:noOfCities^2);
         end
-        for i=1:runs
-            plot(k, bestLs(i,:), 'g');
-            plot(k, worstLs(i,:), 'r');
-            plot(k, meanLs(i,:), 'b');
+        if heuristic > 8
+            for i=1:runs
+                plot(k, bestLs(i,:), 'g');
+                plot(k, worstLs(i,:), 'r');
+                plot(k, meanLs(i,:), 'b');
+            end
+        else
+            for i=1:runs
+                plot(k, log10(min(currLs)), 'g');
+                plot(k, log10(max(currLs)), 'r');
+                plot(k, log10(mean(currLs)), 'b');
+            end
         end
+        hold off;
     end
-    hold off;
     
     figure;
     disp(['best ', num2str(min(lenFound))]);
@@ -138,6 +156,8 @@ function tspOne()
     stdDev = std(lenFound);
     upper = averageLength+1.96*stdDev;
     lower = averageLength-1.96*stdDev;
+    disp(['upper ', num2str(upper)]);
+    disp(['lower ', num2str(lower)]);
     plot(1:runs,upper,'r.',1:runs,lower,'r.',1:runs,lenFound,'bo');
     
     toc;

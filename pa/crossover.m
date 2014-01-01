@@ -9,7 +9,9 @@ function out = crossover(order)
     r2 = ceil(rand(1)*noOfCities);
     if r1 < r2
         out = [order(r2:end), order(r1+1:r2-1), order(1:r1)];
-    else
+    elseif r2 < r1
         out = [order(r1:end), order(r2+1:r1-1), order(1:r2)];
+    else
+        out = order;
     end
 end
