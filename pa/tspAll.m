@@ -11,12 +11,12 @@ function tspAll()
         noOfCities = 411;
         ax = [-3 125 -3 100];
         textX = 130;
-        fid = fopen('TSP_411.txt', 'r');
+        fid = fopen('TSP_411.txt', 'r'); % takes 4 min
     else
         noOfCities = 131;
         ax = [-3 110 -3 50];
         textX = 115;
-        fid = fopen('data131.txt', 'r');
+        fid = fopen('data131.txt', 'r'); % takes 1 min
     end
 
     coordinates = zeros(noOfCities,2);

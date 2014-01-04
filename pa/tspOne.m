@@ -6,7 +6,7 @@ function tspOne()
     tic;
     
     %----------------
-    heuristic = 8;
+    heuristic = 1;
     % 1-4   Construction NN, BI, CI, S
     % 5-8   Local Search S, T, I, STI
     % 9,10  Simulated Annealing M, HB
