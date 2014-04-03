@@ -1,42 +1,88 @@
 
 \documentclass[journal]{IEEEtran}
+\usepackage{natbib}
 
 \begin{document}
-\title{A Bare Demo of\\IEEEtran.cls for Journals}
+\title{ Translation approaches for Cross-Language Information
+Retrieval (CLIR)}
 
 \author{Mirco Kocher, Student Number: 09-113-739\\Student in Master of Science in
 Computer Science of the Universities of Bern, Neuchâtel and Fribourg}
 
 % The paper headers
-\markboth{Seminar Workshop Spring Semester 2014}%
-{Seminar Workshop Spring Semester 2014}
+\markboth{Seminar Workshop - Spring Semester 2014}%
+{Seminar Workshop - Spring Semester 2014}
 
 % make the title area
 \maketitle
 
 
 \begin{abstract}
-The abstract goes here.
+This research paper presents and evaluates the issue of providing
+systems for CLIR. Different translation approaches are first elaborated and then compared.
+The two studied issues elaborate what and how to translate.
 \end{abstract}
 
 
 \section{Introduction}
-\IEEEPARstart{T}{his} demo file is intended to serve as a ``starter file''
-for IEEE journal papers produced under \LaTeX\ using
-IEEEtran.cls version 1.7 and later. I wish you the best of success.
+\IEEEPARstart{P}{eople} may write a query in one language and understand answers given in another. This is for instance when regarding very short text in Question and Answer format or just factual information for travel. Many documents contain non-textual information such as images, videos and statistics that can be understood regardless of the language involved and do not need translation.
+
+Next to the two most common working languages in the European Union English and French there are 22 other official languages. While the EU encourages all its citizens to be able to speak two languages in addition to their mother tongue many  are not bilingual. \cite{ebs386} Others can read documents written in another language but cannot formulate a query to search it, or at least cannot provide reliable search terms in a form comparable to those found in the documents being searched. The challenge is "given a query in any medium and any language, select relevant items from a multilingual multimedia collection which can be in any medium and any language, and present them in the style or oder most likely to be useful to the querier, with identical or near identical objects in differen media or languages appropriately identified." \cite{oard97} To retrieve documents across languages, that is written in languages different from the language used for query formulation, the classic information retrieval mechanisms have to be extended by Cross-Lanugage Infromation Retrieval systems. There is a difference between what they translate (such as the query or document only or a combination of both) and how they translate (either using machine-readable dictionaries, with machine translation or applying a statistical approach). The most prominent problems are the translation ambiguity, insufficient lexical coverage or variety in quality of the available resources.
+
+For the withing-language retrieveal the implementation is essentially separated into two phases, namely an indexing and a matching phase. Such a system first indexes the documents offline in advance and then in the second step reacts online to the users query. This system is extended to manage a language mismatch between query and parts of the document collection where either:
+\begin{itemize}
+	\item the document collection is monolingual, but the users can formulate queries in a different language.
+	\item the document collection contains documents in multiple languages and users can query the entire collection in any language.
+	\item the document collection contains documents with mixed-language content and users can query the entire collection in any language.
+\end{itemize}
+A Multilingual Infromation Retrieval (MLIR) system covers all the above cases plus the basic withing-language retrieval. There are four choices for crossing the language gap between query and documents. We can either:
+\begin{enumerate}
+	\item translate the query into the language of the documents
+	\item translate the documents into the language of the query
+	\item translate both the query and the documents into an intermediary language
+	\item translate nothing
+\end{enumerate}
+There are direct advantages and disadvantages to all options. With the second choice the whole corpus has to be translated which uses more storage space with each covered language and is a time-consuming process. With improving translation systems the whole document collection has to be preiodically re-translated to take advantage of these improvements. However the whole translation process can be shifted to the offline portion and avoids any speed penalty at retrieval time. Also the context of terms is available and helps disambiuate words with multiple meanings. On the contrary in the first choice only the words in the query (which is usually short) are translated and avoids these problems. However, since user queries tend to be short and thus offer little context to handle ambiguous terms. The third choice can be used if there is no direct translation available or the quality is poor and the extra translation results in a better retrieval. For similar languages such as in the Nordic languages Danish, Swedish and Norwegian the query might not need to be translated based on the similar vocabulary and with a spelling correction algorithm one language can be seen as a mis-spelled form of another.
+
+
+
+\section{State of the Art}
+
+Most important previous work
+
+Summarize them
+
+limit of current practices
+
+
+
+\section{Formalism}
+Notation used
+
+Example
+
+
+
+\section{Evaluation}
+Benchmarks
+
+Interpretation
+
 
 
 \section{Conclusion}
-The conclusion goes here.
+Recap main idea
 
+Main results found
 
-\begin{thebibliography}{1}
+Improvements/applications
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+\cite{gollins01}
+\cite{peters12}
+\cite{savoy09}
+\cite{yu09}
 
-\end{thebibliography}
-
+\bibliographystyle{unsrt}
+\bibliography{ref}
 
 \end{document}

@@ -26,4 +26,5 @@ lucene/src/org/tartarus
 *.pyc
 */.pydevproject
 *.asv
-
+*.bbl
+*.blg
