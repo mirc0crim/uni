@@ -51,7 +51,7 @@ Sometimes a stopword list is applied to remove frequent and insignificant terms 
 
 There are some problems that come with the translation. One of the most prominent problem is the insufficient lexical coverage where some words have no translation such as for abbreviations or names. This can be countered by using a specialized thesauri with names of persons ("Gorbachev" in English and "Gorbatschow" in German), arts ("Mona Lisa" in English is "La Gioconda" in Italian) and cities ("Lisbon" in English is "Lisboa" in Portuguese) and a dictionary for codes ("WHO" in English is "OMS" in French).
 Depending on the previously applied stopword list there might have been new problems introduced. The query "vitamin A" is transformed to "vitamin" when using the SMART system. In this case any document refering to any vitamin is retrieved even if it is about the vitamin C that is of no use for the querier. The same problems appear for the queries "IT engineer" and "WHO goals".
-Assuming the systems applies a stopword list that preserves the word "who" but uses a dictionary of codes. The query "Who won the Tour de France in 1995" could be translated to "OMS gagné le tour de France en 1995".
+Assuming the systems applies a stopword list that preserves the word "who" but uses a dictionary of codes. In this case the query "Who won the Tour de France in 1995" could be translated to "OMS gagn\'{e} le tour de France en 1995".
 %The most prominent problems in all CLIR systems are the translation ambiguity or variety in quality of the available resources.
 
 \section{State of the Art}
