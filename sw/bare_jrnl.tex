@@ -131,12 +131,44 @@ Limit of current practices
 
 
 \section{Formalism}
-Notation used.
-Precision.
-Recall.
-Mean Average Precision.
+To compare different approaches we need clearly defined notations and a common baseline.
+The evaluation of a system is based on its ability to find and present relevant documents that are appealing to the users.
+This effectiveness is measured using the precision and recall.
+Precision specifies the proportion of a retrieved set that is relevant while the recall indicates the proportion of all relevant documents in the collection that is included in the retrieved set.
 
-Example
+\begin{table}[h]
+\caption{A contingency table}
+\label{contTable}
+\begin{center}
+\begin{tabular}{ | l | c | c | }
+	\hline
+				& Relevant	& Not relevant	\\ \hline
+	Retrieved		& A		& B			\\ \hline
+	Not retrieved	& C		& D			\\
+	\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+In table \ref{contTable} we have A+B+C+D as the collection size with A+C being the relevant documents and A+B representing the retrieved documents.
+We therefore define
+\begin{equation}
+\label{precision}
+Precision = \frac{A}{A+B}
+\end{equation}
+and
+\begin{equation}
+\label{recall}
+Recall = \frac{A}{A+C}.
+\end{equation}
+Since we have a ranked list for each query instead of a set the precision can be calculated at a fixed recall point (like precision at 20\% recall) or a fixed rank cutoff (like precision at rank 20).
+Finally we only want a single number for effectiveness measure and we take the average precision.
+This is calculated by averaging precision when the recall increases which is the case at each new relevant retrieved document.
+As an example we have a total of 10 retrieved documents and we know that the documents at rank 2, 4, 5, 7 and 9 are relevant and the rest is irrelevant.
+For the document at rank 7 we have A = 4 and B = 3 which gives us using (\ref{precision}) a precision of 4 / (4 + 3) = 0.57.
+Following this calculation at each rank with a relevant document we calculate the average precision to be (0.5 + 0.5 + 0.6 + 0.57 + 0.55) / 5 = 0.544.
+A single query isn't enough to evaluate the effectiveness of a retrieval system.
+Therefore we introduce the mean average precision (MAP) which is the average of many queries' average precision values.
 
 
 
