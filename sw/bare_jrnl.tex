@@ -133,7 +133,12 @@ Limit of current practices
 \section{Formalism}
 To compare different approaches we need clearly defined notations and a common baseline.
 The evaluation of a system is based on its ability to find and present relevant documents that are appealing to the users.
-This effectiveness is measured using the precision and recall.
+
+The monolingual retrieval results provide a useful baseline for evaluating cross-lanugage retrieval performance.
+In this case the untranslated document collection and the query in the same language is used and considered as the practical limit.
+In the cases where CLIR effectiveness is higher than the monolingual one some test set specific knowledge are available that gives the system with more information about relevance than monolingual topic description \cite{xu00}.
+
+The effectiveness is measured using the precision and recall.
 Precision specifies the proportion of a retrieved set that is relevant while the recall indicates the proportion of all relevant documents in the collection that is included in the retrieved set.
 
 \begin{table}[h]
@@ -151,16 +156,17 @@ Precision specifies the proportion of a retrieved set that is relevant while the
 \end{table}
 
 In table \ref{contTable} we have A+B+C+D as the collection size with A+C being the relevant documents and A+B representing the retrieved documents.
-We therefore define
+We can therefore define the
 \begin{equation}
 \label{precision}
 Precision = \frac{A}{A+B}
 \end{equation}
-and
+and the
 \begin{equation}
 \label{recall}
 Recall = \frac{A}{A+C}.
 \end{equation}
+
 Since we have a ranked list for each query instead of a set the precision can be calculated at a fixed recall point (like precision at 20\% recall) or a fixed rank cutoff (like precision at rank 20).
 Finally we only want a single number for effectiveness measure and we take the average precision.
 This is calculated by averaging precision when the recall increases which is the case at each new relevant retrieved document.
@@ -174,9 +180,8 @@ Therefore we introduce the mean average precision (MAP) which is the average of 
 
 \section{Evaluation}
 Benchmarks.
-Baseline is monolingual IR.
 
-Interpretation
+Interpretation.
 
 
 
@@ -192,6 +197,7 @@ Improvements/applications
 \cite{savoy09}
 \cite{yu09}
 \cite{oard97b}
+\cite{fujita01}
 
 \bibliographystyle{unsrt}
 \bibliography{ref}
