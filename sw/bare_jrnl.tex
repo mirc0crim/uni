@@ -7,8 +7,12 @@
 \title{ Translation approaches for Cross-Language Information
 Retrieval (CLIR)}
 
-\author{Mirco Kocher, Student Number: 09-113-739\\
-Student in Master of Science in Computer Science of the Universities of Bern, Neuch\^{a}tel and Fribourg}
+\author{Mirco Kocher\\
+Master Student at the Universities of Bern, Neuch\^{a}tel and Fribourg\\
+Mitra Akasereh\\
+PhD Student in the Computer Science Departement at the University of Neuch\^{a}tel
+\thanks{Mirco Kocher has the student number 09-113-739} % yeah, thanks is the correct command according to IEEE
+}
 
 % The paper headers
 \markboth{Seminar Workshop - Spring Semester 2014}{Seminar Workshop - Spring Semester 2014}
@@ -118,15 +122,18 @@ The resulting query now contains five different terms for the word "Material" wh
 Something about variety in quality of the available resources...
 
 
-\section{State of the Art}
 
-Most important previous work.
-Oard with document translation versus query translation.
-Yu with his comparable corpus from Wikipedia.
-Gollins and the lexical triangualtion.
-Savoy using Google machine translation.
+\section{Related Work}
+Previous work in this domain mainly focused on how to translate queries to improve CLIR.
+Yu extracted a bilingual dictionary from Wikipedia and was able to collect robust and large-scale comparable corpora \cite{yu09}.
+Gollins translated in parallel across multiple intermediate languages and fused the end results which raised the effectiveness of the system \cite{gollins01}.
+Savoy used the machine translation tools provided by Google\footnote{http://translate.google.com/}, BabelFish\footnote{http://babelfish.com/} or Promt\footnote{http://translation2.paralink.com/} and addressed the querstion to what extent they can produce adequate results \cite{savoy09}.
 
-Limit of current practices
+The following work focused on what to translate to improve CLIR.
+Oard showed that document translation can be approximately as effective as approaches based on query translation and may ultimately be more effective for some application \cite{oard97b}.
+
+Fujita presented the limits of CLIR effectiveness and conditions to further improve the results \cite{fujita01}.
+In this paper we compare the results achieved by those previous works according to the the relative improvement over monolingual baseline.
 
 
 
@@ -192,12 +199,7 @@ Main results found
 
 Improvements/applications
 
-\cite{gollins01}
 \cite{peters12}
-\cite{savoy09}
-\cite{yu09}
-\cite{oard97b}
-\cite{fujita01}
 
 \bibliographystyle{unsrt}
 \bibliography{ref}
