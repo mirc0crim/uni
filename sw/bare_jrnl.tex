@@ -124,15 +124,20 @@ Something about variety in quality of the available resources...
 
 
 \section{Related Work}
-Previous work in this domain mainly focused on how to translate queries to improve CLIR.
+Many previous works in this domain focused on how to translate queries to improve CLIR.
 Yu extracted a bilingual dictionary from Wikipedia and was able to collect robust and large-scale comparable corpora \cite{yu09}.
+He also combined context heterogeneity similarity (terms around a domain specific word are similar to that of its translation in another language) and dependency heterogeneity similarity (a word and its translation share similar modifiers and head) which outperforms both the individual approaches.
 Gollins translated in parallel across multiple intermediate languages and fused the end results which raised the effectiveness of the system \cite{gollins01}.
+Depending on the size of the language resourced the lexical triangulation approach to transitive translation may even outperform the direct translation but there is no single best merge strategy for all environments.
 Savoy used the machine translation tools provided by Google\footnote{http://translate.google.com/}, BabelFish\footnote{http://babelfish.com/} or Promt\footnote{http://translation2.paralink.com/} and addressed the querstion to what extent they can produce adequate results \cite{savoy09}.
+Independent from the service used the retrieval performance is clearly lower than in a monolingual search especially for queries containing concepts expressed in an ambiguous way or vocabulary that leads to incorrect identification of relevant and non-relevant items.
 
 The following work focused on what to translate to improve CLIR.
 Oard showed that document translation can be approximately as effective as approaches based on query translation and may ultimately be more effective for some application \cite{oard97b}.
+With the moderately large corpus he noted that the performance gain with document translation depends on the topic but in general appears to perform at least as well as query translation.
 
 Fujita presented the limits of CLIR effectiveness and conditions to further improve the results \cite{fujita01}.
+While the query translation quality should be ideally perfect techniques like the pre-translation query expansion may improve the effectiveness further but also helps to compensate for lost information in the translation.
 In this paper we compare the results achieved by those previous works according to the the relative improvement over monolingual baseline.
 
 
