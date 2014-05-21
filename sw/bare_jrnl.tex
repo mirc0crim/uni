@@ -119,8 +119,7 @@ Assuming we use the Merriam-Webster Spanish Online dictionary to replace each wo
 The Spanish query "Contrabando de Material Radiactivo" is transformed (when ignoring the Spanish stopword "de") to "smuggling, contraband; material, physical, real, equipment, gear; radioactive".
 The resulting query now contains five different terms for the word "Material" which will influence the document retrieval.
 
-Something about variety in quality of the available resources...
-
+%Something about variety in quality of the available resources...
 
 
 \section{Related Work}
@@ -132,9 +131,11 @@ Depending on the size of the language resourced the lexical triangulation approa
 Savoy used the machine translation tools provided by Google\footnote{http://translate.google.com/}, BabelFish\footnote{http://babelfish.com/} or Promt\footnote{http://translation2.paralink.com/} and addressed the querstion to what extent they can produce adequate results \cite{savoy09}.
 Independent from the service used the retrieval performance is clearly lower than in a monolingual search especially for queries containing concepts expressed in an ambiguous way or vocabulary that leads to incorrect identification of relevant and non-relevant items.
 
-The following work focused on what to translate to improve CLIR.
+The following works focused on what to translate to improve CLIR.
 Oard showed that document translation can be approximately as effective as approaches based on query translation and may ultimately be more effective for some application \cite{oard97b}.
 With the moderately large corpus he noted that the performance gain with document translation depends on the topic but in general appears to perform at least as well as query translation.
+McCarley ran comparable experiments and came to the same results as Oard \cite{mccarley99}.
+He extended the testing with a hybrid system that uses both query translation and document translation which finally produces superior performance than eigher direction alone.
 
 Fujita presented the limits of CLIR effectiveness and conditions to further improve the results \cite{fujita01}.
 While the query translation quality should be ideally perfect techniques like the pre-translation query expansion may improve the effectiveness further but also helps to compensate for lost information in the translation.
@@ -186,11 +187,35 @@ As an example we have a total of 10 retrieved documents and we know that the doc
 For the document at rank 7 we have A = 4 and B = 3 which gives us using (\ref{precision}) a precision of 4 / (4 + 3) = 0.57.
 Following this calculation at each rank with a relevant document we calculate the average precision to be (0.5 + 0.5 + 0.6 + 0.57 + 0.55) / 5 = 0.544.
 A single query isn't enough to evaluate the effectiveness of a retrieval system.
-Therefore we introduce the mean average precision (MAP) which is the average of many queries' average precision values.
+Therefore we introduce as our main metric the mean average precision (MAP) which is the average of many queries' average precision values.
 
 
 
 \section{Evaluation}
+In this evaluation we answer the questions about whether document or query translation is better and how bilingual dictionary extration, lexical triangulation and machine translation performes.
+
+\subsection{Query or Document translation}
+In the work of Oard \cite{oard97b} queries of variable length and from different topics are used.
+They are evaluated in three different scenarios.
+First as a baseline the monolingual retrieval of german queries in the german SDA/NZZ document collection.
+Then the retrieval is performed with query translation, meaning the english queries are translated to the german language and used in the same untranslated document collection.
+Finally the retrieval is tested with document translation, which means that the same english queries are used but the documents are translated to the english language.
+When only using short queries the difference between the document translation and query translation is not significant and they preform about equally well.
+If we look for instance at the precision at 30\% recall we get 1/3 precision for the monolingual retrieval and about 9/40 precision for both translation strategies.
+This also means that CLIR is in this case 5/8 as effective as classical IR.
+When increasing the recall level the gap diminishes until at 70\% recall they both result in the same performance.
+A notable difference in translation strategy can be detected when using longer queries.
+The monolingual retrieval still achieves 1/3 precision at 30\% recall.
+At the same level the document translation approaches a precision of 1/4 but the query translation only gets 1/5 precision.
+The difference in precision between document translation and monolingual already vanishes at 40\% recall while the difference between all three tested systems disappears not until the 60\% recall level.
+Some advantage for document translation is apparent for long queries.
+Looking at the gain in average precision that emerges from using document translation rather than query translation on a query-by-query basis shows a similar result.
+Even though for some topics the average precision decreases in most cases there is a positive gain.
+It does appear that document translation is performing at least as well as query translation and both approaches are performing creditably according to testings by Oard \cite{oard97b} and also McCarley \cite{mccarley99} who ran similar experiments.
+The results for short and long queries range between 67\% and 90\% of monolingual average precision on the SDA/NZZ collection.
+
+
+
 Benchmarks.
 
 Interpretation.
