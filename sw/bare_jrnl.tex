@@ -194,12 +194,13 @@ Therefore we introduce as our main metric the mean average precision (MAP) which
 \section{Evaluation}
 In this evaluation we answer the questions about whether document or query translation is better and how bilingual dictionary extration, lexical triangulation and machine translation performes.
 
-\subsection{Query or Document translation}
+\subsection{Query or document translation}
 In the work of Oard \cite{oard97b} queries of variable length and from different topics are used.
 They are evaluated in three different scenarios.
-First as a baseline the monolingual retrieval of german queries in the german SDA/NZZ document collection.
-Then the retrieval is performed with query translation, meaning the english queries are translated to the german language and used in the same untranslated document collection.
-Finally the retrieval is tested with document translation, which means that the same english queries are used but the documents are translated to the english language.
+First as a baseline the monolingual retrieval of German queries in the German SDA/NZZ document collection.
+Then the retrieval is performed with query translation, meaning the English queries are translated to the German language and used in the same untranslated document collection.
+Finally the retrieval is tested with document translation, which means that the same English queries are used but the documents are translated to the English language.
+
 When only using short queries the difference between the document translation and query translation is not significant and they preform about equally well.
 If we look for instance at the precision at 30\% recall we get 1/3 precision for the monolingual retrieval and about 9/40 precision for both translation strategies.
 This also means that CLIR is in this case 5/8 as effective as classical IR.
@@ -215,6 +216,37 @@ It does appear that document translation is performing at least as well as query
 The results for short and long queries range between 67\% and 90\% of monolingual average precision on the SDA/NZZ collection.
 
 
+\subsection{Bilingual dictionary extraction}
+\cite{yu09}
+
+
+\subsection{Lexical triangulation}
+While most approaches to CLIR assume that a direct translation between the query and the document exist Gollins \cite{gollins01} researches the situation where this assumption does not hold.
+Using a pivot language introduced errors due to the additional step of transitive translations.
+By using lexical triangualtion, which combines translations from two different transitive routes, the errors are reduced and the performance improves.
+As a test Gollins took German queries and a document collection in the English language and first used the two pivot languages Spanish and Dutch and later included Italian as well.
+If the query was the single German word "fisch", a Spanish suggestion is the two terms "pez, pescado" from where the English translation "pitch, fish, tar, food fish" follows.
+On the Dutch route we first get "vis" and finally "pisces the fishes, pisces, fish".
+For the strict merge process only the intersection of the two transitive translation is taken, which is "fish" in this example and representing a good unamgibuous translation of the original German word.
+In the liberal merge again the common translations are preferred but in the absence of a common translation the terms from both routes were used.
+If no translation is available then the original German term passed unchanged.
+
+The mean average precision for all runs in case of the monolingual baseline was 0.289.
+Then the direct translation scored 0.0549 precision which makes it 81\% below the monolingual retrieval.
+This difference in performance can be expalined by the poor vocabulary coverage and the inability tho choose the most common sense of a word.
+All three transitive translation via the Spanish, Dutch and Italian pivot languages scored with a precision of 0.0106, 0.0044 and 0.0026 respectively considerably worse.
+The triangulation of Spanish and Dutch improves the performance to a precision of 0.0436 in the strict merge process and 0.0403 in the liberal merging.
+Each intermediate language adds some noise by adding erroneous additional words and therefore introduces ambiguity to the translation.
+Comparing different routes serves as a noice cancellation and preserves only the correctly translated terms.
+When triangulating all three pivor languages the precision raised to 0.0558 when using liberal merging but fell to 0.038 in the strict merge process.
+The improvement over direct translation of the former is not statistically significant.
+Even though transitive translation introduces more ambiguity the preformance might increase when combining evidence from several transitive translations \cite{ballesteros00}.
+The results for the German queries are about 20\% of monolingual average precision when using transitive translation to match the English document collection.
+Compared to the direct translation the triangulations have depending on the pivot languages and merge process an average precision that ranges between 50\% and 100\%.
+
+
+\subsection{Machine translation}
+\cite{savoy09}
 
 Benchmarks.
 
