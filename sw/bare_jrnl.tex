@@ -141,7 +141,7 @@ He extended the testing with a hybrid system that uses both query translation an
 
 Fujita presented the limits of CLIR effectiveness and conditions to further improve the results \cite{fujita01}.
 While the query translation quality should be ideally perfect techniques like the pre-translation query expansion may improve the effectiveness further but also helps to compensate for lost information in the translation.
-In this paper we compare the results achieved by those previous works according to the the relative improvement over monolingual baseline.
+In this paper we compare the results achieved by those previous works according to the relative improvement over monolingual baseline.
 
 
 
@@ -191,7 +191,7 @@ Following this calculation at each rank with a relevant document we calculate th
 A single query isn't enough to evaluate the effectiveness of a retrieval system.
 Therefore we introduce as our main metric the mean average precision (MAP) which is the average of many queries' average precision values.
 
-We can also look for a value that closely reflects the expectation of those queriers who are searching for a single good respons to their request.
+We can also look for a value that closely reflects the expectation of those queriers who are searching for a single good response to their request.
 The mean reciprocal rank (MRR) average value of the inverse of the rank for the first relevant document.
 The MRR varies between 1 (the first retrieved item is relevant) and 0 (no correct response up to a given threshold).
 This value serves as a measure for the ability to extract one correct answer and list it among the top ranked items.
@@ -222,7 +222,24 @@ It does appear that document translation is performing at least as well as query
 The results for short and long queries range between 67\% and 90\% of monolingual average precision on the SDA/NZZ collection.
 
 \subsection{Bilingual dictionary extraction}
-\cite{yu09}
+Approaches from the natural language processing domain can be used to extract bilingual dictionaries from comparable corpora.
+With the inter-language links in Wikipedia Yu \cite{yu09} builds a comparable corpora and then uses context and dependency heterogeneity similarity to extract such a lexicon.
+The large size ensures the quantity of the comparable corpora and the manually created links by the article authors guarantees the quality of the collected corpora.
+The context based strategy observes that a term and its translation appear in similar lexical contexts.
+The dependency based strategy not only uses the words around translation candidates but utilizes the syntactic analysis of comparable corpora to recognize the meaning of translation candidates.
+The lexical information comes from the entire sentence instead of just a small frame.
+Finally the proposed solution is to combine the context heterogeneity similarity and dependency heterogeneity similarity appropriately.
+The experiment first uses 500 Chinese-English pairs that are randomly selected from the collected pages and equally divided into a testing and development group.
+In a second experiment 15 Chinese-English pairs are randomly selected from a different independent lexicon to test the effectiveness of the proposed approach in real bilingual dictionary extraction.
+
+Comparing both heterogeneity similarity strategies on the first translation pairs the dependency based method reached a MRR of 0.112 while the context based approach was with 0.053 over 50\% lower.
+The proposed solution that combines the two approaches out performs the individual scores with a MRR of 0.125.
+This is a 10\% improvement to the dependency approach and aver 130\% better than when only using the context.
+In the second experiment with real world data the performance is generally lower.
+The individual approaches reached a mean reciprocal rank of 0.079 and 0.078, again with the advantage for the context approach.
+With a MRR of 0.097 the combined solution is better by 1/4 compared to the other two approaches.
+Yu did not test this extracted dictionary with a retrieval and a comparison to a monolingual baseline.
+Nevertheless the improvement over current practices in bilingual dictionary extraction can be seen.
 
 \subsection{Lexical triangulation}
 While most approaches to CLIR assume that a direct translation between the query and the document exist Gollins \cite{gollins01} researches the situation where this assumption does not hold.
