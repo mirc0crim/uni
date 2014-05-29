@@ -7,9 +7,7 @@
 \title{Translation approaches for Cross-Language Information Retrieval (CLIR)}
 
 \author{Mirco Kocher\\
-Master Student at the Universities of Bern, Neuch\^{a}tel and Fribourg\\
-Mitra Akasereh\\
-PhD Student in the Computer Science Department at the University of Neuch\^{a}tel
+Master Student at the Universities of Bern, Neuch\^{a}tel and Fribourg
 \thanks{Mirco Kocher has the student number 09-113-739} % yeah, thanks is the correct command according to IEEE
 }
 
@@ -22,7 +20,7 @@ PhD Student in the Computer Science Department at the University of Neuch\^{a}te
 \begin{abstract}
 This research paper presents and evaluates the issue of providing systems for CLIR.
 Different translation approaches are first elaborated and then compared.
-The two main studied issues elaborate \textit{what} part a CLIR system should translate and \textit{how} it should do it.
+The two main studied issues elaborate \textit{what} a CLIR system should translate and \textit{how} it should do it.
 In case the offline document corpus translation is possible the performance is at least as good as if the online query translation is be used.
 For a direct translation the machine translation services offer a good result.
 If a pivot language has to be used it is better to do multiple translations in parallel with different intermediate languages to filter out erroneous additional words and reduce ambiguity.
@@ -35,7 +33,7 @@ If a pivot language has to be used it is better to do multiple translations in p
 This is for instance when regarding very short text in Question and Answer format or just factual information for travel.
 Moreover, many documents contain non-textual information such as images, videos and statistics that can be understood regardless of the language involved and do not need translation.
 
-Next to the two most common working languages in the European Union English and French there are 22 other official languages.
+Next to the two most common working languages in the European Union, English and French, there are 22 other official languages.
 While the EU encourages all its citizens to be able to speak two languages in addition to their mother tongue many are not bilingual \cite{ebs386}.
 Some can read documents written in another language but cannot formulate a query in that language.
 They cannot provide reliable search terms comparable to those found in the documents being searched.
@@ -92,7 +90,7 @@ However, since user queries tend to be short and thus offer little context to ha
 The third choice can be used if there is no direct translation available or the quality is poor and the intermediate translation results in a better retrieval.
 For similar languages such as the Nordic languages (Danish, Swedish and Norwegian) the query might not need to be translated, based on the similar vocabulary and with a spelling correction algorithm one language can be considered as a misspelled form of another.
 
-\subsection{Problems}
+\subsection{Problems introduced by translation}
 Before applying any translation method the text in question has to be preprocessed.
 In general the text is transformed to lowercase to improve matching regardless of the capitalization (for instance when the word is at the beginning of a sentence).
 Compound words that do not exist in the target language have to be segmented and on the other hand tokens have to be compounded to represent a meaningful word.
@@ -148,7 +146,7 @@ In this paper we compare the results achieved by those previous works according 
 
 
 
-\section{Formalism}
+\section{Methods}
 To compare different approaches we need clearly defined notations and a common baseline.
 The evaluation of a system is based on its ability to find and present relevant documents that are appealing to the users.
 
@@ -203,6 +201,8 @@ This value serves as a measure for the ability to extract one correct answer and
 \section{Evaluation}
 In this evaluation we answer the questions about whether document or query translation is better and how bilingual dictionary extraction, lexical triangulation and machine translation performs.
 
+\section*{What to translate}
+
 \subsection{Query or document translation}
 In the work of Oard \cite{oard97b} queries of variable length and from different topics are used.
 They are evaluated in three different scenarios.
@@ -223,6 +223,10 @@ Looking at the gain in average precision that emerges from using document transl
 Even though for some topics the average precision decreases in most cases there is a positive gain.
 It does appear that document translation is performing at least as well as query translation and both approaches are performing creditably according to tests by Oard \cite{oard97b} and also McCarley \cite{mccarley99} who ran similar experiments.
 The results for short and long queries range between 67\% and 90\% of monolingual average precision on the SDA/NZZ collection.
+
+\section*{How to translate}
+
+\setcounter{subsection}{0}
 
 \subsection{Bilingual dictionary extraction}
 Approaches from the natural language processing domain can be used to extract bilingual dictionaries from comparable corpora.
