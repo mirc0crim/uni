@@ -127,17 +127,17 @@ The resulting query now contains five different terms for the word "Material" wh
 
 \section{Related Work}
 Many previous works in this domain focused on how to translate queries to improve CLIR.
-Yu extracted a bilingual dictionary from Wikipedia and was able to collect robust and large-scale comparable corpora \cite{yu09}.
+Yu and Tsujii extracted a bilingual dictionary from Wikipedia and was able to collect robust and large-scale comparable corpora \cite{yu09}.
 He also combined context heterogeneity similarity (terms around a domain specific word are similar to that of its translation in another language) and dependency heterogeneity similarity (a word and its translation share similar modifiers and head) which outperforms both the individual approaches.
-Gollins translated in parallel across multiple intermediate languages and fused the end results which raised the effectiveness of the system \cite{gollins01}.
+Gollins and Sanderson translated in parallel across multiple intermediate languages and fused the end results which raised the effectiveness of the system \cite{gollins01}.
 Depending on the size of the language resourced the lexical triangulation approach to transitive translation may even outperform the direct translation but there is no single best merge strategy for all environments.
-Savoy used the machine translation tools provided by Google\footnote{http://translate.google.com/}, BabelFish\footnote{http://babelfish.com/} or Promt\footnote{http://translation2.paralink.com/} and addressed the question to what extent they can produce adequate results \cite{savoy09}.
+Savoy and Dolamic used the machine translation tools provided by Google\footnote{http://translate.google.com/}, BabelFish\footnote{http://babelfish.com/} or Promt\footnote{http://translation2.paralink.com/} and addressed the question to what extent they can produce adequate results \cite{savoy09}.
 Independent from the service used the retrieval performance is clearly lower than in a monolingual search especially for queries containing concepts expressed in an ambiguous way or vocabulary that leads to incorrect identification of relevant and non-relevant items.
 
 The following works focused on what to translate to improve CLIR.
-Oard showed that document translation can be approximately as effective as approaches based on query translation and may ultimately be more effective for some application \cite{oard97b}.
+Oard and Hackett showed that document translation can be approximately as effective as approaches based on query translation and may ultimately be more effective for some application \cite{oard97b}.
 With the moderately large corpus he noted that the performance gain with document translation depends on the topic but in general appears to perform at least as well as query translation.
-McCarley ran comparable experiments and came to the same results as Oard \cite{mccarley99}.
+McCarley \cite{mccarley99} ran comparable experiments and came to the same results as Oard and Hackett.
 He extended the testing with a hybrid system that uses both query translation and document translation which finally produces superior performance than either direction alone.
 
 Fujita presented the limits of CLIR effectiveness and conditions to further improve the results \cite{fujita01}.
@@ -199,12 +199,13 @@ This value serves as a measure for the ability to extract one correct answer and
 
 
 \section{Evaluation}
-In this evaluation we answer the questions about whether document or query translation is better and how bilingual dictionary extraction, lexical triangulation and machine translation performs.
+In this evaluation we first focus on the \textit{what} to translate by answering the questions about whether document or query translation is better according to the results achieved by Oard and Hackett.
+Then we analyze the \textit{how} to tranlate by comparing the approaches of the bilingual dictionary extraction by Yu and Tsujii, the lexical triangulation of Gollins and Sanderson and finally the performance of machine translation examined by Savoy and Dolamic.
 
 \section*{What to translate}
 
 \subsection{Query or document translation}
-In the work of Oard \cite{oard97b} queries of variable length and from different topics are used.
+In the work of Oard and Hackett \cite{oard97b} queries of variable length and from different topics are used.
 They are evaluated in three different scenarios.
 First as a baseline the monolingual retrieval of German queries in the German SDA\footnote{Swiss news press agency - Schweizerische Depeschenagentur AG}/NZZ\footnote{New Journal of Zurich - Neue Z\"{u}rcher Zeitung} document collection.
 Then the retrieval is performed with query translation, meaning the English queries are translated to the German language and used in the same untranslated document collection.
@@ -221,7 +222,7 @@ The difference in precision between document translation and monolingual already
 Some advantage for document translation is apparent for long queries.
 Looking at the gain in average precision that emerges from using document translation rather than query translation on a query-by-query basis shows a similar result.
 Even though for some topics the average precision decreases in most cases there is a positive gain.
-It does appear that document translation is performing at least as well as query translation and both approaches are performing creditably according to tests by Oard \cite{oard97b} and also McCarley \cite{mccarley99} who ran similar experiments.
+It does appear that document translation is performing at least as well as query translation and both approaches are performing creditably according to tests by Oard and Hackett \cite{oard97b} and also McCarley \cite{mccarley99} who ran similar experiments.
 The results for short and long queries range between 67\% and 90\% of monolingual average precision on the SDA/NZZ collection.
 
 \section*{How to translate}
@@ -230,7 +231,7 @@ The results for short and long queries range between 67\% and 90\% of monolingua
 
 \subsection{Bilingual dictionary extraction}
 Approaches from the natural language processing domain can be used to extract bilingual dictionaries from comparable corpora.
-With the inter-language links in Wikipedia Yu \cite{yu09} builds a comparable corpora and then uses context and dependency heterogeneity similarity to extract such a lexicon.
+With the inter-language links in Wikipedia Yu and Tsujii \cite{yu09} builds a comparable corpora and then uses context and dependency heterogeneity similarity to extract such a lexicon.
 The large size ensures the quantity of the comparable corpora and the manually created links by the article authors guarantees the quality of the collected corpora.
 The context based strategy observes that a term and its translation appear in similar lexical contexts.
 The dependency based strategy not only uses the words around translation candidates but utilizes the syntactic analysis of comparable corpora to recognize the meaning of translation candidates.
@@ -245,14 +246,14 @@ This is a 10\% improvement to the dependency approach and aver 130\% better than
 In the second experiment with real world data the performance is generally lower.
 The individual approaches reached a mean reciprocal rank of 0.079 and 0.078, again with the advantage for the context approach.
 With a MRR of 0.097 the combined solution is better by 1/4 compared to the other two approaches.
-Yu did not test this extracted dictionary with a retrieval and a comparison to a monolingual baseline.
+Yu and Tsujii did not test this extracted dictionary with a retrieval and a comparison to a monolingual baseline.
 Nevertheless the improvement over current practices in bilingual dictionary extraction can be seen.
 
 \subsection{Lexical triangulation}
-While most approaches to CLIR assume that a direct translation between the query and the document exist Gollins \cite{gollins01} researches the situation where this assumption does not hold.
+While most approaches to CLIR assume that a direct translation between the query and the document exist Gollins and Sanderson \cite{gollins01} researches the situation where this assumption does not hold.
 Using a pivot language introduced errors due to the additional step of transitive translations.
 By using lexical triangulation, which combines translations from two different transitive routes, the errors are reduced and the performance improves.
-As a test Gollins took German queries and a document collection in the English language and first used the two pivot languages Spanish and Dutch and later included Italian as well.
+As a test Gollins and Sanderson took German queries and a document collection in the English language and first used the two pivot languages Spanish and Dutch and later included Italian as well.
 If the query was the single German word "fisch", a Spanish suggestion is the two terms "pez, pescado" from where the English translation "pitch, fish, tar, food fish" follows.
 On the Dutch route we first get "vis" and finally "pisces the fishes, pisces, fish".
 For the strict merge process only the intersection of the two transitive translation is taken, which is "fish" in this example and representing a good unambiguous translation of the original German word.
@@ -273,7 +274,7 @@ The results for the German queries are about 20\% of monolingual average precisi
 Compared to the direct translation the triangulations have depending on the pivot languages and merge process an average precision that ranges between 50\% and 100\%.
 
 \subsection{Machine translation}
-Without directly evaluating the translation services provided by online machine translation services Savoy \cite{savoy09} tested and analyzed various systems in term of their ability to retrieve items automatically based on a translated queries.
+Without directly evaluating the translation services provided by online machine translation services Savoy and Dolamic \cite{savoy09} tested and analyzed various systems in term of their ability to retrieve items automatically based on a translated queries.
 The document collection contains French articles published by the newspaper Le Monde and the SDA.
 As a baseline French queries of almost 300 topics were used for a monolingual retrieval.
 Then English language topics were translated from English to French for the evaluation.
