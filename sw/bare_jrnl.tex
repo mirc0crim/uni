@@ -60,10 +60,12 @@ For all other documents, the similarity scores are calculated according to the n
 There are different algorithms to calculate a similarity score that are based on the idea that documents and queries are vectors in a high-dimensional space.
 The coefficients represent features with a weighting (like the \textit{tf-idf}\footnote{term frequency in the document multiplied with the inverse document frequency, that is the number of documents containing this term}, Okapi\footnote{a more complex probabilistic model in which a term's weight also depends on its discrimination power and on document length}, statistical language\footnote{tries to estimate the occurrence probability of terms} or the cosine\footnote{the tf-idf normalized by its length} model) and binary vector operations (like the inner product\footnote{the sum of the products of the corresponding entries of the two vectors}, dice\footnote{two times the inner product is divided by the sum of the length of each vector} or cosine\footnote{the inner product is divided by the product of the root of the length of each vector} formula) are used for the calculation of the similarity score.
 In the end the system returns a ranked list of documents with descending similarity scores.
+More weighting formulas and feature representations with further details on the topic can be found in the book by Peters et alii \cite{peters12}.
 
 
 
 \section{Cross-Language Information Retrieval}
+\label{sec:clir}
 To retrieve documents across languages, that is written in languages different from the language used for query formulation, the classic information retrieval mechanisms have to be extended by Cross-Language Information Retrieval (CLIR) systems.
 This system manages a language mismatch between query and parts of the document collection where either:
 \begin{itemize}
@@ -88,9 +90,10 @@ Also the context of terms is available and helps the disambiguation of the words
 On the contrary in the first choice only the words in the query (which is usually short) are translated and avoids the storage problem.
 However, since user queries tend to be short and thus offer little context to handle ambiguous terms.
 The third choice can be used if there is no direct translation available or the quality is poor and the intermediate translation results in a better retrieval.
-For similar languages such as the Nordic languages (Danish, Swedish and Norwegian) the query might not need to be translated, based on the similar vocabulary and with a spelling correction algorithm one language can be considered as a misspelled form of another.
+For similar languages such as the Nordic languages (Danish, Swedish and Norwegian) the query might not need to be translated, based on the similar vocabulary and with a spelling correction algorithm one language can be considered as a misspelled form of another \cite{peters12}.
 
 \subsection{Problems introduced by translation}
+\label{sec:problems}
 Before applying any translation method the text in question has to be preprocessed.
 In general the text is transformed to lowercase to improve matching regardless of the capitalization (for instance when the word is at the beginning of a sentence).
 Compound words that do not exist in the target language have to be segmented and on the other hand tokens have to be compounded to represent a meaningful word.
@@ -199,10 +202,15 @@ This value serves as a measure for the ability to extract one correct answer and
 
 
 \section{Evaluation}
-In this evaluation we first focus on the \textit{what} to translate by answering the questions about whether document or query translation is better according to the results achieved by Oard and Hackett.
-Then we analyze the \textit{how} to tranlate by comparing the approaches of the bilingual dictionary extraction by Yu and Tsujii, the lexical triangulation of Gollins and Sanderson and finally the performance of machine translation examined by Savoy and Dolamic.
+In this evaluation we will interpret the two main studied issues about \textit{what} a CLIR system should translate and \textit{how} is should do it.
+First we focus on the \textit{what} to translate by answering the questions about whether document or query translation is better according to the results achieved by Oard and Hackett.
+Then we analyze the \textit{how} to tranlate by comparing the approaches of the bilingual dictionary extraction by Yu and Tsujii, the lexical triangulation of Gollins and Sanderson and finally the performance of machine translation services examined by Savoy and Dolamic.
 
 \section*{What to translate}
+As presented in section~\ref{sec:clir} there are four choices to cross the language gap between query and documents.
+Obviously the approach of translating nothing is generally not suitable or applicable.
+By using multiple translation stages the errors that emerge by translation as shown in subsection~\ref{sec:problems} will stack up resulting in suboptimal performance
+Therefore there should ideally be only a single translation of either the query or the document collection as presented in the following subsection.
 
 \subsection{Query or document translation}
 In the work of Oard and Hackett \cite{oard97b} queries of variable length and from different topics are used.
@@ -226,6 +234,10 @@ It does appear that document translation is performing at least as well as query
 The results for short and long queries range between 67\% and 90\% of monolingual average precision on the SDA/NZZ collection.
 
 \section*{How to translate}
+Despite the traditional approach of translating term wise using a dictionary the following subsections examine other methods.
+This is useful for instance if the resources needed for the translation is not available.
+A dictionary can in this case be collected from comparable corpora and using a triangulation with multiple languages helps in the elimination of wrong translations.
+The machine translation services provide another way to cross the language gap.
 
 \setcounter{subsection}{0}
 
@@ -307,8 +319,6 @@ Recap main idea
 Main results found
 
 Improvements/applications
-
-\cite{peters12}
 
 
 
