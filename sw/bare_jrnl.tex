@@ -259,7 +259,7 @@ In a second experiment 15 Chinese-English pairs are randomly selected from a dif
 
 Comparing both heterogeneity similarity strategies on the first translation pairs the dependency based method reached a MRR of 0.112 while the context based approach was with 0.053 over 50\% lower.
 The proposed solution that combines the two approaches out performs the individual scores with a MRR of 0.125.
-This is a 10\% improvement to the dependency approach and aver 130\% better than when only using the context.
+This is a 10\% improvement to the dependency approach and over 130\% better than when only using the context.
 In the second experiment with real world data the performance is generally lower.
 The individual approaches reached a mean reciprocal rank of 0.079 and 0.078, again with the advantage for the context approach.
 With a MRR of 0.097 the combined solution is better by 1/4 compared to the other two approaches.
@@ -321,6 +321,7 @@ With English topics the translation systems Google, BabelFish and Prompt increas
 \section{Conclusion}
 In this paper we studied the concept of CLIR then elaborated and compared different translation approaches.
 Depending on the languages, the size of the corpus and the available resources the best approach among the existing ones based on the different studies is different.
+\mbox{}\\
 
 Experiments were performed to compare query and document translation based CLIR systems.
 The machine readable dictionaries and semantic rules were used identically for both translation approaches.
@@ -331,15 +332,24 @@ But in general no clear advantage for either the query translation system or the
 The latter approach might be a practical method on moderately large collections.
 A future work extending the current state might experiment with a hybrid system incorporating both translations.
 In this case two retrieval systems would be run parallel and the results could be merged to the arithmetic mean of the retrieval scores.
+\mbox{}\\
 
 The usage of a comparable corpora like Wikipedia to extract a dictionary is a common approach.
+The context and dependency heterogeneity similarity were individually used for the extraction of a bilingual dictionary.
+But the combination of the two approaches out performs the system that uses the two features alone.
+In the experiments the extracted dictionary was compared with an independent lexicon.
+The results showed a MRR of 0.1 which means that the correct translation on average can be found at rank 10.
+This is not a striking performance but it is an improvement over the current practices which was visible in the test results.
+Note that for each term only a single exact translated term would be treated as valid.
+This means that even though the other translations are not expected, like a synonym of the term, a CLIR system might still return the desired documents.
+A future work should verify this performance with a retrieval system.
+The comparison to systems with a monolingual retrieval or the results based on a translation with a independent dictionary should be examined.
+\mbox{}\\
 
+Lexical
+\mbox{}\\
 
-Recap main idea.
-
-Main results found
-
-Improvements/applications
+Machine
 
 
 
