@@ -346,12 +346,22 @@ A future work should verify this performance with a retrieval system.
 The comparison to systems with a monolingual retrieval or the results based on a translation with a independent dictionary should be examined.
 \mbox{}\\
 
-Lexical
+Most translation services provide two-way translation from a main language like English to other languages.
+This means that large bilingual translation resources in high quality are not available for every language pair.
+In this case an intermediate language is used but the performance is expected to decrease.
+In the studied work lexical triangulation is used to translate in parallel with multiple pivot languages.
+There was some suggestion in the results that the three-way triangulated queries may have outperformed the direct translation.
+Different language pairings and varied size of the language resources appear to affect the outcomes.
+Furthermore the merge strategy is variable and no single best approach for all environments was found.
+In a future work the translations could be improved by taking account of the context of each term instead of translating word-by-word independently.
 \mbox{}\\
 
 Machine
+\mbox{}\\
 
-
+A future work continuing the comparison of translation approach in this paper should test all proposed solutions.
+The experiment should work with the same resources, a common translation strategy and an equal baseline.
+This would allow to better assess the capabilities of each method.
 
 \bibliographystyle{unsrt}
 \bibliography{ref}
