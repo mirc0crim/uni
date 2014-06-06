@@ -141,7 +141,7 @@ Yu and Tsujii \cite{yu09} extracted a bilingual dictionary from Wikipedia and wa
 He also combined context heterogeneity similarity (terms around a domain specific word are similar to that of its translation in another language) and dependency heterogeneity similarity (a word and its translation share similar modifiers and head) which outperforms both the individual approaches.
 Gollins and Sanderson \cite{gollins01} translated in parallel across multiple intermediate languages and fused the end results which raised the effectiveness of the system.
 Depending on the size of the language resourced the lexical triangulation approach to transitive translation may even outperform the direct translation but there is no single best merge strategy for all environments.
-Savoy and Dolamic \cite{savoy09} used the machine translation tools provided by Google\footnote{http://translate.google.com/}, BabelFish\footnote{http://babelfish.com/} or Promt\footnote{http://translation2.paralink.com/} and addressed the question to what extent they can produce adequate results.
+Savoy and Dolamic \cite{savoy09} used the machine translation tools provided by Google\footnote{http://translate.google.com/}, BabelFish\footnote{http://babelfish.yahoo.com/ (since June 2013 inactive). Not to confuse with http://babelfish.com/ which was created in 1995.} or Promt\footnote{http://translation2.paralink.com/} and addressed the question to what extent they can produce adequate results.
 Independent from the service used the retrieval performance is clearly lower than in a monolingual search especially for queries containing concepts expressed in an ambiguous way or vocabulary that leads to incorrect identification of relevant and non-relevant items.
 
 The following works focused on \textit{what} to translate to improve CLIR.
@@ -378,6 +378,14 @@ Furthermore an experiment between less popular languages could implemented.
 It would measure the difference between a direct machine translation and a two step machine translation with English as a pivot language.
 This would be performed under the motive that the service might already use this translation path without showing it to the user.
 \mbox{}\\
+
+We showed that CLIR is definitively not an easy task.
+The system is indifferent in performance if it uses the query or the document translation approach.
+Machine translation services generally work good and can retrieve the informations.
+Naturally a direct translation is always preferred to a translation with an intermediate language.
+If this is not possible then multiple pivot languages should be used to improve the effectiveness.
+A custom dictionary can be collected if no other resources are available.
+It can also be used for specific vocabulary look up as a second stage dictionary if the word can not be found in the main lexicon.
 
 A future work continuing the comparison of translation approach in this paper should test all proposed solutions with an identical implementation.
 The experiment should work with the same resources, a common translation strategy and most important an equal baseline.
