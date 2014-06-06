@@ -24,7 +24,7 @@ The two main studied issues elaborate \textit{what} a CLIR system should transla
 In case document translation is possible the performance is at least as good as if instead the query would be translated.
 For a direct translation the machine translation services offer a good result.
 If a pivot language has to be used it is better to do multiple translations in parallel with different intermediate languages to filter out erroneous additional words and reduce ambiguity.
-A comparable corpus can be used to create a dictionary and by combining two similarity strategies the overall fitness improves.
+A comparable corpus can be used to create a custom dictionary and by combining two similarity strategies the overall fitness improves.
 \end{abstract}
 
 
@@ -42,26 +42,28 @@ The challenge is ``given a query in any medium and any language, select relevant
 
 In this paper we are going to present the main factors that have to be considered when building information retrieval system that handles multiple languages.
 The rest of this paper is organized as follows.
-After a general introduction to classical information retrieval and the extension across languages the following part shows related works that we contemplated.
-Section five presents the methods and notations used.
-Chapter six provides the results that were achieved and in the conclusion we present our main findings.
+After a general introduction to classical information retrieval and the extension across languages the following part shows related works that we used in this research.
+Section five then presents the methods and notations used.
+Chapter six provides the results that were achieved and in the conclusion we show our main findings.
 
 
 
 \section{Classical Information Retrieval}
 In a within-language retrieval the implementation is essentially separated into two phases, namely, an indexing and a matching phase.
-Such a information retrieval (IR) system first indexes the documents offline in advance and in the second step reacts online to the users query.
+Such an information retrieval (IR) system first indexes the documents offline in advance and in the second step reacts online to the users query.
 The created index allows to look up features from the query and calculates a score for each matching document.
-This is faster than searching a large dataset at query execution time with a linear scan and results in an efficient system with effective retrieval.
+This is faster than searching a large dataset at query execution time with a linear scan.
+Therefore it results in an efficient system with an effective retrieval.
 The system builds an inverted index (like a hash table) that allows efficient look-up of a feature and returns a list of all documents containing the given feature.
 The index is said to be inverted because each feature is associated with a pair containing a document number and the corresponding frequency that denotes how often this term occurs in this document.
 In the matching phase the system performs \textit{n} look-ups for a query with \textit{n} different features.
 All documents that are not included in the union of these \textit{n} lists receive a score of 0 and won't be considered further.
 For all other documents, the similarity scores are calculated according to the number of features they contain.
 There are different algorithms to calculate a similarity score that are based on the idea that documents and queries are vectors in a high-dimensional space.
-The coefficients represent features with a weighting (like the \textit{tf-idf}\footnote{term frequency in the document multiplied with the inverse document frequency, that is the number of documents containing this term}, Okapi\footnote{a more complex probabilistic model in which a term's weight also depends on its discrimination power and on document length}, statistical language\footnote{tries to estimate the occurrence probability of terms} or the cosine\footnote{the tf-idf normalized by its length} model) and binary vector operations (like the inner product\footnote{the sum of the products of the corresponding entries of the two vectors}, dice\footnote{two times the inner product is divided by the sum of the length of each vector} or cosine\footnote{the inner product is divided by the product of the root of the length of each vector} formula) are used for the calculation of the similarity score.
-In the end the system returns a ranked list of documents with descending similarity scores.
-More weighting formulas and feature representations with further details on the topic can be found in the book by Peters et alii \cite{peters12}.
+The coefficients represent features with a weighting (like the \textit{tf-idf}\footnote{The frequency of a term in the document is multiplied with its inverse document frequency, that is the number of documents containing this term.}, Okapi\footnote{A more complex probabilistic model in which a term's weight also depends on its discrimination power and on document length.}, statistical language\footnote{It tries to estimate the occurrence probability of terms.} or the cosine\footnote{The \textit{tf-idf} normalized by its length.} model) and binary vector operations (like the inner product\footnote{The scalar product. For the two vectors the corresponding coefficients are multiplied and then those products are summed up. In MATLAB the formula \textit{``dot(query,document)"} calculates this.}, dice\footnote{Two times the inner product is divided by the sum of the norm of both vectors. The formula \textit{``2*dot(query,document)/(norm(query)+norm(document))"} can be used in MATLAB for this calculation.} or cosine\footnote{The inner product is divided by the root of the product of the norm of each vector. This is \textit{``dot(query,document)/sqrt(norm(query)*norm(document))"} in MATLAB.} formula) are used for the calculation of the similarity score.
+As an example of the binary vector operations we have a query represented by the vector $q = [3, 5, 7]^T$ and the two documents $A = [2, 6, 6]^T$ and $B = [3, 4, 8]^T$.
+The inner product gives us a similarity with document $A$ of 78 and 85 for $B$ while the dice and cosine formula both give us a score of about 8.8 for $A$ and around 9.2 for $B$.
+In the end the system returns a ranked list of documents with descending similarity scores which is in our example first document $B$ and then $A$ which has the lower document retrieval score\footnote{More weighting formulas and feature representations with further details on the topic can be found in the book by Peters et alii \cite{peters12}.}.
 
 
 
@@ -142,7 +144,7 @@ Independent from the service used the retrieval performance is clearly lower tha
 The following works focused on what to translate to improve CLIR.
 Oard and Hackett showed that document translation can be approximately as effective as approaches based on query translation and may ultimately be more effective for some application \cite{oard97b}.
 With the moderately large corpus he noted that the performance gain with document translation depends on the topic but in general appears to perform at least as well as query translation.
-McCarley \cite{mccarley99} ran comparable experiments and came to the same results as Oard and Hackett.
+McCarley \cite{mccarley99} ran comparable experiments and came to the same results as Oard and Hackett (1997).
 He extended the testing with a hybrid system that uses both query translation and document translation which finally produces superior performance than either direction alone.
 
 Fujita presented the limits of CLIR effectiveness and conditions to further improve the results \cite{fujita01}.
@@ -206,8 +208,8 @@ This value serves as a measure for the ability to extract one correct answer and
 
 \section{Evaluation}
 In this evaluation we will interpret the two main studied issues about \textit{what} a CLIR system should translate and \textit{how} is should do it.
-First we focus on the \textit{what} to translate by answering the questions about whether document or query translation is better according to the results achieved by Oard and Hackett.
-Then we analyze the \textit{how} to translate by comparing the approaches of the bilingual dictionary extraction by Yu and Tsujii, the lexical triangulation of Gollins and Sanderson and finally the performance of machine translation services examined by Savoy and Dolamic.
+First we focus on the \textit{what} to translate by answering the questions about whether document or query translation is better according to the results achieved by Oard and Hackett (1997).
+Then we analyze the \textit{how} to translate by comparing the approaches of the bilingual dictionary extraction by Yu and Tsujii (2009), the lexical triangulation of Gollins and Sanderson (2001) and finally the performance of machine translation services examined by Savoy and Dolamic (2009).
 
 
 \section*{What to translate}
@@ -263,14 +265,14 @@ This is a 10\% improvement to the dependency approach and over 130\% better than
 In the second experiment with real world data the performance is generally lower.
 The individual approaches reached a mean reciprocal rank of 0.079 and 0.078, again with the advantage for the context approach.
 With a MRR of 0.097 the combined solution is better by 1/4 compared to the other two approaches.
-Yu and Tsujii did not test this extracted dictionary with a retrieval and a comparison to a monolingual baseline.
+Yu and Tsujii (2009) did not test this extracted dictionary with a retrieval and a comparison to a monolingual baseline.
 Nevertheless the improvement over current practices in bilingual dictionary extraction can be seen.
 
 \subsection{Lexical triangulation}
 While most approaches to CLIR assume that a direct translation between the query and the document exist Gollins and Sanderson \cite{gollins01} researches the situation where this assumption does not hold.
 Using a pivot language introduced errors due to the additional step of transitive translations.
 By using lexical triangulation, which combines translations from two different transitive routes, the errors are reduced and the performance improves.
-As a test Gollins and Sanderson took German queries and a document collection in the English language and first used the two pivot languages Spanish and Dutch and later included Italian as well.
+As a test Gollins and Sanderson (2001) took German queries and a document collection in the English language and first used the two pivot languages Spanish and Dutch and later included Italian as well.
 If the query was the single German word "fisch", a Spanish suggestion is the two terms "pez, pescado" from where the English translation "pitch, fish, tar, food fish" follows.
 On the Dutch route we first get "vis" and finally "pisces the fishes, pisces, fish".
 For the strict merge process only the intersection of the two transitive translation is taken, which is "fish" in this example and representing a good unambiguous translation of the original German word.
@@ -328,7 +330,7 @@ Document translation is the less common approach as translation is frequently co
 Some indications were observed where document translation may be more effective than query translation for some applications.
 This occurs since a long document offers the translation engine more opportunities to translate key words and phrases appropriately.
 But in general no clear advantage for either the query translation system or the document translation system was found.
-The latter approach might be a practical method on moderately large collections.
+The latter approach might be a practical method on moderately large collections \cite{oard97b}.
 A future work extending the current state might experiment with a hybrid system incorporating both translations.
 In this case two retrieval systems would be run parallel and the results could be merged to the arithmetic mean of the retrieval scores.
 \mbox{}\\
@@ -341,7 +343,7 @@ In the experiments the extracted dictionary was compared with an independent lex
 The results showed a MRR of 0.1 which means that the correct translation on average can be found at rank 10.
 This is not a striking performance but it is an improvement over the current practices which was visible in the test results.
 Note that for each term only a single exact translated term would be treated as valid.
-This means that even though the other translations are not expected, like a synonym of the term, a CLIR system might still return the desired documents.
+This means that even though the other translations are not expected, like a synonym of the term, a CLIR system might still return the desired documents \cite{yu09}.
 A future work should verify this performance with a retrieval system.
 The comparison to systems with a monolingual retrieval or the results based on a translation with a independent dictionary should be examined.
 \mbox{}\\
@@ -351,7 +353,7 @@ This means that large bilingual translation resources in high quality are not av
 In this case an intermediate language is used but the performance is expected to decrease.
 In the studied work lexical triangulation is used to translate in parallel with multiple pivot languages.
 There was some suggestion in the results that the three-way triangulated queries may have outperformed the direct translation.
-Different language pairings and varied size of the language resources appear to affect the outcomes.
+Different language pairings and varied size of the language resources appear to affect the outcomes \cite{gollins01}.
 Furthermore the merge strategy is variable and no single best approach for all environments was found.
 In a future work the translations could be improved by taking account of the context of each term instead of translating word-by-word independently.
 \mbox{}\\
@@ -361,7 +363,7 @@ Applying the Google translation tool to automatically translate an English topic
 In the monolingual search a relevant item in the top five was in 81\% while the translation service reduced this percentage to 72\%.
 Similar results were found for the Babelfish and Promt systems.
 Clearly, in mean, a translated query by a machine translation service may retrieve the needed information.
-Depending on the language pairs the retrieval effectiveness may be lower.
+Depending on the language pairs the retrieval effectiveness may be lower \cite{savoy09}.
 The machine translation tools are generally used as a black box and to open this case future studies can be performed.
 In a future work those service could be reevaluated since the machine translation tools are continuously improved.
 Furthermore an experiment between less popular languages could implemented.
@@ -372,6 +374,8 @@ This would be performed under the motive that the service might already use this
 A future work continuing the comparison of translation approach in this paper should test all proposed solutions.
 The experiment should work with the same resources, a common translation strategy and an equal baseline.
 This would allow to better assess the capabilities of each method.
+
+
 
 \bibliographystyle{unsrt}
 \bibliography{ref}
