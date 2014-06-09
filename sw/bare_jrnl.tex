@@ -21,35 +21,38 @@ Master Student at the Universities of Bern, Neuch\^{a}tel and Fribourg
 This research paper presents and evaluates the issue of providing systems for CLIR.
 Different translation approaches are first elaborated and then compared.
 The two main studied issues elaborate \textit{what} a CLIR system should translate and \textit{how} it should do it.
-In case document translation is possible the performance is at least as good as if instead the query would be translated.
+Document translation is a good choice if the systems capabilities (e.g. storage space) allow it.
+But there is no significant difference to the commonly used query translation.
 For a direct translation the machine translation services offer a good result.
-If a pivot language has to be used it is better to do multiple translations in parallel with different intermediate languages to filter out erroneous additional words and reduce ambiguity.
-A comparable corpus can be used to create a custom dictionary and by combining two similarity strategies the overall fitness improves.
+If a pivot language has to be used it is better to do multiple translations in parallel with different intermediate languages.
+This method filters out erroneous additional words and reduces ambiguity.
+A comparable corpus can be used to create a specific custom dictionary.
+By combining two similarity strategies the overall fitness improves compared to current practices.
 \end{abstract}
 
 
 
 \section{Introduction}
 \IEEEPARstart{P}{eople} may write a query in one language and understand answers given in another.
-This is for instance when regarding very short text in Question and Answer format or just factual information for travel.
+This is for instance when regarding very short text in question and answer format or just factual information for travel.
 Moreover, many documents contain non-textual information such as images, videos and statistics that can be understood regardless of the language involved and do not need translation.
 
 Next to the two most common working languages in the European Union, English and French, there are 22 other official languages.
 While the EU encourages all its citizens to be able to speak two languages in addition to their mother tongue many are not bilingual \cite{ebs386}.
 Some can read documents written in another language but cannot formulate a query in that language.
 They cannot provide reliable search terms comparable to those found in the documents being searched.
-The challenge is ``given a query in any medium and any language, select relevant items from a multilingual multimedia collection which can be in any medium and any language, and present them in the style or order most likely to be useful to the querier, with identical or near identical objects in different media or languages appropriately identified." \cite{oard97a}
+The challenge is that ``given a query in any medium and any language, select relevant items from a multilingual multimedia collection which can be in any medium and any language, and present them in the style or order most likely to be useful to the querier, with identical or near identical objects in different media or languages appropriately identified." \cite{oard97a}
 
 In this paper we are going to present the main factors that have to be considered when building information retrieval system that handles multiple languages.
 The rest of this paper is organized as follows.
-After a general introduction to classical information retrieval and the extension across languages the following part shows related works that we used in this research.
+After a general introduction to classical information retrieval and then the extension across languages the following part shows the main related works that we used in this research.
 Section five then presents the methods and notations used.
 Chapter six provides the results that were achieved and in the conclusion we show our main findings.
 
 
 
 \section{Classical Information Retrieval}
-In a within-language retrieval the implementation is essentially separated into two phases, namely, an indexing and a matching phase.
+In a within-language retrieval system the implementation is essentially separated into two phases, namely, an indexing and a matching phase.
 Such an information retrieval (IR) system first indexes the documents offline in advance and in the second step reacts online to the users query.
 The created index allows to look up features from the query and calculates a score for each matching document.
 This is faster than searching a large dataset at query execution time with a linear scan.
@@ -63,7 +66,8 @@ There are different algorithms to calculate a similarity score that are based on
 The coefficients represent features with a weighting (like the \textit{tf-idf}\footnote{The frequency of a term in the document is multiplied with its inverse document frequency, that is the number of documents containing this term.}, Okapi\footnote{A more complex probabilistic model in which a term's weight also depends on its discrimination power and on document length.}, statistical language\footnote{It tries to estimate the occurrence probability of terms.} or the cosine\footnote{The \textit{tf-idf} normalized by its length.} model) and binary vector operations (like the inner product\footnote{The scalar product. For the two vectors the corresponding coefficients are multiplied and then those products are summed up. In MATLAB the formula \textit{``dot(query,document)"} calculates this.}, dice\footnote{Two times the inner product is divided by the sum of the norm of both vectors. The formula \textit{``2*dot(query,document)/(norm(query)+norm(document))"} can be used in MATLAB for this calculation.} or cosine\footnote{The inner product is divided by the root of the product of the norm of each vector. This is \textit{``dot(query,document)/sqrt(norm(query)*norm(document))"} in MATLAB.} formula) are used for the calculation of the similarity score.
 As an example of the binary vector operations we have a query represented by the vector $q = [3, 5, 7]^T$ and the two documents $A = [2, 6, 6]^T$ and $B = [3, 4, 8]^T$.
 The inner product gives us a similarity with document $A$ of 78 and 85 for $B$ while the dice and cosine formula both give us a score of about 8.8 for $A$ and around 9.2 for $B$.
-In the end the system returns a ranked list of documents with descending similarity scores which is in our example first document $B$ and then $A$ which has the lower document retrieval score\footnote{More weighting formulas and feature representations with further details on the topic can be found in the book by Peters et alii \cite{peters12}.}.
+In the end the system returns a ranked list of documents with descending similarity scores.
+This is in our example first document $B$ and then $A$, which has the lower document retrieval score\footnote{More weighting formulas and feature representations with further details on the topic can be found in the book by Peters et alii \cite{peters12}.}.
 
 
 
@@ -78,7 +82,7 @@ This system manages a language mismatch between query and parts of the document 
 	\item the document collection contains documents with mixed-language content and users can query the entire collection in any language.
 \end{itemize}
 A Multilingual Information Retrieval (MLIR) system covers all the above cases plus the basic within-language retrieval.
-The question is \textit{what} to translate (such as the query or document only or a combination of both) and \textit{how} to translate (either using machine-readable dictionaries, with machine translation or applying a statistical approach).
+The question is \textit{what} to translate (such as the query or document only or a combination of both) and \textit{how} to translate (e.g. using machine-readable dictionaries, with machine translation or applying a statistical approach).
 There are four choices for crossing the language gap between query and documents:
 \begin{enumerate}
 	\item translate the query into the language of the documents
@@ -94,23 +98,25 @@ Also the context of terms is available and helps the disambiguation of the words
 On the contrary in the first choice only the words in the query (which is usually short) are translated and avoids the storage problem.
 However, since user queries tend to be short and thus offer little context to handle ambiguous terms.
 The third choice can be used if there is no direct translation available or the quality is poor and the intermediate translation results in a better retrieval.
-For similar languages such as the Nordic languages (Danish, Swedish and Norwegian) the query might not need to be translated, based on the similar vocabulary and with a spelling correction algorithm one language can be considered as a misspelled form of another \cite{peters12}.
+For similar languages such as the Nordic languages (Danish, Swedish and Norwegian) the query might not need to be translated, based on the similar vocabulary.
+With a spelling correction algorithm one language can be considered as a misspelled form of another \cite{peters12}.
 
 \subsection{Problems introduced by translation}
 \label{sec:problems}
+To explain why translation is not a flawless method we have to look at the common procedure in CLIR.
 Before applying any translation method the text in question has to be preprocessed.
 In general the text is transformed to lowercase to improve matching regardless of the capitalization (for instance when the word is at the beginning of a sentence).
 Compound words that do not exist in the target language might have to be segmented and on the other hand multiple tokens have to be compounded to represent the intended meaningful word.
 For example the German word "Bundesbankpr\"{a}sident" should be decoumpounded to "Bund" + es + "Bank" + "Pr\"{a}sident" which is then translated to "federal bank CEO".
-This case is usually covered by a word-by-word translation with a lexicon decompounding only has to be done if the term is out of the covered vocabulary.
+This case is usually covered by a word-by-word translation with a lexicon and decompounding only has to be done if the term is out of the covered vocabulary.
 Conversely in the Chinese word \begin{CJK}{UTF8}{gbsn}中国人\end{CJK}, the three logograms when segmented mean "middle", "kingdom" and "people" which should be compounded and translated to "Chinese" when translating to the English language \cite{ir13}.
 This case is more difficult to cover with a dictionary and the translation should not happen word-by-word.
 
-Additionally the text is modified using a stemmer which conflates different token of the same word type.
-For instance the singular and plural form (like "horse" and "horses") or different grammatical cases (such as the English noun "Prague" in the Czech language where the dative form is "Praze" and the genitive form is "Prahy" are merged with the nominative form "Praha"\footnote{People sometimes use "Praha" in the English language instead of Prague but then mostly forget to decline it.
+Additionally the text is modified using a stemmer which conflates different tokens of the same word type.
+For instance the singular and plural form (like "horse" and "horses") or different grammatical cases (such as the English noun "Prague" in the Czech language. The dative form is "Praze" and the genitive form is "Prahy" and they have to be merged with the nominative form "Praha"\footnote{People sometimes use "Praha" in the English language instead of Prague but then mostly forget to decline it.
 To follow this fashion it would obviously be "to be in Praze" and "go to Prahy".}).
 
-Sometimes a stopword list is applied to remove frequent and insignificant terms with the goal to reduce the size of the inverted file.
+Sometimes a stopword list is applied to remove frequent and insignificant terms with the goal to significantly reduce the size of the inverted file.
 Such a list may contain only one term ("the") as in the WIN system (Thomson Reuters), nine terms ("an", "and", "by", "for", "from", "of", "the", "to", "with") as suggested by the DIALOG system or may like the SMART system include 571 words (e.g. "a", "all", "are", "is", "it", "just", "while", "who", "with", ...).
 As a consequence, the length of a piece of text in the source language, and the length of its representation in the target language may differ widely.
 
@@ -128,8 +134,8 @@ Another prominent problem in all CLIR systems is the translation ambiguity.
 Each word-by-word translation using a machine-readable dictionary returns more possible expressions for each individual term.
 By simply using all available translations, the number of terms in the destination language that is substituted for each term in the source language can vary widely.
 Assuming we use the Merriam-Webster Spanish Online dictionary\footnote{http://merriam-webster.com/} to replace each word with all given translation alternatives.
-The Spanish query "Contrabando de Material Radiactivo" is transformed (when ignoring the Spanish stopword "de") to "smuggling, contraband; material, physical, real, equipment, gear; radioactive".
-The resulting query now contains five different terms for the word "Material" and a single word for "Radiactivo" which will influence the document retrieval.
+The Spanish query "Contrabando de Material Radioactivo" is transformed (when ignoring the Spanish stopword "de") to "smuggling, contraband; material, physical, real, equipment, gear; radioactive".
+The resulting query now contains five different terms for the word "Material" and only a single word for "Radioactivo" which will influence the document retrieval.
 
 %Something about variety in quality of the available resources...
 
@@ -140,18 +146,19 @@ Many previous works in this domain focused on \textit{how} to translate queries 
 Yu and Tsujii \cite{yu09} extracted a bilingual dictionary from Wikipedia and was able to collect robust and large-scale comparable corpora.
 He also combined context heterogeneity similarity (terms around a domain specific word are similar to that of its translation in another language) and dependency heterogeneity similarity (a word and its translation share similar modifiers and head) which outperforms both the individual approaches.
 Gollins and Sanderson \cite{gollins01} translated in parallel across multiple intermediate languages and fused the end results which raised the effectiveness of the system.
-Depending on the size of the language resourced the lexical triangulation approach to transitive translation may even outperform the direct translation but there is no single best merge strategy for all environments.
-Savoy and Dolamic \cite{savoy09} used the machine translation tools provided by Google\footnote{http://translate.google.com/}, BabelFish\footnote{http://babelfish.yahoo.com/ (since June 2013 inactive). Not to confuse with http://babelfish.com/ which was created in 1995.} or Promt\footnote{http://translation2.paralink.com/} and addressed the question to what extent they can produce adequate results.
+Depending on the size of the language resources the lexical triangulation approach to transitive translation may even outperform the direct translation.
+But there is no single best merge strategy for all environments.
+Savoy and Dolamic \cite{savoy09} used the machine translation tools provided by Google\footnote{http://translate.google.com/}, Babelfish\footnote{http://babelfish.yahoo.com/ (inactive since June 2013). Not to confuse with http://babelfish.com/ which was created in 1995.} or Promt\footnote{http://translation2.paralink.com/} and addressed the question to what extent they can produce adequate results.
 Independent from the service used the retrieval performance is clearly lower than in a monolingual search especially for queries containing concepts expressed in an ambiguous way or vocabulary that leads to incorrect identification of relevant and non-relevant items.
 
 The following works focused on \textit{what} to translate to improve CLIR.
 Oard and Hackett \cite{oard97b} showed that document translation can be approximately as effective as approaches based on query translation and may ultimately be more effective for some application.
-With the moderately large corpus he noted that the performance gain with document translation depends on the topic but in general appears to perform at least as well as query translation.
+With the moderately large corpus they noted that the performance gain with document translation depends on the topic but in general appears to perform at least as well as query translation.
 McCarley \cite{mccarley99} ran comparable experiments and came to the same results as Oard and Hackett (1997).
 He extended the testing with a hybrid system that uses both query translation and document translation which finally produces superior performance than either direction alone.
 
-Fujita presented the limits of CLIR effectiveness and conditions to further improve the results \cite{fujita01}.
-While the query translation quality should be ideally perfect techniques like the pre-translation query expansion may improve the effectiveness further but also helps to compensate for lost information in the translation.
+Fujita \cite{fujita01} presented the limits of CLIR effectiveness and conditions to further improve the results.
+While the query translation quality should be ideally perfect, techniques like the pre-translation query expansion\footnote{Encounter terms to be out of the covered vocabulary by including additional related terms.} may improve the effectiveness further but also helps to compensate for lost information in the translation.
 In this paper we compare the results achieved by those previous works according to the relative improvement over monolingual baseline.
 
 
@@ -162,7 +169,7 @@ The evaluation of a system is based on its ability to find and present relevant 
 
 The monolingual retrieval results provide a useful baseline for evaluating cross-language retrieval performance.
 In this case the untranslated document collection and the query in the same language is used and considered as the practical limit.
-In the cases where CLIR effectiveness is higher than the monolingual one some test set specific knowledge are available that gives the system with more information about relevance than monolingual topic description \cite{xu00}.
+In the cases where CLIR effectiveness is higher than the monolingual one some test set specific knowledge are available that gives the system more information about relevance than monolingual topic description \cite{xu00}.
 
 The effectiveness is measured using the precision and recall.
 Precision specifies the proportion of a retrieved set that is relevant while the recall indicates the proportion of all relevant documents in the collection that is included in the retrieved set.
@@ -193,7 +200,7 @@ and the
 Recall = \frac{A}{A+C}.
 \end{equation}
 
-Since we have a ranked list for each query instead of a set the precision can be calculated at a fixed recall point (like precision at 20\% recall) or a fixed rank cutoff (like precision at rank 20).
+Since we have a ranked list for each query instead of a set the precision can be calculated at a fixed recall point (like precision at 20\% recall) or a fixed rank cutoff (like precision at rank 20, i.e. after 20 retrieved documents).
 Finally we only want a single number for effectiveness measure and we take the average precision.
 This is calculated by averaging precision when the recall increases which is the case at each new relevant retrieved document.
 As an example we have a total of 10 retrieved documents and we know that the documents at rank 2, 4, 5, 7 and 9 are relevant and the rest is irrelevant.
@@ -225,7 +232,7 @@ Therefore there should ideally be only a single translation of either the query 
 \subsection{Query or document translation}
 In the work of Oard and Hackett \cite{oard97b} queries of variable length and from different topics are used.
 They are evaluated in three different scenarios.
-First as a baseline the monolingual retrieval of German queries in the German SDA\footnote{Swiss news press agency - Schweizerische Depeschenagentur AG}/NZZ\footnote{New Journal of Zurich - Neue Z\"{u}rcher Zeitung} document collection.
+First as a baseline the monolingual retrieval of German queries in the German SDA\footnote{Schweizerische Depeschenagentur AG - Swiss news press agency}/NZZ\footnote{Neue Z\"{u}rcher Zeitung - New Journal of Zurich} document collection.
 Then the retrieval is performed with query translation, meaning the English queries are translated to the German language and used in the same untranslated document collection.
 Finally the retrieval is tested with document translation, which means that the same English queries are used but the documents are translated to the English language.
 
@@ -236,12 +243,12 @@ When increasing the recall level the gap diminishes until at 70\% recall they bo
 A notable difference in translation strategy can be detected when using longer queries.
 The monolingual retrieval still achieves 1/3 precision at 30\% recall.
 At the same level the document translation approaches a precision of 1/4 but the query translation only gets 1/5 precision.
-The difference in precision between document translation and monolingual already vanishes at 40\% recall while the difference between all three tested systems disappears not until the 60\% recall level.
+The difference in precision between document translation and the monolingual baseline already vanishes at 40\% recall while the difference between all three tested systems disappears not until the 60\% recall level.
 Some advantage for document translation is apparent for long queries.
 Looking at the gain in average precision that emerges from using document translation rather than query translation on a query-by-query basis shows a similar result.
 Even though for some topics the average precision decreases in most cases there is a positive gain.
 It does appear that document translation is performing at least as well as query translation.
-Both approaches are performing creditably according to tests by Oard and Hackett \cite{oard97b} and also McCarley \cite{mccarley99} who ran similar experiments.
+Both approaches are performing creditably according to tests by Oard and Hackett (1997) and also McCarley (1999) who ran similar experiments.
 The results for short and long queries range between 67\% and 90\% of monolingual average precision on the SDA/NZZ collection.
 
 
@@ -261,7 +268,7 @@ The context based strategy observes that a term and its translation appear in si
 This means that the English word "keyboard" is translated correctly to German as either "Tastatur" (the input device of a computer) or as "Schl\"usselbrett" (the rack for hanging keys) depending on the other terms.
 The dependency based strategy not only uses the words around translation candidates but utilizes the syntactic analysis of comparable corpora to recognize the meaning of translation candidates.
 English phrasal verbs consisting of a verb and either an adverb or preposition are a prime example to not look for translation word-by-word.
-For example the sentence "John ran into an old school-friend" should be translated such that John met unexpectedly an old school-friend and not that he actually collided with him while running.
+For example the sentence "John ran into an old school-friend" should be translated such that John \textit{met unexpectedly} an old school-friend and not that he actually \textit{collided} with him while running.
 The lexical information comes from the entire sentence instead of just a small frame.
 Finally the proposed solution is to combine the context heterogeneity similarity and dependency heterogeneity similarity appropriately.
 The experiment first uses 500 Chinese-English pairs that are randomly selected from the collected pages and equally divided into a testing and development group.
@@ -307,23 +314,23 @@ As a baseline French queries of almost 300 topics were used for a monolingual re
 Then English language topics were translated from English to French for the evaluation.
 Further exploratory work was to compare short queries containing only the title of the topic and long queries including the title and the description of the corresponding topic.
 The three models \textit{tf-idf}, Okapi and language model were used and tested with respect to the MRR and MAP.
-Next to Google the translation services by BabelFish and Promt were evaluated.
+Next to Google the translation services by Babelfish and Promt were evaluated.
 
-In any case the Okapi model performed better than the other two IR models.
-First when looking at Google's translation service with short queries the mean average precision using the Okapi model in the monolingual retrieval was 40\% with a MRR of 2/3.
+In any case the Okapi model performed best while the \textit{tf-idf} was the worst and the language model was in the middle between them.
+First when looking at short queries the mean average precision using the Okapi model in the monolingual retrieval was 40\% with a MRR of 2/3.
 With a MAP of only 1/4 and a mean reciprocal rank of 51\% the \textit{tf-idf} model was significantly worse.
-Compared to the first baselines the retrieval using the translation service scored a precision of 0.341 and a MRR of 0.582 which is a relative difference of -15\% and -12\% respectively.
+Compared to the first baselines the retrieval using the translation service provided by Google scored a precision of 0.341 and a MRR of 0.582 which is a relative difference of -15\% and -12\% respectively.
 With the lower baseline the \textit{tf-idf} model also got worse results for when the translation service was used.
 The performance in MRR decreased by 21\% to 0.39 and the MAP fell by 25\% to 1/5.
-Looking at Google, BabelFish and Promt when using the long queries that consist of the additional topic description the performance increased.
-Assuming the Okapi IR model is used the MRR for the monolingual retrieval increased to 0.736 which is a relative difference of 11\%.
-The MRR of Google, BabelFish and Promt with short queries is with $\pm$1\% the same and not significantly different.
+Looking at Google, Babelfish and Promt when using the long queries that consist of the additional topic description the performance increased.
+Assuming the Okapi IR model is used the MRR for the monolingual retrieval increased to 0.736 which is a relative difference of +11\% to short queries.
+The MRR of Google, Babelfish and Promt with short queries is with $\pm$1\% the same and not significantly different.
 Similarly the long queries improved the performance of all systems by 13\% $\pm$0.5\%.
 The results for short and long queries depending on the used IR model range between 75\% and 90\% of the monolingual reciprocal rank on this document collection.
 For some queries the search systems encountered difficulties to find at least one relevant answer.
 In the monolingual run 30 short queries retrieved no relevant item in the 20 documents with the highest scores.
 When adding a translation stage the topics may become more ambiguous or use vocabulary that leads to incorrect identification of relevant items.
-With English topics the translation systems Google, BabelFish and Prompt increased the number of queries without a relevant document to 60, 64 and 56, respectively.
+With English topics the translation systems Google, Babelfish and Prompt increased the number of queries without a relevant document to 60, 64 and 56, respectively.
 
 
 
@@ -340,7 +347,7 @@ This occurs since a long document offers the translation engine more opportuniti
 But in general no clear advantage for either the query translation system or the document translation system was found.
 The latter approach might be a practical method on moderately large collections \cite{oard97b}.
 A future work extending the current state might experiment with a hybrid system incorporating both translations.
-In this case two retrieval systems would be run parallel and the results could be merged to the arithmetic mean of the retrieval scores.
+In this case two retrieval systems would be run in parallel and the results could be merged to the arithmetic mean of the retrieval scores.
 \mbox{}\\
 
 Automatic translation resources are not available for all language pairs, particularly for languages used by small numbers of users and having only modest economic importance.
@@ -351,7 +358,7 @@ In the experiments the extracted dictionary was compared with an independent lex
 The results showed a MRR of 0.1 which means that the correct translation on average can be found at rank 10.
 This is not a striking performance but it is an improvement over the current practices which was visible in the test results \cite{yu09}.
 Note that for each term only a single exact translated term would be treated as valid.
-This means that even though the other translations are not expected, like a synonym of the term, a CLIR system might still return the desired documents.
+This means that even though the other translations before the correct one are not expected, like a synonym of the term, a CLIR system might still return the desired documents.
 A future work should verify this performance with a retrieval system.
 The comparison to systems with a monolingual retrieval or the results based on a translation with a independent dictionary should be examined.
 \mbox{}\\
